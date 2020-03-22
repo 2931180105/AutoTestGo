@@ -8,10 +8,7 @@
   "GasPrice": 500,
   "GasLimit": 20000,
   "Rpc": [
-    "http://polaris1.ont.io:20336",
-    "http://polaris2.ont.io:20336",
-    "http://polaris3.ont.io:20336",
-    "http://polaris4.ont.io:20336"
+    "http://172.168.3.59:32339"
   ],
   "ConsensusPeerPath": [
     [
