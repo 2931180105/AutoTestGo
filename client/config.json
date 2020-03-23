@@ -16,12 +16,12 @@
       "123456"
     ]
   ],
-  "TxNum": 100,
-  "TxFactor": 3,
+  "TxNum": 60,
+  "TxFactor": 300,
   "RoutineNum": 3,
-  "BatchCount": 2,
-  "TPS": 3,
-  "StartNonce": 0,
+  "BatchCount": 15,
+  "TPS": 60,
+  "StartNonce": 10000 ,
   "SaveTx": true,
   "SendTx": true
 }

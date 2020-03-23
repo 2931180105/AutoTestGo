@@ -124,13 +124,15 @@ func main() {
 				leafs = GenerateLeafv(uint32(0)+cfg.BatchCount*nonce, cfg.BatchCount)
 				addArgs := leafvToAddArgs(leafs)
 				if cfg.SendTx {
-					_, err := client.sendRpcRequest(client.GetNextQid(), "batchAdd", addArgs)
+					//_, err := client.sendRpcRequest(client.GetNextQid(), "batchAdd", addArgs)
+					_, err := client.sendRpcRequest(client.GetNextQid(), "verify", addArgs)
+
 					if err != nil {
 						fmt.Printf("Add Error: %s\n", err)
 						log.Errorf("send tx failed, err: %s", err)
 						return
 					} else {
-						log.Infof("send tx ***%s*** status ---%s", addArgs)
+						log.Infof("send tx ***%s***", addArgs)
 					}
 
 					sentNum++
