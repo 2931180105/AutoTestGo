@@ -8,6 +8,7 @@
   "GasPrice": 500,
   "GasLimit": 20000,
   "Rpc": [
+    "https://attestation.ont.io",
     "http://172.168.3.59:32339"
   ],
   "ConsensusPeerPath": [
@@ -16,12 +17,12 @@
       "123456"
     ]
   ],
-  "TxNum": 60,
-  "TxFactor": 300,
+  "TxNum": 90,
+  "TxFactor": 1,
   "RoutineNum": 3,
-  "BatchCount": 15,
-  "TPS": 60,
-  "StartNonce": 10000 ,
+  "BatchCount": 10,
+  "TPS": 18,
+  "StartNonce": 150,
   "SaveTx": true,
-  "SendTx": true
+  "SendTx": false
 }

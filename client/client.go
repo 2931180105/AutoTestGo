@@ -1,6 +1,10 @@
 package main
 
-import "fmt"
+import (
+	"fmt"
+	"github.com/mockyz/AutoTestGo/common/config"
+	"github.com/mockyz/AutoTestGo/common/log"
+)
 
 import (
 	"bytes"
@@ -132,7 +136,7 @@ func (this *RpcClient) sendRpcRequest(qid, method string, params RpcParam) (inte
 }
 
 var (
-	N uint32 = 15
+	N uint32 = 1
 )
 
 func verifyleaf(client *RpcClient, leafs []common.Uint256, v bool) {
@@ -143,6 +147,7 @@ func verifyleaf(client *RpcClient, leafs []common.Uint256, v bool) {
 		if err != nil {
 			fmt.Printf("Verify Failed %s\n", err)
 			panic("xxx")
+			return
 		}
 
 		vres, ok := res.(*VerifyResult)
@@ -160,55 +165,80 @@ func verifyleaf(client *RpcClient, leafs []common.Uint256, v bool) {
 }
 
 func main() {
-	defer clean()
+	configPath := "client/config.json"
 	err := InitSigner()
 	if err != nil {
-		panic(err)
+		log.Error(err)
+		return
 	}
-	testUrl := "http://127.0.0.1:32339"
-	client := NewRpcClient(testUrl)
-	if true {
-		numbatch := uint32(10)
-		tree := MerkleInit()
-		//var alladdargs []string
-		//alladdargs := make([]string, numbatch, numbatch)
-
-		fmt.Printf("prepare args\n")
-		for m := uint32(0); m < numbatch; m++ {
-			if m%1000 == 0 {
-				fmt.Printf("send %d\n", m)
-			}
-			var leafs []common.Uint256
-			//var root []common.Uint256
-			leafs = GenerateLeafv(uint32(0)+N*m, N)
-			//if m == numbatch-1 {
-			//printLeafs("leafs", leafs)
-			//}
-			//root = getleafvroot(leafs, tree, false)
-			//printLeafs("root", root)
-			//tree.AppendHash(leafs[i])
-			//leafvToAddArgs(leafs)
-			addArgs := leafvToAddArgs(leafs)
-			//generateConArgs(leafs)
-			//alladdargs = append(alladdargs, addArgs)
-			//alladdargs[m] = addArgs
-			//res, err := client.sendRpcRequest(client.GetNextQid(), "batchAdd", []interface{}{alladdargs[m]})
-
-			verify := true
-			if !verify {
-				_, err := client.sendRpcRequest(client.GetNextQid(), "batchAdd", addArgs)
+	cfg, err := config.ParseConfig(configPath)
+	if err != nil {
+		log.Error(err)
+		return
+	}
+	exitChan := make(chan int)
+	var txNum = cfg.TxNum * cfg.TxFactor
+	txNumPerRoutine := txNum / cfg.RoutineNum
+	tpsPerRoutine := int64(cfg.TPS / cfg.RoutineNum)
+	client := NewRpcClient(cfg.Rpc[1])
+	startTestTime := time.Now().UnixNano() / 1e6
+	for i := uint(0); i < cfg.RoutineNum; i++ {
+		//rand.Int()%len(cfg.Rpc)随机获取一个接口
+		//client := NewRpcClient(cfg.Rpc[rand.Int()%len(cfg.Rpc)])
+		go func(nonce uint32, routineIndex uint) {
+			startTime := time.Now().UnixNano() / 1e6 // ms
+			sentNum := int64(0)
+			var fileObj *os.File
+			if cfg.SaveTx {
+				fileObj, err = os.OpenFile(fmt.Sprintf("sendLog/invoke_%d.txt", routineIndex),
+					os.O_RDWR|os.O_CREATE|os.O_APPEND, 0644)
 				if err != nil {
-					fmt.Printf("Add Error: %s\n", err)
-					panic("xxxx")
+					fmt.Println("Failed to open the file", err.Error())
+					os.Exit(2)
 				}
-			} else {
-				fmt.Printf("%d\n", m)
-				verifyleaf(client, leafs, true)
 			}
-		}
-		fmt.Printf("prepare args done\n")
-		fmt.Printf("root %x, treeSize %d\n", tree.Root(), tree.TreeSize())
+			for j := uint(0); j < txNumPerRoutine; j++ {
+
+				var leafs []common.Uint256
+				leafs = GenerateLeafv(uint32(0)+cfg.BatchCount*nonce, cfg.BatchCount)
+				addArgs := leafvToAddArgs(leafs)
+				if cfg.SendTx {
+					_, err := client.sendRpcRequest(client.GetNextQid(), "batchAdd", addArgs)
+					//_, err := client.sendRpcRequest(client.GetNextQid(), "verify", addArgs)
+					//verifyleaf(client, leafs, true)
+
+					if err != nil {
+						log.Errorf("send tx failed, err: %s", err)
+						return
+					} else {
+						log.Infof("send tx ***%s**sentNum***%d****", addArgs, sentNum)
+
+					}
+
+					sentNum++
+					now := time.Now().UnixNano() / 1e6 // ms
+					diff := sentNum - (now-startTime)/1e3*tpsPerRoutine
+					if now > startTime && diff > 0 {
+						sleepTime := time.Duration(diff*1000/tpsPerRoutine) * time.Millisecond
+						time.Sleep(sleepTime)
+						log.Infof("sleep %d ms", sleepTime.Nanoseconds()/1e6)
+					}
+				}
+				nonce++
+				if cfg.SaveTx && !cfg.SendTx {
+					log.Infof("send tx ***%s***", addArgs)
+					fileObj.WriteString(addArgs.Hashes[0] + "****" + addArgs.PubKey + "*****" + addArgs.Sigature + "\n")
+					verifyleaf(client, leafs, true)
+				}
+			}
+			exitChan <- 1
+		}(uint32(txNumPerRoutine*i)+cfg.StartNonce, i)
 	}
+	for i := uint(0); i < cfg.RoutineNum; i++ {
+		<-exitChan
+	}
+	endTestTime := time.Now().UnixNano() / 1e6
+	log.Infof("send tps is %f", float64(txNum*1000)/float64(endTestTime-startTestTime))
 }
 
 func waitToExit() {
@@ -415,7 +445,7 @@ var DefSigner sdk.Signer
 
 func InitSigner() error {
 	DefSdk := sdk.NewOntologySdk()
-	wallet, err := DefSdk.OpenWallet("wallet.dat")
+	wallet, err := DefSdk.OpenWallet("client/wallet.dat")
 	if err != nil {
 		return fmt.Errorf("error in OpenWallet:%s\n", err)
 	}
