@@ -2,8 +2,8 @@ package main
 
 import (
 	"fmt"
-	"github.com/mockyz/AutoTestGo/common/config"
-	"github.com/mockyz/AutoTestGo/common/log"
+	"github.com/mockyz/AutoTestGo/ogq-test/config-ogq"
+	log "github.com/ontio/ontology/common/log"
 )
 
 import (
@@ -165,7 +165,7 @@ func verifyleaf(client *RpcClient, leafs []common.Uint256, v bool) {
 }
 
 func main() {
-	configPath := "client/config.json"
+	configPath := "ogq-test/config.json"
 	err := InitSigner()
 	if err != nil {
 		log.Error(err)
@@ -180,7 +180,7 @@ func main() {
 	var txNum = cfg.TxNum * cfg.TxFactor
 	txNumPerRoutine := txNum / cfg.RoutineNum
 	tpsPerRoutine := int64(cfg.TPS / cfg.RoutineNum)
-	client := NewRpcClient(cfg.Rpc[1])
+	client := NewRpcClient(cfg.Rpc[0])
 	startTestTime := time.Now().UnixNano() / 1e6
 	for i := uint(0); i < cfg.RoutineNum; i++ {
 		//rand.Int()%len(cfg.Rpc)随机获取一个接口
@@ -189,7 +189,7 @@ func main() {
 			startTime := time.Now().UnixNano() / 1e6 // ms
 			sentNum := int64(0)
 			var fileObj *os.File
-			if cfg.SaveTx {
+			if cfg.VerTx {
 				fileObj, err = os.OpenFile(fmt.Sprintf("sendLog/invoke_%d.txt", routineIndex),
 					os.O_RDWR|os.O_CREATE|os.O_APPEND, 0644)
 				if err != nil {
@@ -204,14 +204,10 @@ func main() {
 				addArgs := leafvToAddArgs(leafs)
 				if cfg.SendTx {
 					_, err := client.sendRpcRequest(client.GetNextQid(), "batchAdd", addArgs)
-					//_, err := client.sendRpcRequest(client.GetNextQid(), "verify", addArgs)
-					//verifyleaf(client, leafs, true)
-
 					if err != nil {
 						log.Errorf("send tx failed, err: %s", err)
-						return
 					} else {
-						log.Infof("send tx ***%s**sentNum***%d****", addArgs, sentNum)
+						log.Infof(" *****sentNum***%d****", sentNum)
 
 					}
 
@@ -225,8 +221,8 @@ func main() {
 					}
 				}
 				nonce++
-				if cfg.SaveTx && !cfg.SendTx {
-					log.Infof("send tx ***%s***", addArgs)
+				if cfg.VerTx && !cfg.SendTx {
+					//log.Infof("send tx ***%s***", addArgs[0])
 					fileObj.WriteString(addArgs.Hashes[0] + "****" + addArgs.PubKey + "*****" + addArgs.Sigature + "\n")
 					verifyleaf(client, leafs, true)
 				}
@@ -445,12 +441,12 @@ var DefSigner sdk.Signer
 
 func InitSigner() error {
 	DefSdk := sdk.NewOntologySdk()
-	wallet, err := DefSdk.OpenWallet("client/wallet.dat")
+	wallet, err := DefSdk.OpenWallet("ogq-test/wallet.dat")
 	if err != nil {
 		return fmt.Errorf("error in OpenWallet:%s\n", err)
 	}
+	DefSigner, err = wallet.GetAccountByIndex(1, []byte("123456"))
 
-	DefSigner, err = wallet.GetAccountByAddress("APHNPLz2u1JUXyD8rhryLaoQrW46J3P6y2", []byte("123456"))
 	if err != nil {
 		return fmt.Errorf("error in GetDefaultAccount:%s\n", err)
 	}

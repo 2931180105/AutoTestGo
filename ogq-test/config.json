@@ -1,8 +1,8 @@
 {
-  "Wallet": "wallet.dat",
+  "Wallet": "client/wallet.dat",
   "Password": "123456",
   "ContractCodePath": "myt.avm",
-  "Contract": "93c229f90e17790591ea904fdd26820444de2c5b",
+  "Contract": "a1586ac9d2d3d66cb93a4bb6a7c29291b8fbc1d9",
   "To": "AXm2W4AdZ456wsPw7Fn2xk3jnHDoDT1buy",
   "Amount": 1,
   "GasPrice": 500,
@@ -17,12 +17,12 @@
       "123456"
     ]
   ],
-  "TxNum": 90,
-  "TxFactor": 1,
+  "TxNum": 100,
+  "TxFactor": 3,
   "RoutineNum": 3,
-  "BatchCount": 10,
-  "TPS": 18,
-  "StartNonce": 150,
-  "SaveTx": true,
-  "SendTx": false
+  "BatchCount": 255,
+  "TPS": 5,
+  "StartNonce": 100,
+  "VerTx": true,
+  "SendTx": true
 }
