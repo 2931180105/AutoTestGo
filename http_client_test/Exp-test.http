@@ -1,0 +1,77 @@
+# For a quick start check out our HTTP Requests collection (Tools|HTTP Client|Open HTTP Requests Collection) or
+# paste cURL into the file and request will be converted to HTTP Request format.
+#
+# Following HTTP Request Live Templates are available:
+# * 'gtrp' and 'gtr' create a GET request with or without query parameters;
+# * 'ptr' and 'ptrp' create a POST request with a simple or parameter-like body;
+# * 'mptr' and 'fptr' create a POST request to submit a form with a text or file field (multipart/form-data);
+
+###
+#1.获取二维码
+GET http://52.220.128.213:8585/v2/users/login_qrcode
+Accept: */*
+Cache-Control: no-cache
+
+<> 2020-03-31T114750.200.json
+
+###
+#2.轮训检查登录信息、登陆成功返回token
+GET   http://52.220.128.213:8585/v2/users/login_user_info?code=1585730407677ZHwKN
+Accept: application/json
+
+###
+# 3.onto login\依赖2返回的result
+POST http://52.220.128.213:8585/v2/users/login
+Content-Type: application/json
+
+{
+  "signer": "did:ont:xxx",
+  "signedTx": "hexstring",
+  "extraData": {
+    "id": "10ba038e-48da-487b-96e8-8d3b99b6d18a"
+  }
+}
+
+###
+# 4.查询登记地址信息
+GET http://52.220.128.213:8585/v2/users/addresses?ont_id=did:ont:AWccmQ5JUXZxTLQFwRjsufAmmp3PDfsf8n
+Accept: application/json
+ONT_EXP_TOKEN: eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJsb2dpbklkIjoiZGlkOm9udDpBV2NjbVE1SlVYWnhUTFFGd1Jqc3VmQW1tcDNQRGZzZjhuIiwiZXhwIjoxNTg1NzMwNzM0fQ.HTmEmpJ__g1Yx153ZHNCjDuW9gHd_WuKpoHRKW0ZU6w
+
+###
+
+#5.新增或更新用户登记地址
+POST http://52.220.128.213:8585/v2/users/addresses?ont_id=did:ont:AWccmQ5JUXZxTLQFwRjsufAmmp3PDfsf8n
+Content-Type: application/json
+[
+  {
+    "address":"Adj9i5Z2hTeKH7YwJsfMzLuwiD671mvJ6X",
+    "note":"地址01",
+    "strategy":1,
+    "include_oep_token":true
+  }
+]
+
+###
+#6.删除用户登记地址
+POST http://52.220.128.213:8585/v2/users/addresses?ont_id={ontId}
+Content-Type: application/json
+{
+	"address":"address"
+}
+
+
+###
+#7.更新用户信息(无即添加)
+POST http://52.220.128.213:8585/v2/users/?ont_id=did%3Aont%3AAWccmQ5JUXZxTLQFwRjsufAmmp3PDfsf8n
+Content-Type: application/json
+ONT_EXP_TOKEN: eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJsb2dpbklkIjoiZGlkOm9udDpBV2NjbVE1SlVYWnhUTFFGd1Jqc3VmQW1tcDNQRGZzZjhuIiwiZXhwIjoxNTg1NzMwNzM0fQ.HTmEmpJ__g1Yx153ZHNCjDuW9gHd_WuKpoHRKW0ZU6w
+{
+  "create_time": 0,
+  "email": "yangzhu@onchain.com",
+  "last_login_time": 0,
+  "ont_id": "did:ont:AWccmQ5JUXZxTLQFwRjsufAmmp3PDfsf8n",
+  "user_name": "AWccmQ5JUXZxTLQFwRjsufAmmp3PDfsf8n"
+}
+
+###
