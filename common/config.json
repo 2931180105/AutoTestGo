@@ -1,0 +1,53 @@
+{
+  "Wallet": "wallet.dat",
+  "Password": "123456",
+  "ContractCodePath": "myt.avm",
+  "Contract": "93c229f90e17790591ea904fdd26820444de2c5b",
+  "To": "AXm2W4AdZ456wsPw7Fn2xk3jnHDoDT1buy",
+  "Amount": 1,
+  "GasPrice": 500,
+  "GasLimit": 20000,
+  "Rpc": [
+    "http://polaris1.ont.io:20336",
+    "http://polaris2.ont.io:20336",
+    "http://polaris3.ont.io:20336",
+    "http://polaris4.ont.io:20336"
+  ],
+  "ConsensusPeerPath": [
+    [
+      "peer1.dat",
+      "123456"
+    ],
+    [
+      "peer2.dat",
+      "123456"
+    ],
+    [
+      "peer3.dat",
+      "123456"
+    ],
+    [
+      "peer4.dat",
+      "123456"
+    ],
+    [
+      "peer5.dat",
+      "123456"
+    ],
+    [
+      "peer6.dat",
+      "123456"
+    ],
+    [
+      "peer7.dat",
+      "123456"
+    ]
+  ],
+  "TxNum": 100,
+  "TxFactor": 1,
+  "RoutineNum": 1,
+  "TPS": 1,
+  "StartNonce": 0,
+  "SaveTx": true,
+  "SendTx": true
+}
