@@ -9,11 +9,6 @@ import (
 	"time"
 )
 
-//Lock:
-//- fromAssetHash：0000000000000000000000000000000000000001
-//toChainId：2 ETH
-//- toAddress：ETH地址去掉 F41089700D6d950C8c379772f8a12b12955dB886
-//- amount： 10
 type LockParam struct {
 	FromAssetHash string
 	ToChainId     int
@@ -21,6 +16,7 @@ type LockParam struct {
 	Amount        int
 }
 
+//this is example
 func main() {
 	configPath := "client/config.json"
 	cfg, err := config.ParseConfig(configPath)

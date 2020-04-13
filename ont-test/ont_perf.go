@@ -33,7 +33,12 @@ func main() {
 		log.Errorf("get account err: %s", err)
 		return
 	}
+	rpcClient := client.NewRpcClient()
+	rpcClient.SetAddress(cfg.Rpc[0])
+	sdk.SetDefaultClient(rpcClient)
 	testTransfer(cfg, account)
+
+	balanceOf(cfg, sdk, account.Address)
 
 }
 func GenerateLockParam(cfg *config.Config, account *goSdk.Account) *types.MutableTransaction {
@@ -52,6 +57,25 @@ func GenerateLockParam(cfg *config.Config, account *goSdk.Account) *types.Mutabl
 		os.Exit(1)
 	}
 	return mutTx
+}
+
+func balanceOf(cfg *config.Config, sdk *goSdk.OntologySdk, address common.Address) {
+	contractAddr, err := utils.AddressFromHexString(cfg.Contract)
+	if err != nil {
+		log.Errorf("balanceOf: decode contract addr failed, err: %s", err)
+		return
+	}
+	preResult, err := sdk.NeoVM.PreExecInvokeNeoVMContract(contractAddr, []interface{}{"balanceOf", []interface{}{address}})
+	if err != nil {
+		log.Errorf("balanceOf: pre-execute failed, err: %s", err)
+		return
+	}
+	balance, err := preResult.Result.ToInteger()
+	if err != nil {
+		log.Errorf("balanceOf: parse result %v failed, err: %s", preResult, err)
+		return
+	}
+	log.Infof("balanceOf: addr %s is %d", address.ToBase58(), balance)
 }
 
 func GenerateOngParam(cfg *config.Config, account *goSdk.Account) *types.MutableTransaction {

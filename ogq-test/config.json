@@ -9,6 +9,7 @@
   "GasLimit": 20000,
   "Rpc": [
     "https://attestation.ont.io",
+    "https://test.attestation.ont.io",
     "http://172.168.3.59:32339"
   ],
   "ConsensusPeerPath": [
@@ -17,12 +18,12 @@
       "123456"
     ]
   ],
-  "TxNum": 100,
-  "TxFactor": 3,
-  "RoutineNum": 3,
-  "BatchCount": 255,
-  "TPS": 5,
-  "StartNonce": 100,
+  "TxNum": 1,
+  "TxFactor": 1,
+  "RoutineNum": 1,
+  "BatchCount": 1,
+  "TPS": 1,
+  "StartNonce": 1,
   "VerTx": true,
-  "SendTx": true
+  "SendTx": false
 }

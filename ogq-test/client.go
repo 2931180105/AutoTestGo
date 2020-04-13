@@ -180,7 +180,7 @@ func main() {
 	var txNum = cfg.TxNum * cfg.TxFactor
 	txNumPerRoutine := txNum / cfg.RoutineNum
 	tpsPerRoutine := int64(cfg.TPS / cfg.RoutineNum)
-	client := NewRpcClient(cfg.Rpc[0])
+	client := NewRpcClient(cfg.Rpc[1])
 	startTestTime := time.Now().UnixNano() / 1e6
 	for i := uint(0); i < cfg.RoutineNum; i++ {
 		//rand.Int()%len(cfg.Rpc)随机获取一个接口
@@ -190,7 +190,7 @@ func main() {
 			sentNum := int64(0)
 			var fileObj *os.File
 			if cfg.VerTx {
-				fileObj, err = os.OpenFile(fmt.Sprintf("sendLog/invoke_%d.txt", routineIndex),
+				fileObj, err = os.OpenFile(fmt.Sprintf("invoke_%d.txt", routineIndex),
 					os.O_RDWR|os.O_CREATE|os.O_APPEND, 0644)
 				if err != nil {
 					fmt.Println("Failed to open the file", err.Error())

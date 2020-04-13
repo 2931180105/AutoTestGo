@@ -4,7 +4,7 @@
   "ContractCodePath": "myt.avm",
   "Contract": "50db55b5b8bdff4219a94c9c3bf22cf699ebdced",
   "ToAddress": "826Fff572D2Ca512D4E393a63e46Ca28Fa17994f",
-  "FromAssetHash": "0000000000000000000000000000000000000002",
+  "FromAssetHash": "50db55b5b8bdff4219a94c9c3bf22cf699ebdced",
   "ToChainId": 2,
   "To": "APHNPLz2u1JUXyD8rhryLaoQrW46J3P6y2",
   "Amount": 1,
@@ -20,11 +20,11 @@
       "123456"
     ]
   ],
-  "TxNum": 10,
-  "TxFactor": 3,
-  "RoutineNum": 3,
-  "TPS": 10,
-  "StartNonce": 1200,
+  "TxNum": 1,
+  "TxFactor": 1,
+  "RoutineNum": 1,
+  "TPS": 1,
+  "StartNonce": 1,
   "SaveTx": false,
   "SendTx": true
 }
