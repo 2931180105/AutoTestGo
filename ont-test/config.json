@@ -4,15 +4,14 @@
   "ContractCodePath": "myt.avm",
   "Contract": "50db55b5b8bdff4219a94c9c3bf22cf699ebdced",
   "ToAddress": "826Fff572D2Ca512D4E393a63e46Ca28Fa17994f",
-  "FromAssetHash": "50db55b5b8bdff4219a94c9c3bf22cf699ebdced",
+  "FromAssetHash": "0000000000000000000000000000000000000002",
   "ToChainId": 2,
   "To": "APHNPLz2u1JUXyD8rhryLaoQrW46J3P6y2",
   "Amount": 1,
   "GasPrice": 500,
   "GasLimit": 20000,
   "Rpc": [
-    "http://138.91.6.125:20336",
-    "http://172.168.3.151:20336"
+    "http://138.91.6.125:20336"
   ],
   "ConsensusPeerPath": [
     [
@@ -21,10 +20,10 @@
     ]
   ],
   "TxNum": 1,
-  "TxFactor": 1,
+  "TxFactor": 3,
   "RoutineNum": 1,
   "TPS": 1,
-  "StartNonce": 1,
-  "SaveTx": false,
+  "StartNonce": 23,
+  "SaveTx": true,
   "SendTx": true
 }

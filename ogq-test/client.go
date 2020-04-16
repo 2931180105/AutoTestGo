@@ -98,8 +98,14 @@ func (this *RpcClient) sendRpcRequest(qid, method string, params RpcParam) (inte
 	if err != nil {
 		return nil, fmt.Errorf("JsonRpcRequest json.Marsha error:%s", err)
 	}
-	//fmt.Printf("request: \n%s\n", data)
-	resp, err := this.httpClient.Post(this.addr, "application/json", bytes.NewReader(data))
+	fmt.Printf("request: \n%s\n", data)
+	headers := map[string]string{
+		"tenantID":     "did:ont:AJ2R9JuVqauef72uejoS49M52skNkmdx26",
+		"addonID":      "14",
+		"Content-Type": "application/json",
+	}
+	resp, err := this.httpClient.Post2(this.addr, headers, bytes.NewReader(data))
+	//resp, err := this.httpClient.Post(this.addr, "application/json", bytes.NewReader(data))
 	if err != nil {
 		return nil, fmt.Errorf("http post request:%s error:%s", data, err)
 	}
@@ -108,6 +114,10 @@ func (this *RpcClient) sendRpcRequest(qid, method string, params RpcParam) (inte
 	body, err := ioutil.ReadAll(resp.Body)
 	if err != nil {
 		return nil, fmt.Errorf("read rpc response body error:%s", err)
+	}
+
+	if resp.StatusCode != 200 {
+		return nil, fmt.Errorf("read rpc response Status error:%s", resp.Status)
 	}
 
 	if method == "batchAdd" {
@@ -180,7 +190,7 @@ func main() {
 	var txNum = cfg.TxNum * cfg.TxFactor
 	txNumPerRoutine := txNum / cfg.RoutineNum
 	tpsPerRoutine := int64(cfg.TPS / cfg.RoutineNum)
-	client := NewRpcClient(cfg.Rpc[1])
+	client := NewRpcClient(cfg.Rpc[2])
 	startTestTime := time.Now().UnixNano() / 1e6
 	for i := uint(0); i < cfg.RoutineNum; i++ {
 		//rand.Int()%len(cfg.Rpc)随机获取一个接口
@@ -441,7 +451,7 @@ var DefSigner sdk.Signer
 
 func InitSigner() error {
 	DefSdk := sdk.NewOntologySdk()
-	wallet, err := DefSdk.OpenWallet("ogq-test/wallet.dat")
+	wallet, err := DefSdk.OpenWallet("ogq-test/EIO_ADDRESS.dat")
 	if err != nil {
 		return fmt.Errorf("error in OpenWallet:%s\n", err)
 	}

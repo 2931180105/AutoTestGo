@@ -38,7 +38,7 @@ func main() {
 	sdk.SetDefaultClient(rpcClient)
 	testTransfer(cfg, account)
 
-	balanceOf(cfg, sdk, account.Address)
+	//balanceOf(cfg, sdk, account.Address)
 
 }
 func GenerateLockParam(cfg *config.Config, account *goSdk.Account) *types.MutableTransaction {
@@ -131,9 +131,9 @@ func testTransfer(cfg *config.Config, account *goSdk.Account) {
 					if err != nil {
 						log.Errorf("send tx failed, err: %s********", err)
 					} else {
-						log.Infof("send tx %s", hash.ToHexString())
+						sentNum++
+						log.Infof("send tx %s****sentnum:***%d", hash.ToHexString(), sentNum)
 					}
-					sentNum++
 					now := time.Now().UnixNano() / 1e6 // ms
 					diff := sentNum - (now-startTime)/1e3*tpsPerRoutine
 					if now > startTime && diff > 0 {
