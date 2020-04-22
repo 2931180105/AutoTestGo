@@ -1,8 +1,11 @@
 {
-  "Wallet": "ont-test/wallet.dat",
-  "Password": "123456",
+  "Wallet": "ont-test/crosschain_testnet.dat",
+  "Password": "password",
   "ContractCodePath": "myt.avm",
-  "Contract": "50db55b5b8bdff4219a94c9c3bf22cf699ebdced",
+  "Contract": "235d7d9551b67887388bfb15b70363f6ce428541",
+  "EthX": "1f161e3aa0195bb9ac61883a237e6c29fdd0f5de",
+  "BtcX": "235d7d9551b67887388bfb15b70363f6ce428541",
+  "LockProxy": "50db55b5b8bdff4219a94c9c3bf22cf699ebdced",
   "ToAddress": "826Fff572D2Ca512D4E393a63e46Ca28Fa17994f",
   "FromAssetHash": "0000000000000000000000000000000000000002",
   "ToChainId": 2,
@@ -20,10 +23,10 @@
     ]
   ],
   "TxNum": 1,
-  "TxFactor": 3,
+  "TxFactor": 1,
   "RoutineNum": 1,
   "TPS": 1,
   "StartNonce": 23,
-  "SaveTx": true,
+  "SaveTx": false,
   "SendTx": true
 }

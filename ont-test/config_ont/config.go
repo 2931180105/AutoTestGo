@@ -16,6 +16,9 @@ const (
 
 type Config struct {
 	Wallet            string
+	LockProxy         string
+	EthX              string
+	BtcX              string
 	Password          string
 	ConsensusPeerPath [][2]string
 	ContractCodePath  string

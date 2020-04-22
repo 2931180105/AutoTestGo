@@ -100,7 +100,7 @@ func (this *RpcClient) sendRpcRequest(qid, method string, params RpcParam) (inte
 	}
 	fmt.Printf("request: \n%s\n", data)
 	headers := map[string]string{
-		"tenantID":     "did:ont:AJ2R9JuVqauef72uejoS49M52skNkmdx26",
+		"tenantID":     "did:ont:Ae1K39aU9i1fxQmCpbdgrwQw2JBAt1mEa2",
 		"addonID":      "14",
 		"Content-Type": "application/json",
 	}
@@ -190,7 +190,7 @@ func main() {
 	var txNum = cfg.TxNum * cfg.TxFactor
 	txNumPerRoutine := txNum / cfg.RoutineNum
 	tpsPerRoutine := int64(cfg.TPS / cfg.RoutineNum)
-	client := NewRpcClient(cfg.Rpc[2])
+	client := NewRpcClient(cfg.Rpc[0])
 	startTestTime := time.Now().UnixNano() / 1e6
 	for i := uint(0); i < cfg.RoutineNum; i++ {
 		//rand.Int()%len(cfg.Rpc)随机获取一个接口
@@ -217,11 +217,9 @@ func main() {
 					if err != nil {
 						log.Errorf("send tx failed, err: %s", err)
 					} else {
+						sentNum++
 						log.Infof(" *****sentNum***%d****", sentNum)
-
 					}
-
-					sentNum++
 					now := time.Now().UnixNano() / 1e6 // ms
 					diff := sentNum - (now-startTime)/1e3*tpsPerRoutine
 					if now > startTime && diff > 0 {
@@ -232,7 +230,6 @@ func main() {
 				}
 				nonce++
 				if cfg.VerTx && !cfg.SendTx {
-					//log.Infof("send tx ***%s***", addArgs[0])
 					fileObj.WriteString(addArgs.Hashes[0] + "****" + addArgs.PubKey + "*****" + addArgs.Sigature + "\n")
 					verifyleaf(client, leafs, true)
 				}
@@ -451,7 +448,7 @@ var DefSigner sdk.Signer
 
 func InitSigner() error {
 	DefSdk := sdk.NewOntologySdk()
-	wallet, err := DefSdk.OpenWallet("ogq-test/EIO_ADDRESS.dat")
+	wallet, err := DefSdk.OpenWallet("ogq-test/wallet.dat")
 	if err != nil {
 		return fmt.Errorf("error in OpenWallet:%s\n", err)
 	}
