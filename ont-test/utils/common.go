@@ -67,12 +67,24 @@ func GenerateLayer2DepositParam(cfg *config.Config, account *goSdk.Account) *typ
 	if err != nil {
 		log.Errorf("parse contract addr failed, err: %s", err)
 	}
-	tokenAddress, _ := hex.DecodeString("0000000000000000000000000000000000000002")
-	mutTx, err = genTxSdk.NeoVM.NewNeoVMInvokeTransaction(500, 40000, contractAddress,
+	tokenAddress, _ := hex.DecodeString(cfg.FromAssetHash)
+	mutTx, err = genTxSdk.NeoVM.NewNeoVMInvokeTransaction(cfg.GasPrice, cfg.GasLimit, contractAddress,
 		[]interface{}{"deposit", []interface{}{account.Address, cfg.Amount, tokenAddress}})
+	if err != nil {
+		log.Errorf("parse contract addr failed, err: %s", err)
+	}
 	return mutTx
 }
 
+func GenerateLayer2WithdrawParam(cfg *config.Config, account *goSdk.Account) *types.MutableTransaction {
+	genTxSdk := goSdk.NewOntologySdk()
+	var mutTx *types.MutableTransaction
+	mutTx, err := genTxSdk.Native.Ong.NewTransferTransaction(cfg.GasPrice, cfg.GasLimit, account.Address, common.ADDRESS_EMPTY, cfg.Amount)
+	if err != nil {
+		log.Errorf("parse contract addr failed, err: %s", err)
+	}
+	return mutTx
+}
 func signTx(sdk *goSdk.OntologySdk, tx *types.MutableTransaction, nonce uint32, signer goSdk.Signer) error {
 	tx.Nonce = nonce
 	tx.Sigs = nil
