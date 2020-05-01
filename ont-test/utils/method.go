@@ -42,11 +42,11 @@ func TestTransfer(cfg *config.Config, account *goSdk.Account) {
 	tpsPerRoutine := int64(cfg.TPS / cfg.RoutineNum)
 	startTestTime := time.Now().UnixNano() / 1e6
 	for i := uint(0); i < cfg.RoutineNum; i++ {
-		mutTx := GenerateLayer2DepositParam(cfg, account)
+		mutTx := GenerateLayer2WithdrawParam(cfg, account)
 		go func(nonce uint32, routineIndex uint) {
 			sendTxSdk := goSdk.NewOntologySdk()
 			rpcClient := client.NewRpcClient()
-			rpcClient.SetAddress(cfg.Rpc[int(routineIndex)%len(cfg.Rpc)+1])
+			rpcClient.SetAddress(cfg.Rpc[0])
 			sendTxSdk.SetDefaultClient(rpcClient)
 			startTime := time.Now().UnixNano() / 1e6 // ms
 			sentNum := int64(0)

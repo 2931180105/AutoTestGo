@@ -12,7 +12,7 @@ var sdk = goSdk.NewOntologySdk()
 
 func main() {
 	log.InitLog(log.InfoLog, log.PATH, log.Stdout)
-	configPath := "config.json"
+	configPath := "ont-test/config.json"
 	cfg, err := config.ParseConfig(configPath)
 	if err != nil {
 		log.Error(err)
