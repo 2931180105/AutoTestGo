@@ -1,6 +1,7 @@
 package utils
 
 import (
+	"encoding/hex"
 	"fmt"
 	config "github.com/mockyz/AutoTestGo/ont-test/config_ont"
 	goSdk "github.com/ontio/ontology-go-sdk"
@@ -58,6 +59,20 @@ func GenerateBindAsstHashTx(cfg *config.Config, fromAsstHash string, toChainId u
 	}
 	return mutTx
 }
+
+func GenerateLayer2DepositParam(cfg *config.Config, account *goSdk.Account) *types.MutableTransaction {
+	genTxSdk := goSdk.NewOntologySdk()
+	var mutTx *types.MutableTransaction
+	contractAddress, err := utils.AddressFromHexString(cfg.Contract)
+	if err != nil {
+		log.Errorf("parse contract addr failed, err: %s", err)
+	}
+	tokenAddress, _ := hex.DecodeString("0000000000000000000000000000000000000002")
+	mutTx, err = genTxSdk.NeoVM.NewNeoVMInvokeTransaction(500, 40000, contractAddress,
+		[]interface{}{"deposit", []interface{}{account.Address, cfg.Amount, tokenAddress}})
+	return mutTx
+}
+
 func signTx(sdk *goSdk.OntologySdk, tx *types.MutableTransaction, nonce uint32, signer goSdk.Signer) error {
 	tx.Nonce = nonce
 	tx.Sigs = nil

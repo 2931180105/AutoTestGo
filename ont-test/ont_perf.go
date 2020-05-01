@@ -29,11 +29,11 @@ func main() {
 	rpcClient := client.NewRpcClient()
 	rpcClient.SetAddress(cfg.Rpc[0])
 	sdk.SetDefaultClient(rpcClient)
-	OntTools.BindAssetHash(cfg, account)
-	OntTools.GetCrossLimt(cfg, account)
-	OntTools.GetAseetHash(cfg, account)
+	//OntTools.BindAssetHash(cfg, account)
+	//OntTools.GetCrossLimt(cfg, account)
+	//OntTools.GetAseetHash(cfg, account)
 
-	//OntTools.TestTransfer(cfg, account)
+	OntTools.TestTransfer(cfg, account)
 	//address,_ :=common.AddressFromBase58("AUeKhaRr9xwy114zwsVarYvVG13C2T3C9o")
 	//OntTools.BalanceOf(sdk,address,cfg.EthX)
 }
