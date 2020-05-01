@@ -74,6 +74,7 @@ func TestTransfer(cfg *config.Config, account *goSdk.Account) {
 					if err != nil {
 						log.Errorf("send tx failed, err: %s********", err)
 					} else {
+						//time.Sleep(300000*1e6)
 						sentNum++
 						log.Infof("send tx %s****sentnum:***%d", hash.ToHexString(), sentNum)
 					}
