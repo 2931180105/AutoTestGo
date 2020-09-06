@@ -1,0 +1,30 @@
+{
+  "Wallet": "wing-test/wallet.dat",
+  "Password": "123456",
+  "ContractCodePath": "myt.avm",
+  "Oracle": "024e222c791d83d82bbb55bfb8f26b6aa6356a85",
+  "GovToken": "3d90c3fa84f7a49b713d04f344004a74cd0179ba",
+  "ZeroPool": "235d7d9551b67887388bfb15b70363f6ce428541",
+  "WingGov": "2c1fc37f02f21568a2bda77ae2d724bbe0a8400a",
+  "WingProfit": "dd4523749dd3765b0f53568389204015f52f656a",
+  "FromAssetHash": "0000000000000000000000000000000000000001",
+  "ToChainId": 2,
+  "To": "APHNPLz2u1JUXyD8rhryLaoQrW46J3P6y2",
+  "Amount": 38,
+  "GasPrice": 0,
+  "GasLimit": 20000,
+  "Rpc": [
+    "http://172.168.3.151:20336",
+    "http://172.168.3.152:20336"
+  ],
+  "Wallets": [
+    "wallet01.dat"
+  ],
+  "TxNum": 10,
+  "TxFactor": 1000000,
+  "RoutineNum": 2,
+  "TPS": 10,
+  "StartNonce": 1,
+  "SaveTx": false,
+  "SendTx": true
+}
