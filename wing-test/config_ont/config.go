@@ -24,7 +24,7 @@ type Config struct {
 	ContractCodePath  string
 	Oracle            string
 	WingProfit        string // HexString
-	FromAssetHash     string // HexString
+	GlobalParam       string // HexString
 	ToChainId         uint64
 	Amount            uint64
 	Rpc               []string

@@ -4,13 +4,13 @@
   "ContractCodePath": "myt.avm",
   "Oracle": "024e222c791d83d82bbb55bfb8f26b6aa6356a85",
   "GovToken": "3d90c3fa84f7a49b713d04f344004a74cd0179ba",
-  "ZeroPool": "235d7d9551b67887388bfb15b70363f6ce428541",
-  "WingGov": "2c1fc37f02f21568a2bda77ae2d724bbe0a8400a",
-  "WingProfit": "dd4523749dd3765b0f53568389204015f52f656a",
-  "FromAssetHash": "0000000000000000000000000000000000000001",
+  "ZeroPool": "340db981f0c3585ac0d273037e0236d962704488",
+  "WingGov": "cd455c4ed4a52c8e1956e2bae4a1d6869f058e60",
+  "WingProfit": "ed2e277c489f6b03bb4b717b663f24b374c4e721",
+  "GlobalParam": "a7e169ef9ab7930d573850c1152780d8d7530458",
   "ToChainId": 2,
   "To": "APHNPLz2u1JUXyD8rhryLaoQrW46J3P6y2",
-  "Amount": 38,
+  "Amount": 380,
   "GasPrice": 0,
   "GasLimit": 20000,
   "Rpc": [
@@ -24,7 +24,7 @@
   "TxFactor": 1000000,
   "RoutineNum": 2,
   "TPS": 10,
-  "StartNonce": 1,
+  "StartNonce": 0,
   "SaveTx": false,
   "SendTx": true
 }

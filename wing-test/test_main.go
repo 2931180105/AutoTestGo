@@ -29,11 +29,14 @@ func main() {
 	rpcClient := client.NewRpcClient()
 	rpcClient.SetAddress(cfg.Rpc[0])
 	sdk.SetDefaultClient(rpcClient)
-	tx := Utils.Gov_init(cfg, account, sdk)
+	//tx := Utils.GovTokenInit(cfg, account, sdk)
+	tx := Utils.GovTokenSetGov(cfg, account, sdk)
+
 	hash, err := sdk.SendTransaction(tx)
 	if err != nil {
 		log.Errorf("send tx failed, err: %s********", err)
 	} else {
 		log.Infof("send tx %s****sentnum:***%d", hash.ToHexString(), cfg.StartNonce)
 	}
+	Utils.PrintSmartEventByHash_Ont(sdk, hash.ToHexString())
 }
