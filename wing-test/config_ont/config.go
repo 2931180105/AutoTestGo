@@ -15,29 +15,30 @@ const (
 )
 
 type Config struct {
-	Wallet            string
-	WingGov           string
-	GovToken          string
-	ZeroPool          string
-	Password          string
-	ConsensusPeerPath [][2]string
-	ContractCodePath  string
-	Oracle            string
-	WingProfit        string // HexString
-	GlobalParam       string // HexString
-	ToChainId         uint64
-	Amount            uint64
-	Rpc               []string
-	TxNum             uint // whole tx num is *TxFactor
-	TxFactor          uint
-	RoutineNum        uint // whole tx save to RoutineNum files, and one go-routine per file
-	TPS               uint
-	StartNonce        uint32
-	GasPrice          uint64
-	GasLimit          uint64
-	SaveTx            bool
-	SendTx            bool
-	To                string
+	Wallet           string
+	WingGov          string
+	GovToken         string
+	ZeroPool         string
+	Password         string
+	SDRate           int // static and dyamic profit
+	ContractCodePath string
+	Oracle           string
+	WingProfit       string // HexString
+	GlobalParam      string // HexString
+	AuthAddr         string
+	Amount           uint64
+	Weight           int
+	Rpc              []string
+	TxNum            uint // whole tx num is *TxFactor
+	TxFactor         uint
+	RoutineNum       uint // whole tx save to RoutineNum files, and one go-routine per file
+	TPS              uint
+	StartNonce       uint32
+	GasPrice         uint64
+	GasLimit         uint64
+	SaveTx           bool
+	SendTx           bool
+	Owner            string
 }
 
 func ParseConfig(path string) (*Config, error) {

@@ -30,7 +30,7 @@ func main() {
 	rpcClient := client.NewRpcClient()
 	rpcClient.SetAddress(cfg.Rpc[0])
 	sdk.SetDefaultClient(rpcClient)
-	tx := Utils.GetGovTokenAddres(cfg, account, sdk)
+	tx := Utils.UpdateProfitContract(cfg, account, sdk)
 
 	hash, err := sdk.SendTransaction(tx)
 	if err != nil {
