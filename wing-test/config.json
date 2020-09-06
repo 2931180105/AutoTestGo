@@ -12,7 +12,7 @@
   "To": "APHNPLz2u1JUXyD8rhryLaoQrW46J3P6y2",
   "Amount": 380,
   "GasPrice": 0,
-  "GasLimit": 20000,
+  "GasLimit": 32000000,
   "Rpc": [
     "http://172.168.3.151:20336",
     "http://172.168.3.152:20336"

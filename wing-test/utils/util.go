@@ -39,3 +39,15 @@ func PrintSmartEventByHash_Ont(sdk *ontology_go_sdk.OntologySdk, txHash string) 
 	}
 	return evts.Notify
 }
+
+func signTx(sdk *ontology_go_sdk.OntologySdk, tx *types.MutableTransaction, nonce uint32, signer ontology_go_sdk.Signer) error {
+	if nonce != 0 {
+		tx.Nonce = nonce
+	}
+	tx.Sigs = nil
+	err := sdk.SignToTransaction(tx, signer)
+	if err != nil {
+		return fmt.Errorf("sign tx failed, err: %s", err)
+	}
+	return nil
+}

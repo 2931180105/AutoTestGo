@@ -6,6 +6,7 @@ import (
 	goSdk "github.com/ontio/ontology-go-sdk"
 	"github.com/ontio/ontology-go-sdk/client"
 	"github.com/ontio/ontology/common/log"
+	"time"
 )
 
 var sdk = goSdk.NewOntologySdk()
@@ -29,8 +30,7 @@ func main() {
 	rpcClient := client.NewRpcClient()
 	rpcClient.SetAddress(cfg.Rpc[0])
 	sdk.SetDefaultClient(rpcClient)
-	//tx := Utils.GovTokenInit(cfg, account, sdk)
-	tx := Utils.GovTokenSetGov(cfg, account, sdk)
+	tx := Utils.GetGovTokenAddres(cfg, account, sdk)
 
 	hash, err := sdk.SendTransaction(tx)
 	if err != nil {
@@ -38,5 +38,6 @@ func main() {
 	} else {
 		log.Infof("send tx %s****sentnum:***%d", hash.ToHexString(), cfg.StartNonce)
 	}
+	time.Sleep(time.Second * 3)
 	Utils.PrintSmartEventByHash_Ont(sdk, hash.ToHexString())
 }
