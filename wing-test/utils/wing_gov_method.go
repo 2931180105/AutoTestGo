@@ -4,6 +4,7 @@ import (
 	"fmt"
 	config "github.com/mockyz/AutoTestGo/wing-test/config_ont"
 	goSdk "github.com/ontio/ontology-go-sdk"
+	"github.com/ontio/ontology-go-sdk/common"
 	"github.com/ontio/ontology-go-sdk/utils"
 	"github.com/ontio/ontology/common/log"
 	"github.com/ontio/ontology/core/types"
@@ -168,19 +169,13 @@ func UpdatePoolAddress(cfg *config.Config, account *goSdk.Account, genSdk *goSdk
 }
 
 //query_pool_count
-func QueryPoolCount(cfg *config.Config, account *goSdk.Account, genSdk *goSdk.OntologySdk) *types.MutableTransaction {
+func QueryPoolCount(cfg *config.Config, account *goSdk.Account, genSdk *goSdk.OntologySdk) *common.PreExecResult {
 	WingGovAddr, _ := utils.AddressFromHexString(cfg.WingGov)
 	params := []interface{}{}
 	resut, _ := genSdk.WasmVM.PreExecInvokeWasmVMContract(WingGovAddr, "query_pool_count", params)
 	log.Infof("get_product_pools: %s", resut.Result)
-	mutTx, err := genSdk.WasmVM.NewInvokeWasmVmTransaction(cfg.GasPrice, cfg.GasLimit, WingGovAddr, "query_pool_count", params)
-	if err != nil {
-		fmt.Println("construct tx err", err)
-	}
-	if err := signTx(genSdk, mutTx, cfg.StartNonce, account); err != nil {
-		log.Error(err)
-	}
-	return mutTx
+
+	return resut
 }
 
 //update_profit_contract
@@ -190,6 +185,107 @@ func UpdateProfitContract(cfg *config.Config, account *goSdk.Account, genSdk *go
 
 	params := []interface{}{WingProfitAddr}
 	mutTx, err := genSdk.WasmVM.NewInvokeWasmVmTransaction(cfg.GasPrice, cfg.GasLimit, WingGovAddr, "update_profit_contract", params)
+	if err != nil {
+		fmt.Println("construct tx err", err)
+	}
+	if err := signTx(genSdk, mutTx, cfg.StartNonce, account); err != nil {
+		log.Error(err)
+	}
+	return mutTx
+}
+
+//query_pool_count
+func GetProfitContract(cfg *config.Config, account *goSdk.Account, genSdk *goSdk.OntologySdk) *common.PreExecResult {
+	WingGovAddr, _ := utils.AddressFromHexString(cfg.WingGov)
+	params := []interface{}{}
+	resut, _ := genSdk.WasmVM.PreExecInvokeWasmVMContract(WingGovAddr, "get_profit_contract", params)
+	log.Infof("get_product_pools: %s", resut.Result)
+
+	return resut
+}
+
+//unbound_token ToDo: invoke failed
+func UnboundToken(cfg *config.Config, account *goSdk.Account, genSdk *goSdk.OntologySdk) *types.MutableTransaction {
+	WingGovAddr, _ := utils.AddressFromHexString(cfg.WingGov)
+	params := []interface{}{}
+	mutTx, err := genSdk.WasmVM.NewInvokeWasmVmTransaction(cfg.GasPrice, cfg.GasLimit, WingGovAddr, "unbound_token", params)
+	if err != nil {
+		fmt.Println("construct tx err", err)
+	}
+	if err := signTx(genSdk, mutTx, cfg.StartNonce, account); err != nil {
+		log.Error(err)
+	}
+	return mutTx
+}
+
+//get_unbound_pool
+func Get_unbound_pool(cfg *config.Config, account *goSdk.Account, genSdk *goSdk.OntologySdk) *common.PreExecResult {
+	WingGovAddr, _ := utils.AddressFromHexString(cfg.WingGov)
+	params := []interface{}{}
+	resut, _ := genSdk.WasmVM.PreExecInvokeWasmVMContract(WingGovAddr, "get_unbound_pool", params)
+	log.Infof("Get_unbound_pool: %s", resut.Result)
+
+	return resut
+}
+
+//unbound_to_governance ToDo: invoke failed
+func Unbound_to_governance(cfg *config.Config, account *goSdk.Account, genSdk *goSdk.OntologySdk) *types.MutableTransaction {
+	WingGovAddr, _ := utils.AddressFromHexString(cfg.WingGov)
+	params := []interface{}{}
+	mutTx, err := genSdk.WasmVM.NewInvokeWasmVmTransaction(cfg.GasPrice, cfg.GasLimit, WingGovAddr, "unbound_to_governance", params)
+	if err != nil {
+		fmt.Println("construct tx err", err)
+	}
+	if err := signTx(genSdk, mutTx, cfg.StartNonce, account); err != nil {
+		log.Error(err)
+	}
+	return mutTx
+}
+
+//unbound_to_pool ToDo: invoke failed
+func Unbound_to_pool(cfg *config.Config, account *goSdk.Account, genSdk *goSdk.OntologySdk) *types.MutableTransaction {
+	WingGovAddr, _ := utils.AddressFromHexString(cfg.WingGov)
+	params := []interface{}{}
+	mutTx, err := genSdk.WasmVM.NewInvokeWasmVmTransaction(cfg.GasPrice, cfg.GasLimit, WingGovAddr, "unbound_to_pool", params)
+	if err != nil {
+		fmt.Println("construct tx err", err)
+	}
+	if err := signTx(genSdk, mutTx, cfg.StartNonce, account); err != nil {
+		log.Error(err)
+	}
+	return mutTx
+}
+
+//query_unbound_to_pool
+func Query_unbound_to_pool(cfg *config.Config, account *goSdk.Account, genSdk *goSdk.OntologySdk) *common.PreExecResult {
+	WingGovAddr, _ := utils.AddressFromHexString(cfg.WingGov)
+	ZeroPoolAddr, _ := utils.AddressFromHexString(cfg.ZeroPool)
+	params := []interface{}{ZeroPoolAddr, 1}
+	resut, _ := genSdk.WasmVM.PreExecInvokeWasmVMContract(WingGovAddr, "query_unbound_to_pool", params)
+	log.Infof("Query_unbound_to_pool: %s", resut.Result)
+	return resut
+}
+
+//query_unbound_to_pool_count ToDO : name ?
+func Query_unbound_to_pool_count(cfg *config.Config, account *goSdk.Account, genSdk *goSdk.OntologySdk) *common.PreExecResult {
+	WingGovAddr, _ := utils.AddressFromHexString(cfg.WingGov)
+	ZeroPoolAddr, _ := utils.AddressFromHexString(cfg.ZeroPool)
+	params := []interface{}{ZeroPoolAddr}
+	resut, _ := genSdk.WasmVM.PreExecInvokeWasmVMContract(WingGovAddr, "query_unbound_to_pool_count", params)
+	log.Infof("Get_unbound_pool: %s", resut.Result)
+	return resut
+}
+
+//deposit TODO: invoke failed
+func Deposit(cfg *config.Config, account *goSdk.Account, genSdk *goSdk.OntologySdk) *types.MutableTransaction {
+	WingGovAddr, _ := utils.AddressFromHexString(cfg.WingGov)
+	ZeroPoolAddr, _ := utils.AddressFromHexString(cfg.ZeroPool)
+	OUSDTAddr, _ := utils.AddressFromHexString(cfg.OUSDT)
+	falge := true
+	FromAddr := account.Address
+
+	params := []interface{}{FromAddr, ZeroPoolAddr, OUSDTAddr, cfg.Amount, falge}
+	mutTx, err := genSdk.WasmVM.NewInvokeWasmVmTransaction(cfg.GasPrice, cfg.GasLimit, WingGovAddr, "unbound_to_pool", params)
 	if err != nil {
 		fmt.Println("construct tx err", err)
 	}
