@@ -22,3 +22,17 @@ func OracleInit(cfg *config.Config, account *goSdk.Account, genSdk *goSdk.Ontolo
 	}
 	return mutTx
 }
+
+//init
+func SetDecimal(cfg *config.Config, account *goSdk.Account, genSdk *goSdk.OntologySdk) *types.MutableTransaction {
+	OracleAddr, _ := utils.AddressFromHexString(cfg.Oracle)
+	params := []interface{}{9}
+	mutTx, err := genSdk.WasmVM.NewInvokeWasmVmTransaction(cfg.GasPrice, cfg.GasLimit, OracleAddr, "setDecimal", params)
+	if err != nil {
+		fmt.Println("construct tx err", err)
+	}
+	if err := signTx(genSdk, mutTx, cfg.StartNonce, account); err != nil {
+		log.Error(err)
+	}
+	return mutTx
+}

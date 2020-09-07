@@ -30,7 +30,7 @@ func main() {
 	rpcClient := client.NewRpcClient()
 	rpcClient.SetAddress(cfg.Rpc[0])
 	sdk.SetDefaultClient(rpcClient)
-	tx := Utils.OracleInit(cfg, account, sdk)
+	tx := Utils.SetDecimal(cfg, account, sdk)
 	hash, err := sdk.SendTransaction(tx)
 	if err != nil {
 		log.Errorf("send tx failed, err: %s********", err)
