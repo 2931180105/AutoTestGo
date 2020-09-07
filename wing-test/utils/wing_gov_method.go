@@ -28,6 +28,50 @@ func WingGovInit(cfg *config.Config, account *goSdk.Account, genSdk *goSdk.Ontol
 	return mutTx
 }
 
+func Set_oracle_address(cfg *config.Config, account *goSdk.Account, genSdk *goSdk.OntologySdk) *types.MutableTransaction {
+	WingGovAddr, _ := utils.AddressFromHexString(cfg.WingGov)
+	Oracle, _ := utils.AddressFromHexString(cfg.Oracle)
+	params := []interface{}{Oracle}
+	mutTx, err := genSdk.WasmVM.NewInvokeWasmVmTransaction(cfg.GasPrice, cfg.GasLimit, WingGovAddr, "set_oracle_address", params)
+	if err != nil {
+		fmt.Println("construct tx err", err)
+	}
+	if err := signTx(genSdk, mutTx, cfg.StartNonce, account); err != nil {
+		log.Error(err)
+	}
+	return mutTx
+}
+
+//get_oracle_address
+func Get_oracle_address(cfg *config.Config, account *goSdk.Account, genSdk *goSdk.OntologySdk) {
+	WingGovAddr, _ := utils.AddressFromHexString(cfg.WingGov)
+	params := []interface{}{}
+	resut, _ := genSdk.WasmVM.PreExecInvokeWasmVMContract(WingGovAddr, "get_oracle_address", params)
+	log.Infof("get_oracle_address: %s", resut.Result)
+}
+
+func Set_global_address(cfg *config.Config, account *goSdk.Account, genSdk *goSdk.OntologySdk) *types.MutableTransaction {
+	WingGovAddr, _ := utils.AddressFromHexString(cfg.WingGov)
+	GlobalParam, _ := utils.AddressFromHexString(cfg.GlobalParam)
+	params := []interface{}{GlobalParam}
+	mutTx, err := genSdk.WasmVM.NewInvokeWasmVmTransaction(cfg.GasPrice, cfg.GasLimit, WingGovAddr, "set_global_address", params)
+	if err != nil {
+		fmt.Println("construct tx err", err)
+	}
+	if err := signTx(genSdk, mutTx, cfg.StartNonce, account); err != nil {
+		log.Error(err)
+	}
+	return mutTx
+}
+
+//get_oracle_address
+func Get_global_address(cfg *config.Config, account *goSdk.Account, genSdk *goSdk.OntologySdk) {
+	WingGovAddr, _ := utils.AddressFromHexString(cfg.WingGov)
+	params := []interface{}{}
+	resut, _ := genSdk.WasmVM.PreExecInvokeWasmVMContract(WingGovAddr, "get_global_address", params)
+	log.Infof("get_global_address: %s", resut.Result)
+}
+
 func GetGovTokenAddres(cfg *config.Config, account *goSdk.Account, genSdk *goSdk.OntologySdk) *types.MutableTransaction {
 	WingGovAddr, _ := utils.AddressFromHexString(cfg.WingGov)
 	//WingToken, _ := utils.AddressFromHexString(cfg.GovToken)
@@ -120,19 +164,12 @@ func RegisterPool(cfg *config.Config, account *goSdk.Account, genSdk *goSdk.Onto
 }
 
 //get_product_pools, TODO: need read struct
-func GetProductPools(cfg *config.Config, account *goSdk.Account, genSdk *goSdk.OntologySdk) *types.MutableTransaction {
+func GetProductPools(cfg *config.Config, account *goSdk.Account, genSdk *goSdk.OntologySdk) {
 	WingGovAddr, _ := utils.AddressFromHexString(cfg.WingGov)
 	params := []interface{}{"11"}
 	resut, _ := genSdk.WasmVM.PreExecInvokeWasmVMContract(WingGovAddr, "get_product_pools", params)
 	log.Infof("get_product_pools: %s", resut.Result)
-	mutTx, err := genSdk.WasmVM.NewInvokeWasmVmTransaction(cfg.GasPrice, cfg.GasLimit, WingGovAddr, "get_product_pools", params)
-	if err != nil {
-		fmt.Println("construct tx err", err)
-	}
-	if err := signTx(genSdk, mutTx, cfg.StartNonce, account); err != nil {
-		log.Error(err)
-	}
-	return mutTx
+
 }
 
 //update_pool_weight
@@ -453,12 +490,40 @@ func Get_exchange_rate(cfg *config.Config, account *goSdk.Account, genSdk *goSdk
 	return resut
 }
 
+//set_exchange_rate batch TODO: invoke failed
+func Set_exchange_rates(cfg *config.Config, account *goSdk.Account, genSdk *goSdk.OntologySdk) *types.MutableTransaction {
+	WingGovAddr, _ := utils.AddressFromHexString(cfg.WingGov)
+	params := []interface{}{}
+	mutTx, err := genSdk.WasmVM.NewInvokeWasmVmTransaction(cfg.GasPrice, cfg.GasLimit, WingGovAddr, "set_exchange_rates", params)
+	if err != nil {
+		fmt.Println("construct tx err", err)
+	}
+	if err := signTx(genSdk, mutTx, cfg.StartNonce, account); err != nil {
+		log.Error(err)
+	}
+	return mutTx
+}
+
 //migrate TODO: not finished
 func migrate(cfg *config.Config, account *goSdk.Account, genSdk *goSdk.OntologySdk) *types.MutableTransaction {
 	WingGovAddr, _ := utils.AddressFromHexString(cfg.WingGov)
 	OUSDTAddr, _ := utils.AddressFromHexString(cfg.OUSDT)
 	params := []interface{}{OUSDTAddr, cfg.ExchangeRate}
 	mutTx, err := genSdk.WasmVM.NewInvokeWasmVmTransaction(cfg.GasPrice, cfg.GasLimit, WingGovAddr, "migrate", params)
+	if err != nil {
+		fmt.Println("construct tx err", err)
+	}
+	if err := signTx(genSdk, mutTx, cfg.StartNonce, account); err != nil {
+		log.Error(err)
+	}
+	return mutTx
+}
+
+//migrate TODO: not finished
+func Destroy(cfg *config.Config, account *goSdk.Account, genSdk *goSdk.OntologySdk) *types.MutableTransaction {
+	WingGovAddr, _ := utils.AddressFromHexString(cfg.WingGov)
+	params := []interface{}{}
+	mutTx, err := genSdk.WasmVM.NewInvokeWasmVmTransaction(cfg.GasPrice, cfg.GasLimit, WingGovAddr, "destroy", params)
 	if err != nil {
 		fmt.Println("construct tx err", err)
 	}

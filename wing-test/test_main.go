@@ -30,7 +30,7 @@ func main() {
 	rpcClient := client.NewRpcClient()
 	rpcClient.SetAddress(cfg.Rpc[0])
 	sdk.SetDefaultClient(rpcClient)
-	tx := Utils.Add_support_token(cfg, account, sdk)
+	tx := Utils.Set_global_address(cfg, account, sdk)
 	hash, err := sdk.SendTransaction(tx)
 	if err != nil {
 		log.Errorf("send tx failed, err: %s********", err)
@@ -39,7 +39,5 @@ func main() {
 	}
 	time.Sleep(time.Second * 3)
 	Utils.PrintSmartEventByHash_Ont(sdk, hash.ToHexString())
-	Utils.QueryPoolByAddress(cfg, account, sdk)
-	Utils.Get_support_token(cfg, account, sdk)
-
+	Utils.Get_global_address(cfg, account, sdk)
 }
