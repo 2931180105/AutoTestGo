@@ -29,7 +29,7 @@ func ContractInit(cfg *config.Config, account *goSdk.Account, genSdk *goSdk.Onto
 
 }
 
-func DeployContreacProfit(cfg *config.Config, account *goSdk.Account, genSdk *goSdk.OntologySdk) common.Uint256 {
+func DeployContractProfit(cfg *config.Config, account *goSdk.Account, genSdk *goSdk.OntologySdk) common.Uint256 {
 	bytes, err := ioutil.ReadFile("wing-test/contract/profit.wasm.str")
 	if err != nil {
 		log.Fatal(err)
@@ -46,7 +46,7 @@ func DeployContreacProfit(cfg *config.Config, account *goSdk.Account, genSdk *go
 	}
 	return result
 }
-func DeployContreacGov(cfg *config.Config, account *goSdk.Account, genSdk *goSdk.OntologySdk) common.Uint256 {
+func DeployContractGov(cfg *config.Config, account *goSdk.Account, genSdk *goSdk.OntologySdk) common.Uint256 {
 	bytes, err := ioutil.ReadFile("wing-test/contract/wing_dao_contracts.wasm.str")
 	if err != nil {
 		log.Fatal(err)
@@ -58,6 +58,24 @@ func DeployContreacGov(cfg *config.Config, account *goSdk.Account, genSdk *goSdk
 	}
 	log.Infof("GovCodeContract address : %s", GovCodeContract.ToHexString())
 	result, err := genSdk.WasmVM.DeployWasmVMSmartContract(cfg.GasPrice, cfg.GasLimit, account, GovCodeStr, "name", "version", "author", "email", "desc")
+	if err != nil {
+		log.Errorf("deployContreac  failed: %s", err)
+	}
+	return result
+}
+
+func DeployContractOracle(cfg *config.Config, account *goSdk.Account, genSdk *goSdk.OntologySdk) common.Uint256 {
+	bytes, err := ioutil.ReadFile("wing-test/contract/oracle.wasm.str")
+	if err != nil {
+		log.Fatal(err)
+	}
+	CodeStr := string(bytes)
+	CodeContractAddr, err := utils.GetContractAddress(CodeStr)
+	if err != nil {
+		log.Error(err)
+	}
+	log.Infof("Oracle address : %s", CodeContractAddr.ToHexString())
+	result, err := genSdk.WasmVM.DeployWasmVMSmartContract(cfg.GasPrice, cfg.GasLimit, account, CodeStr, "name", "version", "author", "email", "desc")
 	if err != nil {
 		log.Errorf("deployContreac  failed: %s", err)
 	}
