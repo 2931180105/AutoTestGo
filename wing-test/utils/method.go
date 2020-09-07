@@ -15,6 +15,10 @@ func ContractInit(cfg *config.Config, account *goSdk.Account, genSdk *goSdk.Onto
 	GovTokenSetGov(cfg, account, genSdk)
 	WingProfitInit(cfg, account, genSdk)
 	WingGovInit(cfg, account, genSdk)
+	//zero pool init
+	// init zero pool (global , wing token)
+	// invoke gov regsiter pool
+	// staking , unstaking ,withdraw_wing ,get amount_wing,
+	// global init
 	//	ADD Token support
-
 }
