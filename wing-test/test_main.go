@@ -30,7 +30,7 @@ func main() {
 	rpcClient := client.NewRpcClient()
 	rpcClient.SetAddress(cfg.Rpc[0])
 	sdk.SetDefaultClient(rpcClient)
-	tx := Utils.Set_eta(cfg, account, sdk)
+	tx := Utils.WingGovInit(cfg, account, sdk)
 	hash, err := sdk.SendTransaction(tx)
 	if err != nil {
 		log.Errorf("send tx failed, err: %s********", err)
@@ -39,5 +39,8 @@ func main() {
 	}
 	time.Sleep(time.Second * 3)
 	Utils.PrintSmartEventByHash_Ont(sdk, hash.ToHexString())
-	Utils.Get_eta(cfg, account, sdk)
+	//reslut := Utils.DeployContreacGov(cfg, account, sdk)
+	//log.Infof("hash",reslut.ToHexString())
+	//time.Sleep(time.Second * 3)
+	//Utils.PrintSmartEventByHash_Ont(sdk, reslut.ToHexString())
 }
