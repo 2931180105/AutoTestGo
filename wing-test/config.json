@@ -24,6 +24,11 @@
     "http://172.168.3.151:20336",
     "http://172.168.3.152:20336"
   ],
+  "TotalStaticProfit": 100,
+  "LendAmount": [
+    10,20,30,40
+  ],
+  "TotalDynamicProfit": 100,
   "Wallets": [
     "wallet01.dat"
   ],
