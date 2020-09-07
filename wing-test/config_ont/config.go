@@ -27,6 +27,7 @@ type Config struct {
 	WingProfit       string // HexString
 	GlobalParam      string // HexString
 	AuthAddr         string
+	ExchangeRate     int
 	Amount           uint64
 	Weight           int
 	Rpc              []string
