@@ -10,6 +10,24 @@ import (
 	"github.com/ontio/ontology/core/types"
 )
 
+//gov init
+func WingGovInit(cfg *config.Config, account *goSdk.Account, genSdk *goSdk.OntologySdk) *types.MutableTransaction {
+	WingGovAddr, _ := utils.AddressFromHexString(cfg.WingGov)
+	WingProfit, _ := utils.AddressFromHexString(cfg.WingProfit)
+	Oracle, _ := utils.AddressFromHexString(cfg.Oracle)
+	WingToken, _ := utils.AddressFromHexString(cfg.GovToken)
+	GlobalParam, _ := utils.AddressFromHexString(cfg.GlobalParam)
+	params := []interface{}{WingToken, WingProfit, Oracle, GlobalParam, cfg.SDRate}
+	mutTx, err := genSdk.WasmVM.NewInvokeWasmVmTransaction(cfg.GasPrice, cfg.GasLimit, WingGovAddr, "init", params)
+	if err != nil {
+		fmt.Println("construct tx err", err)
+	}
+	if err := signTx(genSdk, mutTx, cfg.StartNonce, account); err != nil {
+		log.Error(err)
+	}
+	return mutTx
+}
+
 func GetGovTokenAddres(cfg *config.Config, account *goSdk.Account, genSdk *goSdk.OntologySdk) *types.MutableTransaction {
 	WingGovAddr, _ := utils.AddressFromHexString(cfg.WingGov)
 	//WingToken, _ := utils.AddressFromHexString(cfg.GovToken)
@@ -390,8 +408,8 @@ func Freeze_pool(cfg *config.Config, account *goSdk.Account, genSdk *goSdk.Ontol
 //add_support_token TODO: invoke failed
 func Add_support_token(cfg *config.Config, account *goSdk.Account, genSdk *goSdk.OntologySdk) *types.MutableTransaction {
 	WingGovAddr, _ := utils.AddressFromHexString(cfg.WingGov)
-	OUSDTAddr, _ := utils.AddressFromHexString(cfg.OUSDT)
-	params := []interface{}{OUSDTAddr}
+	OETHAddr, _ := utils.AddressFromHexString(cfg.OETH)
+	params := []interface{}{OETHAddr}
 	mutTx, err := genSdk.WasmVM.NewInvokeWasmVmTransaction(cfg.GasPrice, cfg.GasLimit, WingGovAddr, "add_support_token", params)
 	if err != nil {
 		fmt.Println("construct tx err", err)

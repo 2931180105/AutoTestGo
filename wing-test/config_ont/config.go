@@ -19,7 +19,6 @@ type Config struct {
 	WingGov          string
 	GovToken         string
 	ZeroPool         string
-	OUSDT            string
 	Password         string
 	SDRate           int // static and dyamic profit
 	ContractCodePath string
@@ -27,9 +26,14 @@ type Config struct {
 	WingProfit       string // HexString
 	GlobalParam      string // HexString
 	AuthAddr         string
+	OUSDT            string
+	OWBTC            string
+	OETH             string
 	ExchangeRate     int
 	Amount           uint64
 	Weight           int
+	Eta              int
+	Gama             int
 	Rpc              []string
 	TxNum            uint // whole tx num is *TxFactor
 	TxFactor         uint
