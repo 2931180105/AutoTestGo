@@ -4,10 +4,10 @@
   "SDRate": 20,
   "WingStartTime": 20,
   "Oracle": "356fb121f0812e4be51d5668d3d26832d2121695",
-  "GovToken": "3d90c3fa84f7a49b713d04f344004a74cd0179ba",
+  "GovToken": "0774c8c5fccf1161a486d1354cfe0384de6b182a",
   "ZeroPool": "e11bcb67d37f1797de02dc890344db2bd4440d4a",
-  "WingGov": "499d386d83ef6b64694765c93ae3c0c22d1a7c0b",
-  "WingProfit": "ed2e277c489f6b03bb4b717b663f24b374c4e721",
+  "WingGov": "e02ff6a9891d2d0b638f47349e1c45746d51f15c",
+  "WingProfit": "989414eeda616052c36678e40e8399ca683c34fc",
   "GlobalParam": "a7e169ef9ab7930d573850c1152780d8d7530458",
   "AuthAddr": "APHNPLz2u1JUXyD8rhryLaoQrW46J3P6y2",
   "Owner": "AG4pZwKa9cr8ca7PED7FqzUfcwnrQ2N26w",
@@ -19,11 +19,12 @@
   "Eta": 10,
   "Gama": 380,
   "ExchangeRate": 2,
-  "GasPrice": 0,
+  "GasPrice": 2500,
   "GasLimit": 3200000000,
   "Rpc": [
     "http://172.168.3.151:20336",
-    "http://172.168.3.152:20336"
+    "http://172.168.3.152:20336",
+    "http://polaris3.ont.io:20336"
   ],
   "TotalStaticProfit": 100,
   "LendAmount": [
