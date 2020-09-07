@@ -446,7 +446,12 @@ func Freeze_pool(cfg *config.Config, account *goSdk.Account, genSdk *goSdk.Ontol
 func Add_support_token(cfg *config.Config, account *goSdk.Account, genSdk *goSdk.OntologySdk) *types.MutableTransaction {
 	WingGovAddr, _ := utils.AddressFromHexString(cfg.WingGov)
 	OETHAddr, _ := utils.AddressFromHexString(cfg.OETH)
-	params := []interface{}{OETHAddr}
+	oeth := OETH{
+		tokenName: []byte("OETH"),
+		tokenType: byte(2),
+		oethAddr:  OETHAddr,
+	}
+	params := []interface{}{oeth}
 	mutTx, err := genSdk.WasmVM.NewInvokeWasmVmTransaction(cfg.GasPrice, cfg.GasLimit, WingGovAddr, "add_support_token", params)
 	if err != nil {
 		fmt.Println("construct tx err", err)

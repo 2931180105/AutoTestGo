@@ -25,6 +25,8 @@ func ContractInit(cfg *config.Config, account *goSdk.Account, genSdk *goSdk.Onto
 	// staking , unstaking ,withdraw_wing ,get amount_wing,
 	// global init
 	//	ADD Token support
+	//	 oracle init : admin address ,setDecimal
+
 }
 
 func DeployContreacProfit(cfg *config.Config, account *goSdk.Account, genSdk *goSdk.OntologySdk) common.Uint256 {

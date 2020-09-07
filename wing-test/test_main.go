@@ -30,7 +30,7 @@ func main() {
 	rpcClient := client.NewRpcClient()
 	rpcClient.SetAddress(cfg.Rpc[0])
 	sdk.SetDefaultClient(rpcClient)
-	tx := Utils.WingGovInit(cfg, account, sdk)
+	tx := Utils.Add_support_token(cfg, account, sdk)
 	hash, err := sdk.SendTransaction(tx)
 	if err != nil {
 		log.Errorf("send tx failed, err: %s********", err)

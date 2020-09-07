@@ -33,6 +33,9 @@
   "Wallets": [
     "wallet01.dat"
   ],
+  "Wifs": [
+    "L1nfGvz19cWXHDLeEMMC6vozhSLANCy9E2gNxh3YwHJMXReLddNw"
+  ],
   "TxNum": 10,
   "TxFactor": 1000000,
   "RoutineNum": 2,
