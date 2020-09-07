@@ -9,10 +9,12 @@ import (
 	config "github.com/mockyz/AutoTestGo/wing-test/config_ont"
 )
 
-//contract  init
-func GovInit(cfg *config.Config, account *goSdk.Account, genSdk *goSdk.OntologySdk) {
+//contract  init TODO: add need more invoke
+func ContractInit(cfg *config.Config, account *goSdk.Account, genSdk *goSdk.OntologySdk) {
 	GovTokenInit(cfg, account, genSdk)
 	GovTokenSetGov(cfg, account, genSdk)
 	WingProfitInit(cfg, account, genSdk)
 	WingGovInit(cfg, account, genSdk)
+	//	ADD Token support
+
 }
