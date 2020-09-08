@@ -6,6 +6,7 @@
   "Oracle": "356fb121f0812e4be51d5668d3d26832d2121695",
   "GovToken": "9b3e1920212f9e49e8069a372eb1fdeddb8d5318",
   "ZeroPool": "09489abaedf02734d012d6617edcb6aa029f239b",
+  "Pool2": "09489abaedf02734d012d6617edcb6aa029f239b",
   "WingGov": "09956946a55f61e4280321f7372c49188a911e96",
   "WingProfit": "bc93f1edd1af9458d5e3fc892fcfae0737b76a81",
   "GlobalParam": "a7e169ef9ab7930d573850c1152780d8d7530458",
@@ -41,6 +42,8 @@
   "TxFactor": 1000000,
   "RoutineNum": 2,
   "TPS": 10,
+  "AccountNum": 1000,
+  "StakeOnt": 10,
   "StartNonce": 0,
   "SaveTx": false,
   "SendTx": true

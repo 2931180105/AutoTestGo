@@ -11,11 +11,11 @@ import (
 )
 
 func LockInvoke(cfg *config.Config, account *goSdk.Account) {
-	mutTx := GenerateLockParam(cfg, account)
 	sendTxSdk := goSdk.NewOntologySdk()
 	rpcClient := client.NewRpcClient()
 	rpcClient.SetAddress(cfg.Rpc[0])
 	sendTxSdk.SetDefaultClient(rpcClient)
+	mutTx := GenerateLockParam(cfg, account)
 	if err := signTx(sendTxSdk, mutTx, cfg.StartNonce, account); err != nil {
 		log.Error(err)
 	}

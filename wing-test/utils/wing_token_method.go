@@ -50,6 +50,5 @@ func GovTokenBalanceOf(cfg *config.Config, account *goSdk.Account, genSdk *goSdk
 	params := []interface{}{"balanceOf", []interface{}{balanceAddr}}
 	resut, _ := genSdk.NeoVM.PreExecInvokeNeoVMContract(ContractAddr, params)
 	log.Infof("GovTokenBalanceOf: %s", resut.Result)
-
 	return resut
 }

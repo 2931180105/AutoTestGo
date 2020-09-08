@@ -106,3 +106,43 @@ func DeployContractWing(cfg *config.Config, account *goSdk.Account, genSdk *goSd
 	}
 	return result
 }
+func BatchStakeing(cfg *config.Config, account *goSdk.Account, genSdk *goSdk.OntologySdk) {
+	ZeroPoolAddr, _ := utils.AddressFromHexString(cfg.ZeroPool)
+	accts := GenerateAccounts(cfg, account, genSdk)
+	for i := 0; i < len(accts); i++ {
+		acct := accts[i]
+		params := []interface{}{acct.Address, cfg.StakeOnt}
+		mutTx, _ := genSdk.WasmVM.NewInvokeWasmVmTransaction(cfg.GasPrice, cfg.GasLimit, ZeroPoolAddr, "staking", params)
+		if err := signTx(genSdk, mutTx, cfg.StartNonce, acct); err != nil {
+			log.Error(err)
+		}
+		txhash, err := genSdk.SendTransaction(mutTx)
+		if err != nil {
+			log.Errorf("send tx failed, err: %s********", err)
+		} else {
+			log.Infof("send staking tx %s****sentnum:***%d", txhash.ToHexString(), i)
+		}
+	}
+}
+
+func BatchUnStakeing(cfg *config.Config, account *goSdk.Account, genSdk *goSdk.OntologySdk) {
+	ZeroPoolAddr, _ := utils.AddressFromHexString(cfg.ZeroPool)
+	accts := GenerateAccounts(cfg, account, genSdk)
+	for i := 0; i < len(accts); i++ {
+		acct := accts[i]
+		params := []interface{}{acct.Address, cfg.StakeOnt}
+		mutTx, _ := genSdk.WasmVM.NewInvokeWasmVmTransaction(cfg.GasPrice, cfg.GasLimit, ZeroPoolAddr, "unstaking", params)
+		if err := signTx(genSdk, mutTx, cfg.StartNonce, acct); err != nil {
+			log.Error(err)
+		}
+		txhash, err := genSdk.SendTransaction(mutTx)
+		if err != nil {
+			log.Errorf("send tx failed, err: %s********", err)
+		} else {
+			log.Infof("send unstaking tx %s****sentnum:***%d", txhash.ToHexString(), i)
+		}
+		resut, _ := genSdk.NeoVM.PreExecInvokeNeoVMContract(ZeroPoolAddr, []interface{}{"balanceOf", []interface{}{acct.Address}})
+		WingBalance, _ := resut.Result.ToInteger()
+		log.Infof("Address %s , WIng Token BalanceOf : %s", acct.Address.ToBase58(), WingBalance.Uint64())
+	}
+}

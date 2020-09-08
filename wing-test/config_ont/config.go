@@ -48,6 +48,8 @@ type Config struct {
 	SaveTx             bool
 	SendTx             bool
 	Owner              string
+	AccountNum         int
+	StakeOnt           int
 }
 
 func ParseConfig(path string) (*Config, error) {
