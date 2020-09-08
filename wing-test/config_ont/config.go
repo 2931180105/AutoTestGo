@@ -23,6 +23,11 @@ type Config struct {
 	SDRate             int // static and dyamic profit
 	ContractCodePath   string
 	Oracle             string
+	InterestRate       string
+	Comptroller        string
+	FToken             string
+	Token              string
+	FTokenInsurance    string
 	WingProfit         string // HexString
 	GlobalParam        string // HexString
 	AuthAddr           string

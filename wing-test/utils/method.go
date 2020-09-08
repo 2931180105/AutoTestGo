@@ -1,6 +1,7 @@
 package utils
 
 import (
+	"fmt"
 	"github.com/mockyz/AutoTestGo/common/log"
 	goSdk "github.com/ontio/ontology-go-sdk"
 	"github.com/ontio/ontology-go-sdk/utils"
@@ -106,6 +107,29 @@ func DeployContractWing(cfg *config.Config, account *goSdk.Account, genSdk *goSd
 	}
 	return result
 }
+
+func DeployContractFlash(cfg *config.Config, account *goSdk.Account, genSdk *goSdk.OntologySdk) {
+	contractList := []string{"interestrate", "comptroller", "onttoken", "onttoken"}
+	for _, name := range contractList {
+		bytes, err := ioutil.ReadFile(fmt.Sprintf("wing-test/contract/%s.str", name))
+		if err != nil {
+			log.Fatal(err)
+		}
+		CodeStr := string(bytes)
+		CodeContractAddr, err := utils.GetContractAddress(CodeStr)
+		if err != nil {
+			log.Error(err)
+		}
+		log.Infof("%s address : %s", name, CodeContractAddr.ToHexString())
+		result, err := genSdk.WasmVM.DeployWasmVMSmartContract(cfg.GasPrice, cfg.GasLimit, account, CodeStr, "name", "version", "author", "email", "desc")
+		if err != nil {
+			log.Errorf("deployContreac  failed: %s", err)
+		} else {
+			log.Infof("hash : %s", result.ToHexString())
+		}
+	}
+}
+
 func BatchStakeing(cfg *config.Config, account *goSdk.Account, genSdk *goSdk.OntologySdk) {
 	ZeroPoolAddr, _ := utils.AddressFromHexString(cfg.ZeroPool)
 	accts := GenerateAccounts(cfg, account, genSdk)
