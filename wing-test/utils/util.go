@@ -5,6 +5,8 @@ import (
 	"github.com/ontio/ontology-crypto/keypair"
 	ontology_go_sdk "github.com/ontio/ontology-go-sdk"
 	sdkcommon "github.com/ontio/ontology-go-sdk/common"
+	"github.com/ontio/ontology-go-sdk/utils"
+	OntCommon "github.com/ontio/ontology/common"
 	"github.com/ontio/ontology/common/log"
 	"github.com/ontio/ontology/core/types"
 )
@@ -50,4 +52,9 @@ func signTx(sdk *ontology_go_sdk.OntologySdk, tx *types.MutableTransaction, nonc
 		return fmt.Errorf("sign tx failed, err: %s", err)
 	}
 	return nil
+}
+func getContractAddr(addr string) OntCommon.Address {
+	TokenBytes, _ := OntCommon.HexToBytes(addr)
+	ContractAddr, _ := utils.AddressParseFromBytes(OntCommon.ToArrayReverse(TokenBytes))
+	return ContractAddr
 }
