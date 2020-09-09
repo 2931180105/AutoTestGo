@@ -151,9 +151,8 @@ func GetAuthorizeStatus(cfg *config.Config, account *goSdk.Account, genSdk *goSd
 //register_pool
 func RegisterPool(cfg *config.Config, account *goSdk.Account, genSdk *goSdk.OntologySdk) *types.MutableTransaction {
 	WingGovAddr, _ := utils.AddressFromHexString(cfg.WingGov)
-	AuthAddr, _ := utils.AddressFromBase58(cfg.Owner)
 	ZeroPoolAddr, _ := utils.AddressFromHexString(cfg.ZeroPool)
-	params := []interface{}{AuthAddr, ZeroPoolAddr, cfg.Weight}
+	params := []interface{}{account.Address, ZeroPoolAddr, cfg.Weight}
 	mutTx, err := genSdk.WasmVM.NewInvokeWasmVmTransaction(cfg.GasPrice, cfg.GasLimit, WingGovAddr, "register_pool", params)
 	if err != nil {
 		fmt.Println("construct tx err", err)
@@ -443,6 +442,20 @@ func Freeze_pool(cfg *config.Config, account *goSdk.Account, genSdk *goSdk.Ontol
 	return mutTx
 }
 
+//freeze_pool
+func SetFFactor(cfg *config.Config, account *goSdk.Account, genSdk *goSdk.OntologySdk) *types.MutableTransaction {
+	WingGovAddr, _ := utils.AddressFromHexString(cfg.WingGov)
+	params := []interface{}{cfg.SDRate}
+	mutTx, err := genSdk.WasmVM.NewInvokeWasmVmTransaction(cfg.GasPrice, cfg.GasLimit, WingGovAddr, "set_f_factor", params)
+	if err != nil {
+		fmt.Println("construct tx err", err)
+	}
+	if err := signTx(genSdk, mutTx, cfg.StartNonce, account); err != nil {
+		log.Error(err)
+	}
+	return mutTx
+}
+
 //add_support_token
 func Add_support_token(cfg *config.Config, account *goSdk.Account, genSdk *goSdk.OntologySdk) *types.MutableTransaction {
 	WingGovAddr, _ := utils.AddressFromHexString(cfg.WingGov)
@@ -483,15 +496,24 @@ func Get_support_token(cfg *config.Config, account *goSdk.Account, genSdk *goSdk
 	return resut
 }
 
+//get_support_token
+func Get_f_fatcor(cfg *config.Config, account *goSdk.Account, genSdk *goSdk.OntologySdk) *common.PreExecResult {
+	WingGovAddr, _ := utils.AddressFromHexString(cfg.WingGov)
+	params := []interface{}{}
+	resut, _ := genSdk.WasmVM.PreExecInvokeWasmVMContract(WingGovAddr, "get_f_factor", params)
+	log.Infof("Get_f_fatcor: %s", resut.Result)
+	return resut
+}
+
 //set_exchange_rate
 func Set_exchange_rate(cfg *config.Config, account *goSdk.Account, genSdk *goSdk.OntologySdk) *types.MutableTransaction {
 	WingGovAddr, _ := utils.AddressFromHexString(cfg.WingGov)
-	OETHAddr, _ := utils.AddressFromHexString(cfg.OETH)
-	token := NewToken("OETH", 2, OETHAddr)
+	ONT, _ := utils.AddressFromBase58(cfg.ONT)
+	token := NewToken("ONT", 1, ONT)
 	sink := OntCommon.NewZeroCopySink(nil)
 	sink.WriteString("set_exchange_rate")
 	token.Serialize(sink)
-	sink.WriteI128(OntCommon.I128FromUint64(20))
+	sink.WriteI128(OntCommon.I128FromUint64(1000000000))
 	contract := &states.WasmContractParam{}
 	contract.Address = WingGovAddr
 	argbytes := sink.Bytes()
@@ -515,12 +537,34 @@ func Set_exchange_rate(cfg *config.Config, account *goSdk.Account, genSdk *goSdk
 }
 
 //get_exchange_rate
-func Get_exchange_rate(cfg *config.Config, account *goSdk.Account, genSdk *goSdk.OntologySdk) *common.PreExecResult {
+func Get_exchange_rate(cfg *config.Config, account *goSdk.Account, genSdk *goSdk.OntologySdk) {
 	WingGovAddr, _ := utils.AddressFromHexString(cfg.WingGov)
-	params := []interface{}{}
-	resut, _ := genSdk.WasmVM.PreExecInvokeWasmVMContract(WingGovAddr, "get_exchange_rate", params)
-	log.Infof("get_exchange_rate: %s", resut.Result)
-	return resut
+	OETHAddr, _ := utils.AddressFromHexString(cfg.OETH)
+	token := NewToken("ETH", 2, OETHAddr)
+	sink := OntCommon.NewZeroCopySink(nil)
+	sink.WriteString("get_exchange_rate")
+	token.Serialize(sink)
+	contract := &states.WasmContractParam{}
+	contract.Address = WingGovAddr
+	argbytes := sink.Bytes()
+	contract.Args = argbytes
+	invokePayload := &payload.InvokeCode{
+		Code: OntCommon.SerializeToBytes(contract),
+	}
+	tx := &types.MutableTransaction{
+		Payer:    account.Address,
+		GasPrice: 2500,
+		GasLimit: 300000,
+		TxType:   types.InvokeWasm,
+		Nonce:    uint32(time.Now().Unix()),
+		Payload:  invokePayload,
+		Sigs:     nil,
+	}
+	resut, err := genSdk.PreExecTransaction(tx)
+	if err != nil {
+		log.Errorf("error: %s", err)
+	}
+	log.Infof("result: %s", resut.Result)
 }
 
 //set_exchange_rate batch TODO: invoke failed
@@ -538,7 +582,7 @@ func Set_exchange_rates(cfg *config.Config, account *goSdk.Account, genSdk *goSd
 }
 
 //migrate TODO: not finished
-func Migrate(cfg *config.Config, account *goSdk.Account, genSdk *goSdk.OntologySdk) *types.MutableTransaction {
+func WingGovMigrate(cfg *config.Config, account *goSdk.Account, genSdk *goSdk.OntologySdk) {
 	WingGovAddr, _ := utils.AddressFromHexString(cfg.WingGov)
 	bytes, err := ioutil.ReadFile("wing-test/contract/wing_dao_contracts_new.wasm.str")
 	if err != nil {
@@ -549,13 +593,21 @@ func Migrate(cfg *config.Config, account *goSdk.Account, genSdk *goSdk.OntologyS
 	if err != nil {
 		log.Error(err)
 	}
+	log.Infof("CodeContractAddr address : %s", CodeContractAddr.ToBase58())
 	log.Infof("CodeContractAddr address : %s", CodeContractAddr.ToHexString())
-	params := []interface{}{CodeStr, 3, "name", "version", "author", "email", "desc"}
+
+	params := []interface{}{CodeStr, 3, "WING Token", "1.0.1", "Wing Team", "support@wing.finance", "Wing is a credit-based, cross-chain DeFi platform."}
 	mutTx, _ := genSdk.WasmVM.NewInvokeWasmVmTransaction(cfg.GasPrice, cfg.GasLimit, WingGovAddr, "migrate", params)
+
 	if err := signTx(genSdk, mutTx, cfg.StartNonce, account); err != nil {
 		log.Error(err)
 	}
-	return mutTx
+	hash1, err := genSdk.SendTransaction(mutTx)
+	if err != nil {
+		log.Errorf("send  tx failed, err: %s********", err)
+	}
+	time.Sleep(time.Second * 3)
+	PrintSmartEventByHash_Ont(genSdk, hash1.ToHexString())
 }
 
 //migrate TODO: not finished

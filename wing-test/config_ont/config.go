@@ -29,6 +29,7 @@ type Config struct {
 	OUSDT              string
 	OWBTC              string
 	OETH               string
+	ONT                string
 	ExchangeRate       int
 	Amount             uint64
 	Weight             int

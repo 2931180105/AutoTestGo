@@ -7,6 +7,7 @@ import (
 	"github.com/ontio/ontology/common"
 	"github.com/ontio/ontology/core/types"
 	"io/ioutil"
+	"time"
 )
 
 //
@@ -53,7 +54,7 @@ func DeployContractProfit(cfg *config.Config, account *goSdk.Account, genSdk *go
 	}
 	return result
 }
-func DeployContractGov(cfg *config.Config, account *goSdk.Account, genSdk *goSdk.OntologySdk) common.Uint256 {
+func DeployContractWingGov(cfg *config.Config, account *goSdk.Account, genSdk *goSdk.OntologySdk) common.Uint256 {
 	bytes, err := ioutil.ReadFile("wing-test/contract/wing_dao_contracts.wasm.str")
 	if err != nil {
 		log.Fatal(err)
@@ -89,7 +90,7 @@ func DeployContractOracle(cfg *config.Config, account *goSdk.Account, genSdk *go
 	return result
 }
 
-func DeployContractWing(cfg *config.Config, account *goSdk.Account, genSdk *goSdk.OntologySdk) common.Uint256 {
+func DeployContractWingToken(cfg *config.Config, account *goSdk.Account, genSdk *goSdk.OntologySdk) common.Uint256 {
 	bytes, err := ioutil.ReadFile("wing-test/contract/wing.avm")
 	if err != nil {
 		log.Fatal(err)
@@ -99,16 +100,15 @@ func DeployContractWing(cfg *config.Config, account *goSdk.Account, genSdk *goSd
 	if err != nil {
 		log.Error(err)
 	}
-	log.Infof("Oracle address : %s", CodeContractAddr.ToHexString())
+	log.Infof("Wing address : %s", CodeContractAddr.ToHexString())
 	result, err := genSdk.NeoVM.DeployNeoVMSmartContract(cfg.GasPrice, cfg.GasLimit, account, true, CodeStr, "name", "version", "author", "email", "desc")
 	if err != nil {
 		log.Errorf("deployContreac  failed: %s", err)
 	}
 	return result
 }
-func BatchStakeing(cfg *config.Config, account *goSdk.Account, genSdk *goSdk.OntologySdk) {
+func BatchStaking(cfg *config.Config, account *goSdk.Account, genSdk *goSdk.OntologySdk, accts []*goSdk.Account) {
 	ZeroPoolAddr, _ := utils.AddressFromHexString(cfg.ZeroPool)
-	accts := GenerateAccounts(cfg, account, genSdk)
 	for i := 0; i < len(accts); i++ {
 		acct := accts[i]
 		params := []interface{}{acct.Address, cfg.StakeOnt}
@@ -125,9 +125,9 @@ func BatchStakeing(cfg *config.Config, account *goSdk.Account, genSdk *goSdk.Ont
 	}
 }
 
-func BatchUnStakeing(cfg *config.Config, account *goSdk.Account, genSdk *goSdk.OntologySdk) {
+func BatchUnStakeing(cfg *config.Config, account *goSdk.Account, genSdk *goSdk.OntologySdk, accts []*goSdk.Account) {
 	ZeroPoolAddr, _ := utils.AddressFromHexString(cfg.ZeroPool)
-	accts := GenerateAccounts(cfg, account, genSdk)
+	//accts := GenerateAccounts(cfg, account, genSdk)
 	for i := 0; i < len(accts); i++ {
 		acct := accts[i]
 		params := []interface{}{acct.Address, cfg.StakeOnt}
@@ -141,8 +141,9 @@ func BatchUnStakeing(cfg *config.Config, account *goSdk.Account, genSdk *goSdk.O
 		} else {
 			log.Infof("send unstaking tx %s****sentnum:***%d", txhash.ToHexString(), i)
 		}
-		resut, _ := genSdk.NeoVM.PreExecInvokeNeoVMContract(ZeroPoolAddr, []interface{}{"balanceOf", []interface{}{acct.Address}})
-		WingBalance, _ := resut.Result.ToInteger()
-		log.Infof("Address %s , WIng Token BalanceOf : %s", acct.Address.ToBase58(), WingBalance.Uint64())
+		ZeroPoolWithDraw(cfg, acct, genSdk)
+		time.Sleep(time.Second * 3)
+		resut2, _ := genSdk.NeoVM.PreExecInvokeNeoVMContract(ZeroPoolAddr, []interface{}{"balanceOf", []interface{}{acct.Address}})
+		log.Infof("Address %s , WIng Token BalanceOf : %s", acct.Address.ToBase58(), resut2)
 	}
 }

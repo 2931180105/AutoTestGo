@@ -63,7 +63,7 @@ func getContractAddr(addr string) OntCommon.Address {
 
 func GenerateAccounts(cfg *config.Config, admin *ontology_go_sdk.Account, goSdk *ontology_go_sdk.OntologySdk) []*ontology_go_sdk.Account {
 	pwd := []byte("123456")
-	wallet, _ := goSdk.CreateWallet("tmp.dat")
+	wallet, _ := goSdk.CreateWallet("tmp2.dat")
 	accts := make([]*ontology_go_sdk.Account, cfg.AccountNum)
 	before_amount_ont, _ := goSdk.Native.Ont.BalanceOf(admin.Address)
 	before_amount_ong, _ := goSdk.Native.Ong.BalanceOf(admin.Address)
@@ -79,12 +79,11 @@ func GenerateAccounts(cfg *config.Config, admin *ontology_go_sdk.Account, goSdk 
 		//PrintSmartEventByHash_Ont(goSdk,txHash.ToHexString())
 		txhash, err = goSdk.Native.Ong.Transfer(cfg.GasPrice, cfg.GasLimit, admin, admin, acct.Address, cfg.Amount*100000000)
 		if err != nil {
-			log.Errorf("send tx failed, err: %s********", err)
-		} else {
-			log.Infof("send Ong tx %s****sentnum:***%d", txhash.ToHexString(), i)
+			log.Errorf("send ONG tx failed, err: %s********", err)
 		}
 		accts[i] = acct
 	}
+	wallet.Save()
 	time.Sleep(time.Second * 6)
 	after_amount_ont, _ := goSdk.Native.Ont.BalanceOf(admin.Address)
 	after_amount_ong, _ := goSdk.Native.Ong.BalanceOf(admin.Address)
