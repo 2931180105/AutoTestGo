@@ -27,6 +27,7 @@ type Config struct {
 	Comptroller        string
 	FToken             string
 	Token              string
+	TokenName          string
 	FTokenInsurance    string
 	WingProfit         string // HexString
 	GlobalParam        string // HexString

@@ -16,7 +16,7 @@ import (
 //init
 func InterestRateInit(cfg *config.Config, account *goSdk.Account, genSdk *goSdk.OntologySdk) {
 	interestRateAddr, _ := utils.AddressFromHexString(cfg.InterestRate)
-	params := []interface{}{200000000, 3000000000}
+	params := []interface{}{300000000, 3000000000}
 	mutTx, err := genSdk.WasmVM.NewInvokeWasmVmTransaction(cfg.GasPrice, cfg.GasLimit, interestRateAddr, "init", params)
 	if err != nil {
 		fmt.Println("construct tx err", err)
@@ -173,7 +173,7 @@ func SetWingRate(cfg *config.Config, account *goSdk.Account, genSdk *goSdk.Ontol
 	}
 	hash, err := genSdk.SendTransaction(mutTx)
 	if err != nil {
-		log.Errorf("SetLiquidationIncentive, send tx failed, err: %s********", err)
+		log.Errorf("SetWingRate, send tx failed, err: %s********", err)
 	} else {
 		log.Infof("send tx %s****sentnum:***%d", hash.ToHexString(), cfg.StartNonce)
 	}
@@ -193,7 +193,7 @@ func SupportMarket(cfg *config.Config, account *goSdk.Account, genSdk *goSdk.Ont
 	}
 	hash, err := genSdk.SendTransaction(mutTx)
 	if err != nil {
-		log.Errorf("SetLiquidationIncentive, send tx failed, err: %s********", err)
+		log.Errorf("SupportMarket, send tx failed, err: %s********", err)
 	} else {
 		log.Infof("send tx %s****sentnum:***%d", hash.ToHexString(), cfg.StartNonce)
 	}
@@ -212,7 +212,7 @@ func SetCollateralFactor(cfg *config.Config, account *goSdk.Account, genSdk *goS
 	}
 	hash, err := genSdk.SendTransaction(mutTx)
 	if err != nil {
-		log.Errorf("SetLiquidationIncentive, send tx failed, err: %s********", err)
+		log.Errorf("SetCollateralFactor, send tx failed, err: %s********", err)
 	} else {
 		log.Infof("send tx %s****sentnum:***%d", hash.ToHexString(), cfg.StartNonce)
 	}
@@ -273,7 +273,7 @@ func FTokenInit(cfg *config.Config, account *goSdk.Account, genSdk *goSdk.Ontolo
 	comptrollerAddr, _ := utils.AddressFromHexString(cfg.Comptroller)
 	globalParamAddress, _ := utils.AddressFromHexString(cfg.GlobalParam)
 	interestRateAddr, _ := utils.AddressFromHexString(cfg.InterestRate)
-	params := []interface{}{account.Address, tokenAddr, "ONT", comptrollerAddr, globalParamAddress, interestRateAddr,
+	params := []interface{}{account.Address, tokenAddr, cfg.TokenName, comptrollerAddr, globalParamAddress, interestRateAddr,
 		100000000000000000}
 	mutTx, err := genSdk.WasmVM.NewInvokeWasmVmTransaction(cfg.GasPrice, cfg.GasLimit, fTokenAddr, "init", params)
 	if err != nil {
@@ -339,7 +339,7 @@ func SetInsuranceAddr(cfg *config.Config, account *goSdk.Account, genSdk *goSdk.
 	}
 	hash, err := genSdk.SendTransaction(mutTx)
 	if err != nil {
-		log.Errorf("SetInsuranceFactor, send tx failed, err: %s********", err)
+		log.Errorf("SetInsuranceAddr, send tx failed, err: %s********", err)
 	} else {
 		log.Infof("send tx %s****sentnum:***%d", hash.ToHexString(), cfg.StartNonce)
 	}
@@ -362,7 +362,7 @@ func FTokenInsuranceInit(cfg *config.Config, account *goSdk.Account, genSdk *goS
 	}
 	hash, err := genSdk.SendTransaction(mutTx)
 	if err != nil {
-		log.Errorf("FTokenInit, send tx failed, err: %s********", err)
+		log.Errorf("FTokenInsuranceInit, send tx failed, err: %s********", err)
 	} else {
 		log.Infof("send tx %s****sentnum:***%d", hash.ToHexString(), cfg.StartNonce)
 	}
@@ -381,7 +381,7 @@ func SetMarketAddr(cfg *config.Config, account *goSdk.Account, genSdk *goSdk.Ont
 	}
 	hash, err := genSdk.SendTransaction(mutTx)
 	if err != nil {
-		log.Errorf("FTokenInit, send tx failed, err: %s********", err)
+		log.Errorf("SetMarketAddr, send tx failed, err: %s********", err)
 	} else {
 		log.Infof("send tx %s****sentnum:***%d", hash.ToHexString(), cfg.StartNonce)
 	}
