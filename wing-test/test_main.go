@@ -53,4 +53,5 @@ func deployContract(cfg *config.Config, account *goSdk.Account, genSdk *goSdk.On
 	log.Infof("hash", reslut3.ToHexString())
 	reslut4 := Utils.DeployContractOracle(cfg, account, sdk)
 	log.Infof("hash", reslut4.ToHexString())
+	Utils.DeployContractFlash(cfg, account, sdk)
 }
