@@ -1,0 +1,51 @@
+{
+  "Wallet": "wing-test/wallet.dat",
+  "Password": "123456",
+  "SDRate": 0,
+  "WingStartTime": 20,
+  "Oracle": "356fb121f0812e4be51d5668d3d26832d2121695",
+  "GovToken": "f89f16cae868b279ea4edfdae5a2d66d74c41139",
+  "ZeroPool": "3081fb6a2b72d5b1a78111886b37bee48b7f5965",
+  "WingGov": "f4c864cd5c01339eef2ebbf7dd6904f389e4cd75",
+  "WingProfit": "b1865486666558f6c628bdaee2ee08921288a9ef",
+  "GlobalParam": "a7e169ef9ab7930d573850c1152780d8d7530458",
+  "Pool2": "09489abaedf02734d012d6617edcb6aa029f239b",
+  "AuthAddr": "APHNPLz2u1JUXyD8rhryLaoQrW46J3P6y2",
+  "Owner": "AG4pZwKa9cr8ca7PED7FqzUfcwnrQ2N26w",
+  "OUSDT": "085a0ee02287855e0ec19b30a5a3840ba03527bf",
+  "OWBTC": "1c429ae1de61f992c2af5073b6cb9b24228a0e8d",
+  "OETH":  "1c7b8eda700d932f2fd7b903691e1a5639cfe507",
+  "ONT": "AFmseVrdL9f9oyCzZefL9tG6UbvhUMqNMV",
+  "Weight": 1,
+  "Amount": 380,
+  "Eta": 1,
+  "Gama": 0,
+  "ExchangeRate": 2,
+  "GasPrice": 2500,
+  "GasLimit": 32000000000,
+  "Rpc": [
+    "http://172.168.3.151:20336",
+    "http://172.168.3.152:20336",
+    "http://polaris3.ont.io:20336"
+  ],
+  "TotalStaticProfit": 100,
+  "LendAmount": [
+    10,20,30,40
+  ],
+  "TotalDynamicProfit": 100,
+  "Wallets": [
+    "wallet01.dat"
+  ],
+  "Wifs": [
+    "L1nfGvz19cWXHDLeEMMC6vozhSLANCy9E2gNxh3YwHJMXReLddNw"
+  ],
+  "TxNum": 10,
+  "TxFactor": 1000000,
+  "RoutineNum": 2,
+  "TPS": 10,
+  "AccountNum": 100,
+  "StakeOnt": 10,
+  "StartNonce": 0,
+  "SaveTx": false,
+  "SendTx": true
+}
