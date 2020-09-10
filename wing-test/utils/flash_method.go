@@ -218,6 +218,103 @@ func SetCollateralFactor(cfg *config.Config, account *goSdk.Account, genSdk *goS
 	}
 }
 
+type MarketMeta struct {
+	Addr1 common.Address
+	Addr2 common.Address
+	Bool1 bool
+	Bool2 bool
+	U1    common.I128
+	U2    common.I128
+}
+
+func (this *MarketMeta) Deserialization(source *common.ZeroCopySource) error {
+	address1, eof := source.NextAddress()
+	if eof {
+		return fmt.Errorf("address1 deserialization error eof")
+	}
+	address2, eof := source.NextAddress()
+	if eof {
+		return fmt.Errorf("address2 deserialization error eof")
+	}
+	bool1, irregular, eof := source.NextBool()
+	if eof || irregular {
+		return fmt.Errorf("bool1 deserialization error eof")
+	}
+	bool2, irregular, eof := source.NextBool()
+	if eof || irregular {
+		return fmt.Errorf("bool2 deserialization error eof")
+	}
+	u1, eof := source.NextI128()
+	if eof {
+		return fmt.Errorf("u1 deserialization error eof")
+	}
+	u2, eof := source.NextI128()
+	if eof {
+		return fmt.Errorf("u2 deserialization error eof")
+	}
+	this.Addr1 = address1
+	this.Addr2 = address2
+	this.Bool1 = bool1
+	this.Bool2 = bool2
+	this.U1 = u1
+	this.U2 = u2
+	return nil
+}
+
+func GetMarketMeta(cfg *config.Config, account *goSdk.Account, genSdk *goSdk.OntologySdk) {
+	comptrollerAddr, _ := utils.AddressFromHexString(cfg.Comptroller)
+	fTokenAddr, _ := utils.AddressFromHexString(cfg.FToken)
+	params := []interface{}{fTokenAddr}
+	r, err := genSdk.WasmVM.PreExecInvokeWasmVMContract(comptrollerAddr, "marketMeta", params)
+	if err != nil {
+		fmt.Println("genSdk.WasmVM.PreExecInvokeWasmVMContract err", err)
+	}
+	result, err := r.Result.ToByteArray()
+	if err != nil {
+		fmt.Println("r.Result.ToByteArray err", err)
+	}
+	marketMeta := new(MarketMeta)
+	source := common.NewZeroCopySource(result)
+	err = marketMeta.Deserialization(source)
+	if err != nil {
+		fmt.Println("marketMeta.Deserialization err", err)
+	}
+	fmt.Println(marketMeta)
+}
+
+func GetOracle(cfg *config.Config, account *goSdk.Account, genSdk *goSdk.OntologySdk) {
+	oracleAddr, _ := utils.AddressFromHexString(cfg.Oracle)
+	params := []interface{}{"USDT"}
+	r, err := genSdk.WasmVM.PreExecInvokeWasmVMContract(oracleAddr, "getUnderlyingPrice", params)
+	if err != nil {
+		fmt.Println("genSdk.WasmVM.PreExecInvokeWasmVMContract err", err)
+	}
+	result, err := r.Result.ToByteArray()
+	if err != nil {
+		fmt.Println("r.Result.ToByteArray err", err)
+	}
+	source := common.NewZeroCopySource(result)
+	price, eof := source.NextI128()
+	if eof {
+		fmt.Println("source.NextI128 err", err)
+	}
+	fmt.Println(price.ToBigInt().Uint64())
+}
+
+func GetUnderlyingName(cfg *config.Config, account *goSdk.Account, genSdk *goSdk.OntologySdk) {
+	fTokenAddr, _ := utils.AddressFromHexString(cfg.FToken)
+	params := []interface{}{}
+	r, err := genSdk.WasmVM.PreExecInvokeWasmVMContract(fTokenAddr, "underlyingName", params)
+	if err != nil {
+		fmt.Println("genSdk.WasmVM.PreExecInvokeWasmVMContract err", err)
+	}
+	result, err := r.Result.ToString()
+	if err != nil {
+		fmt.Println("r.Result.ToByteArray err", err)
+	}
+	fmt.Println(result)
+}
+
 func AddWingMarkets(cfg *config.Config, account *goSdk.Account, genSdk *goSdk.OntologySdk) {
 	comptrollerAddr, _ := utils.AddressFromHexString(cfg.Comptroller)
 	fTokenAddr, _ := utils.AddressFromHexString(cfg.FToken)
