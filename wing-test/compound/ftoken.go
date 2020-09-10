@@ -12,8 +12,8 @@ import (
 //mint
 func FtokenMint(cfg *config.Config, account *goSdk.Account, genSdk *goSdk.OntologySdk) *types.MutableTransaction {
 	FTokenAddr, _ := utils.AddressFromHexString(cfg.FBTC)
-	params := []interface{}{"mint", []interface{}{account.Address, cfg.Amount}}
-	mutTx, err := genSdk.NeoVM.NewNeoVMInvokeTransaction(cfg.GasPrice, cfg.GasLimit, FTokenAddr, params)
+	params := []interface{}{account.Address, cfg.Amount}
+	mutTx, err := genSdk.WasmVM.NewInvokeWasmVmTransaction(cfg.GasPrice, cfg.GasLimit, FTokenAddr, "mint", params)
 	if err != nil {
 		fmt.Println("construct tx err", err)
 	}
