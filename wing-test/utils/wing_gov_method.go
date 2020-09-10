@@ -283,20 +283,6 @@ func Get_unbound_pool(cfg *config.Config, account *goSdk.Account, genSdk *goSdk.
 	return resut
 }
 
-//unbound_to_governance ToDo: invoke failed
-func Unbound_to_governance(cfg *config.Config, account *goSdk.Account, genSdk *goSdk.OntologySdk) *types.MutableTransaction {
-	WingGovAddr, _ := utils.AddressFromHexString(cfg.WingGov)
-	params := []interface{}{}
-	mutTx, err := genSdk.WasmVM.NewInvokeWasmVmTransaction(cfg.GasPrice, cfg.GasLimit, WingGovAddr, "unbound_to_governance", params)
-	if err != nil {
-		fmt.Println("construct tx err", err)
-	}
-	if err := signTx(genSdk, mutTx, cfg.StartNonce, account); err != nil {
-		log.Error(err)
-	}
-	return mutTx
-}
-
 //unbound_to_pool ToDo: invoke failed
 func Unbound_to_pool(cfg *config.Config, account *goSdk.Account, genSdk *goSdk.OntologySdk) *types.MutableTransaction {
 	WingGovAddr, _ := utils.AddressFromHexString(cfg.WingGov)
