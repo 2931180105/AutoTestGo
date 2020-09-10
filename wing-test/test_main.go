@@ -26,6 +26,7 @@ func main() {
 
 	//Utils.DeployContractFlash(cfg, account, sdk)
 
+	// run when first token
 	//Utils.InterestRateInit(cfg, account, sdk)
 	//time.Sleep(time.Second * 3)
 	//Utils.ComptrollerInit(cfg, account, sdk)
