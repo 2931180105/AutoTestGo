@@ -15,7 +15,7 @@ func FtokenMint(cfg *config.Config, account *goSdk.Account, genSdk *goSdk.Ontolo
 	params := []interface{}{account.Address, cfg.Amount}
 	mutTx, err := genSdk.WasmVM.NewInvokeWasmVmTransaction(cfg.GasPrice, cfg.GasLimit, FTokenAddr, "mint", params)
 	if err != nil {
-		fmt.Println("construct tx err", err)
+		fmt.Println("construct tx mint err", err)
 	}
 	if err := signTx(genSdk, mutTx, cfg.StartNonce, account); err != nil {
 		log.Error(err)
