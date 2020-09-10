@@ -11,7 +11,7 @@ import (
 
 //init
 func OTokenInit(cfg *config.Config, account *goSdk.Account, genSdk *goSdk.OntologySdk) *types.MutableTransaction {
-	OTokenAddr, _ := utils.AddressFromHexString(cfg.OETH)
+	OTokenAddr, _ := utils.AddressFromHexString(cfg.OWBTC)
 	params := []interface{}{"init", []interface{}{}}
 	mutTx, err := genSdk.NeoVM.NewNeoVMInvokeTransaction(cfg.GasPrice, cfg.GasLimit, OTokenAddr, params)
 	if err != nil {
