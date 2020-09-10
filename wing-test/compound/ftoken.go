@@ -15,7 +15,7 @@ func FtokenMint(cfg *config.Config, account *goSdk.Account, genSdk *goSdk.Ontolo
 	params := []interface{}{account.Address, cfg.Amount}
 	mutTx, err := genSdk.WasmVM.NewInvokeWasmVmTransaction(cfg.GasPrice, cfg.GasLimit, FTokenAddr, "mint", params)
 	if err != nil {
-		fmt.Println("construct tx err", err)
+		fmt.Println("construct tx mint err", err)
 	}
 	if err := signTx(genSdk, mutTx, cfg.StartNonce, account); err != nil {
 		log.Error(err)
@@ -26,8 +26,8 @@ func FtokenMint(cfg *config.Config, account *goSdk.Account, genSdk *goSdk.Ontolo
 //redeem
 func FtokenRedeem(cfg *config.Config, account *goSdk.Account, genSdk *goSdk.OntologySdk) *types.MutableTransaction {
 	FTokenAddr, _ := utils.AddressFromHexString(cfg.FBTC)
-	params := []interface{}{"redeem", []interface{}{account.Address, cfg.Amount}}
-	mutTx, err := genSdk.NeoVM.NewNeoVMInvokeTransaction(cfg.GasPrice, cfg.GasLimit, FTokenAddr, params)
+	params := []interface{}{account.Address, cfg.Amount}}
+	mutTx, err := genSdk.WasmVM.NewInvokeWasmVmTransaction(cfg.GasPrice, cfg.GasLimit, FTokenAddr, "redeem", params)
 	if err != nil {
 		fmt.Println("construct tx err", err)
 	}
@@ -40,8 +40,8 @@ func FtokenRedeem(cfg *config.Config, account *goSdk.Account, genSdk *goSdk.Onto
 //redeemUnderlying
 func FtokenRedeemUnderlying(cfg *config.Config, account *goSdk.Account, genSdk *goSdk.OntologySdk) *types.MutableTransaction {
 	FTokenAddr, _ := utils.AddressFromHexString(cfg.FBTC)
-	params := []interface{}{"redeemUnderlying", []interface{}{account.Address, cfg.Amount}}
-	mutTx, err := genSdk.NeoVM.NewNeoVMInvokeTransaction(cfg.GasPrice, cfg.GasLimit, FTokenAddr, params)
+	params :=  []interface{}{account.Address, cfg.Amount}}
+	mutTx, err := genSdk.WasmVM.NewInvokeWasmVmTransaction(cfg.GasPrice, cfg.GasLimit, FTokenAddr, "redeemUnderlying", params)
 	if err != nil {
 		fmt.Println("construct tx err", err)
 	}
@@ -54,8 +54,8 @@ func FtokenRedeemUnderlying(cfg *config.Config, account *goSdk.Account, genSdk *
 //borrow
 func FtokenBorrow(cfg *config.Config, account *goSdk.Account, genSdk *goSdk.OntologySdk) *types.MutableTransaction {
 	FTokenAddr, _ := utils.AddressFromHexString(cfg.FBTC)
-	params := []interface{}{"borrow", []interface{}{account.Address, cfg.Amount}}
-	mutTx, err := genSdk.NeoVM.NewNeoVMInvokeTransaction(cfg.GasPrice, cfg.GasLimit, FTokenAddr, params)
+	params :=  []interface{}{account.Address, cfg.Amount}}
+	mutTx, err := genSdk.WasmVM.NewInvokeWasmVmTransaction(cfg.GasPrice, cfg.GasLimit, FTokenAddr, "borrow", params)
 	if err != nil {
 		fmt.Println("construct tx err", err)
 	}
@@ -68,8 +68,8 @@ func FtokenBorrow(cfg *config.Config, account *goSdk.Account, genSdk *goSdk.Onto
 //repay borrow
 func FtokenRepayBorrow(cfg *config.Config, account *goSdk.Account, genSdk *goSdk.OntologySdk) *types.MutableTransaction {
 	FTokenAddr, _ := utils.AddressFromHexString(cfg.FBTC)
-	params := []interface{}{"repayBorrow", []interface{}{account.Address, cfg.Amount}}
-	mutTx, err := genSdk.NeoVM.NewNeoVMInvokeTransaction(cfg.GasPrice, cfg.GasLimit, FTokenAddr, params)
+	params :=  []interface{}{account.Address, cfg.Amount}}
+	mutTx, err := genSdk.WasmVM.NewInvokeWasmVmTransaction(cfg.GasPrice, cfg.GasLimit, FTokenAddr, "repayBorrow", params)
 	if err != nil {
 		fmt.Println("construct tx err", err)
 	}
@@ -84,8 +84,8 @@ func FtokenRepayBorrowBehalf(cfg *config.Config, account *goSdk.Account, genSdk 
 	FTokenAddr, _ := utils.AddressFromHexString(cfg.FBTC)
 	payer := account.Address
 	borrower, _ := utils.AddressFromBase58(cfg.AuthAddr)
-	params := []interface{}{"repayBorrowBehalf", []interface{}{payer, borrower, cfg.Amount}}
-	mutTx, err := genSdk.NeoVM.NewNeoVMInvokeTransaction(cfg.GasPrice, cfg.GasLimit, FTokenAddr, params)
+	params :=  []interface{}{payer, borrower, cfg.Amount}}
+	mutTx, err := genSdk.WasmVM.NewInvokeWasmVmTransaction(cfg.GasPrice, cfg.GasLimit, FTokenAddr, "repayBorrowBehalf", params)
 	if err != nil {
 		fmt.Println("construct tx err", err)
 	}
@@ -101,8 +101,8 @@ func FtokenLiquidateBorrow(cfg *config.Config, account *goSdk.Account, genSdk *g
 	payer := account.Address
 	borrower, _ := utils.AddressFromBase58(cfg.AuthAddr)
 	ftokenCollateral, _ := utils.AddressFromHexString(cfg.OUSDT)
-	params := []interface{}{"liquidateBorrow", []interface{}{payer, borrower, cfg.Amount, ftokenCollateral}}
-	mutTx, err := genSdk.NeoVM.NewNeoVMInvokeTransaction(cfg.GasPrice, cfg.GasLimit, FTokenAddr, params)
+	params := []interface{}{payer, borrower, cfg.Amount, ftokenCollateral}}
+	mutTx, err := genSdk.WasmVM.NewInvokeWasmVmTransaction(cfg.GasPrice, cfg.GasLimit, FTokenAddr, "liquidateBorrow", params)
 	if err != nil {
 		fmt.Println("construct tx err", err)
 	}
