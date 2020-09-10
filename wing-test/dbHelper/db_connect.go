@@ -78,10 +78,10 @@ func Query(db *sql.DB, start, end int) *sql.Rows {
 
 }
 
-func QueryAccountFromDb(start, end int) []goSdk.Account {
+func QueryAccountFromDb(start, end int) []*goSdk.Account {
 	db := SetupConnect()
 	rows := Query(db, start, end)
-	accounts := make([]goSdk.Account, end-start)
+	accounts := make([]*goSdk.Account, 0)
 	for rows.Next() {
 		var id int
 		var base58 string
@@ -94,15 +94,18 @@ func QueryAccountFromDb(start, end int) []goSdk.Account {
 		}
 		pkey, _ := hex.DecodeString(wif)
 		pri, _ := keypair.DeserializePrivateKey(pkey)
-		account := goSdk.Account{
+		acct := goSdk.Account{
 			PrivateKey: pri,
 			PublicKey:  pri.Public(),
 			Address:    types.AddressFromPubKey(pri.Public()),
 			SigScheme:  signature.SHA256withECDSA,
 		}
-		accounts = append(accounts, account)
-		log.Infof("base58 :%s, tobase58:%s", base58, account.Address.ToBase58())
+		log.Infof("%s", acct.SigScheme.Name())
+		log.Infof("base58 :%s, tobase58:%s", base58, acct.Address.ToBase58())
+		accounts = append(accounts, &acct)
+
 	}
 	db.Close()
+
 	return accounts
 }

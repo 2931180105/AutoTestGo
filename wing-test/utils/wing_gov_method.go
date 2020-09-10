@@ -151,8 +151,8 @@ func GetAuthorizeStatus(cfg *config.Config, account *goSdk.Account, genSdk *goSd
 //register_pool
 func RegisterPool(cfg *config.Config, account *goSdk.Account, genSdk *goSdk.OntologySdk) *types.MutableTransaction {
 	WingGovAddr, _ := utils.AddressFromHexString(cfg.WingGov)
-	ZeroPoolAddr, _ := utils.AddressFromHexString(cfg.Comptroller)
-	params := []interface{}{account.Address, ZeroPoolAddr, cfg.Weight}
+	PoolAddr, _ := utils.AddressFromHexString(cfg.Comptroller)
+	params := []interface{}{PoolAddr, cfg.Weight}
 	mutTx, err := genSdk.WasmVM.NewInvokeWasmVmTransaction(cfg.GasPrice, cfg.GasLimit, WingGovAddr, "register_pool", params)
 	if err != nil {
 		fmt.Println("construct tx err", err)
@@ -191,7 +191,7 @@ func UpdatePoolWeight(cfg *config.Config, account *goSdk.Account, genSdk *goSdk.
 //query_pool_by_address
 func QueryPoolByAddress(cfg *config.Config, account *goSdk.Account, genSdk *goSdk.OntologySdk) *types.MutableTransaction {
 	WingGovAddr, _ := utils.AddressFromHexString(cfg.WingGov)
-	ZeroPoolAddr, _ := utils.AddressFromHexString(cfg.ZeroPool)
+	ZeroPoolAddr, _ := utils.AddressFromHexString(cfg.Comptroller)
 	params := []interface{}{ZeroPoolAddr}
 	resut, _ := genSdk.WasmVM.PreExecInvokeWasmVMContract(WingGovAddr, "query_pool_by_address", params)
 	log.Infof("get_product_pools: %s", resut.Result)
@@ -254,23 +254,9 @@ func GetProfitContract(cfg *config.Config, account *goSdk.Account, genSdk *goSdk
 	WingGovAddr, _ := utils.AddressFromHexString(cfg.WingGov)
 	params := []interface{}{}
 	resut, _ := genSdk.WasmVM.PreExecInvokeWasmVMContract(WingGovAddr, "get_profit_contract", params)
-	log.Infof("get_product_pools: %s", resut.Result)
+	log.Infof("GetProfitContract: %s", resut.Result)
 
 	return resut
-}
-
-//unbound_token ToDo: invoke failed
-func UnboundToken(cfg *config.Config, account *goSdk.Account, genSdk *goSdk.OntologySdk) *types.MutableTransaction {
-	WingGovAddr, _ := utils.AddressFromHexString(cfg.WingGov)
-	params := []interface{}{}
-	mutTx, err := genSdk.WasmVM.NewInvokeWasmVmTransaction(cfg.GasPrice, cfg.GasLimit, WingGovAddr, "unbound_token", params)
-	if err != nil {
-		fmt.Println("construct tx err", err)
-	}
-	if err := signTx(genSdk, mutTx, cfg.StartNonce, account); err != nil {
-		log.Error(err)
-	}
-	return mutTx
 }
 
 //get_unbound_pool
@@ -283,9 +269,25 @@ func Get_unbound_pool(cfg *config.Config, account *goSdk.Account, genSdk *goSdk.
 	return resut
 }
 
-//unbound_to_pool ToDo: invoke failed
-func Unbound_to_pool(cfg *config.Config, account *goSdk.Account, genSdk *goSdk.OntologySdk) *types.MutableTransaction {
+//unbound_token
+func UnboundToken(cfg *config.Config, account *goSdk.Account, genSdk *goSdk.OntologySdk) *types.MutableTransaction {
 	WingGovAddr, _ := utils.AddressFromHexString(cfg.WingGov)
+	log.Infof("wing gov %s", cfg.WingGov)
+	params := []interface{}{}
+	mutTx, err := genSdk.WasmVM.NewInvokeWasmVmTransaction(cfg.GasPrice, cfg.GasLimit, WingGovAddr, "unbound_token", params)
+	if err != nil {
+		fmt.Println("construct tx err", err)
+	}
+	if err := signTx(genSdk, mutTx, cfg.StartNonce, account); err != nil {
+		log.Error(err)
+	}
+	return mutTx
+}
+
+//unbound_token
+func UnboundToPool2(cfg *config.Config, account *goSdk.Account, genSdk *goSdk.OntologySdk) *types.MutableTransaction {
+	WingGovAddr, _ := utils.AddressFromHexString(cfg.WingGov)
+	log.Infof("wing gov %s", cfg.WingGov)
 	params := []interface{}{}
 	mutTx, err := genSdk.WasmVM.NewInvokeWasmVmTransaction(cfg.GasPrice, cfg.GasLimit, WingGovAddr, "unbound_to_pool", params)
 	if err != nil {
@@ -295,6 +297,83 @@ func Unbound_to_pool(cfg *config.Config, account *goSdk.Account, genSdk *goSdk.O
 		log.Error(err)
 	}
 	return mutTx
+}
+
+//unbound_token
+func UnboundToPool(cfg *config.Config, account *goSdk.Account, genSdk *goSdk.OntologySdk) *types.MutableTransaction {
+	WingGovAddr, _ := utils.AddressFromHexString(cfg.WingGov)
+	log.Infof("wing gov %s", cfg.WingGov)
+	params := []interface{}{}
+	mutTx, err := genSdk.WasmVM.NewInvokeWasmVmTransaction(cfg.GasPrice, cfg.GasLimit, WingGovAddr, "unbound_to_pool", params)
+	if err != nil {
+		fmt.Println("construct tx err", err)
+	}
+	if err := signTx(genSdk, mutTx, cfg.StartNonce, account); err != nil {
+		log.Error(err)
+	}
+	return mutTx
+}
+
+//set_token_operator ToDo: invoke failed
+func Set_token_operator(cfg *config.Config, account *goSdk.Account, genSdk *goSdk.OntologySdk) *types.MutableTransaction {
+	WingGovAddr, _ := utils.AddressFromHexString(cfg.WingGov)
+	log.Infof("Set_token_operator wing gov : %s", cfg.WingGov)
+	params := []interface{}{account.Address}
+	mutTx, err := genSdk.WasmVM.NewInvokeWasmVmTransaction(cfg.GasPrice, cfg.GasLimit, WingGovAddr, "set_token_operator", params)
+	if err != nil {
+		fmt.Println(" Set_token_operator construct tx err", err)
+	}
+	if err := signTx(genSdk, mutTx, cfg.StartNonce, account); err != nil {
+		log.Error(err)
+	}
+	return mutTx
+}
+
+//set_token_operator ToDo: invoke failed
+func Set_pool_operator(cfg *config.Config, account *goSdk.Account, genSdk *goSdk.OntologySdk) *types.MutableTransaction {
+	WingGovAddr, _ := utils.AddressFromHexString(cfg.WingGov)
+	log.Infof("Set_token_operator wing gov : %s", cfg.WingGov)
+	params := []interface{}{account.Address}
+	mutTx, err := genSdk.WasmVM.NewInvokeWasmVmTransaction(cfg.GasPrice, cfg.GasLimit, WingGovAddr, "set_pool_operator", params)
+	if err != nil {
+		fmt.Println(" Set_token_operator construct tx err", err)
+	}
+	if err := signTx(genSdk, mutTx, cfg.StartNonce, account); err != nil {
+		log.Error(err)
+	}
+	return mutTx
+}
+
+//get_token_operator
+func Get_token_operator(cfg *config.Config, account *goSdk.Account, genSdk *goSdk.OntologySdk) *common.PreExecResult {
+	WingGovAddr, _ := utils.AddressFromHexString(cfg.WingGov)
+	params := []interface{}{}
+	resut, err := genSdk.WasmVM.PreExecInvokeWasmVMContract(WingGovAddr, "get_token_operator", params)
+	if err != nil {
+		log.Infof("get_token_operator: %s", err)
+	}
+	if resut.Result != nil {
+		log.Infof("get_token_operator: %s", resut.Result)
+	} else {
+		log.Info("get_token_operator result is nil")
+	}
+	return resut
+}
+
+//get_pool_operator
+func Get_pool_operator(cfg *config.Config, account *goSdk.Account, genSdk *goSdk.OntologySdk) *common.PreExecResult {
+	WingGovAddr, _ := utils.AddressFromHexString(cfg.WingGov)
+	params := []interface{}{}
+	resut, err := genSdk.WasmVM.PreExecInvokeWasmVMContract(WingGovAddr, "get_pool_operator", params)
+	if err != nil {
+		log.Infof("get_token_operator: %s", err)
+	}
+	if resut.Result != nil {
+		log.Infof("get_pool_operator: %s", resut.Result)
+	} else {
+		log.Info("get_pool_operator result is nil")
+	}
+	return resut
 }
 
 //query_unbound_to_pool
@@ -567,10 +646,10 @@ func Set_exchange_rates(cfg *config.Config, account *goSdk.Account, genSdk *goSd
 	return mutTx
 }
 
-//migrate TODO: not finished
+//migrate
 func WingGovMigrate(cfg *config.Config, account *goSdk.Account, genSdk *goSdk.OntologySdk) {
 	WingGovAddr, _ := utils.AddressFromHexString(cfg.WingGov)
-	bytes, err := ioutil.ReadFile("wing-test/contract/wing_dao_contracts_new.wasm.str")
+	bytes, err := ioutil.ReadFile("wing-test/contract/testnet/wing_dao_contracts_new.wasm.str")
 	if err != nil {
 		log.Fatal(err)
 	}
@@ -592,6 +671,7 @@ func WingGovMigrate(cfg *config.Config, account *goSdk.Account, genSdk *goSdk.On
 	if err != nil {
 		log.Errorf("send  tx failed, err: %s********", err)
 	}
+	log.Infof("txhash ", hash1.ToHexString())
 	time.Sleep(time.Second * 3)
 	PrintSmartEventByHash_Ont(genSdk, hash1.ToHexString())
 }

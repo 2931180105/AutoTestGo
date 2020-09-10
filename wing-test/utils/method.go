@@ -38,7 +38,7 @@ func ContractInit(cfg *config.Config, account *goSdk.Account, genSdk *goSdk.Onto
 }
 
 func DeployContractProfit(cfg *config.Config, account *goSdk.Account, genSdk *goSdk.OntologySdk) common.Uint256 {
-	bytes, err := ioutil.ReadFile("wing-test/contract/profit.wasm.str")
+	bytes, err := ioutil.ReadFile("wing-test/contract/testnet/profit.wasm.str")
 	if err != nil {
 		log.Fatal(err)
 	}
@@ -107,13 +107,13 @@ func DeployContractWingToken(cfg *config.Config, account *goSdk.Account, genSdk 
 	}
 	return result
 }
-func BatchStaking(cfg *config.Config, account *goSdk.Account, genSdk *goSdk.OntologySdk, accts []goSdk.Account) {
+func BatchStaking(cfg *config.Config, account *goSdk.Account, genSdk *goSdk.OntologySdk, accts []*goSdk.Account) {
 	ZeroPoolAddr, _ := utils.AddressFromHexString(cfg.ZeroPool)
 	for i := 0; i < len(accts); i++ {
 		acct := accts[i]
 		params := []interface{}{acct.Address, cfg.StakeOnt}
 		mutTx, _ := genSdk.WasmVM.NewInvokeWasmVmTransaction(cfg.GasPrice, cfg.GasLimit, ZeroPoolAddr, "staking", params)
-		if err := signTx(genSdk, mutTx, cfg.StartNonce, &acct); err != nil {
+		if err := signTx(genSdk, mutTx, cfg.StartNonce, acct); err != nil {
 			log.Error(err)
 		}
 		time.Sleep(time.Second)

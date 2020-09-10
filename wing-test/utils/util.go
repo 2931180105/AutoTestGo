@@ -63,7 +63,7 @@ func getContractAddr(addr string) OntCommon.Address {
 	return ContractAddr
 }
 
-func GenerateAccounts(cfg *config.Config, admin *ontology_go_sdk.Account, goSdk *ontology_go_sdk.OntologySdk) []ontology_go_sdk.Account {
+func GenerateAccounts(cfg *config.Config, admin *ontology_go_sdk.Account, goSdk *ontology_go_sdk.OntologySdk) []*ontology_go_sdk.Account {
 	//accts := make([]*ontology_go_sdk.Account, cfg.AccountNum)
 	before_amount_ont, _ := goSdk.Native.Ont.BalanceOf(admin.Address)
 	before_amount_ong, _ := goSdk.Native.Ong.BalanceOf(admin.Address)
@@ -90,7 +90,7 @@ func GenerateAccounts(cfg *config.Config, admin *ontology_go_sdk.Account, goSdk 
 	log.Infof("balance change of ONG : %d", before_amount_ong-after_amount_ong)
 	return accounts
 }
-func NewAccountToDb() {
+func NewAccountToDb(cfg *config.Config, admin *ontology_go_sdk.Account, goSdk *ontology_go_sdk.OntologySdk) {
 	db := DbHelp.SetupConnect()
 	wallet, _ := ontology_go_sdk.NewOntologySdk().CreateWallet("tmp2.dat")
 	pwd := []byte("123456")
@@ -98,8 +98,10 @@ func NewAccountToDb() {
 	if err != nil {
 		log.Infof(" new account error : %s", err)
 	}
+	log.Infof("%s", account.SigScheme.Name())
 	base58 := account.Address.ToBase58()
 	hexWif := keypair.SerializePrivateKey(account.PrivateKey)
-	DbHelp.Insert(db, base58, hex.EncodeToString(hexWif), 1, 2, 3)
+	hexWifStr := hex.EncodeToString(hexWif)
+	DbHelp.Insert(db, base58, hexWifStr, 1, 2, 3)
 	db.Close()
 }
