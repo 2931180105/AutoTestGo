@@ -13,33 +13,36 @@ var sdk = goSdk.NewOntologySdk()
 
 func main() {
 	log.InitLog(log.InfoLog, log.PATH, log.Stdout)
-	configPath := "wing-test/config.json"
+	configPath := "wing-test/config_testnet.json"
 	cfg, _ := config.ParseConfig(configPath)
 	wallet, _ := sdk.OpenWallet(cfg.Wallet)
 	account, _ := wallet.GetDefaultAccount([]byte(cfg.Password))
 	//account,_ := Utils.NewAccountByWif("L1nfGvz19cWXHDLeEMMC6vozhSLANCy9E2gNxh3YwHJMXReLddNw")
 	rpcClient := client.NewRpcClient()
-	rpcClient.SetAddress(cfg.Rpc[3])
+	rpcClient.SetAddress(cfg.Rpc[2])
 	sdk.SetDefaultClient(rpcClient)
-	//Utils.Get_support_token(cfg, account, sdk)
 	//Utils.Get_exchange_rate(cfg, account, sdk)
-	Utils.WingGovMigrate(cfg, account, sdk)
+	//Utils.QueryPoolCount(cfg, account, sdk)
+
+	//reslut2 := Utils.WingGovMigrate(cfg, account, sdk)
+	//log.Infof("hash", reslut2.ToHexString())
 	//Utils.GovTokenBalanceOf(cfg,"AaLXuZ7rCME3QyL3aXWst5socmj4jw1vjG",sdk)
-	//accts := Utils.GenerateAccounts(cfg, account, sdk)
-	//Utils.BatchStaking(cfg, account, sdk, accts)
-	Utils.Get_global_address(cfg, account, sdk)
+	accts := Utils.GenerateAccounts(cfg, account, sdk)
+	Utils.BatchStaking(cfg, account, sdk, accts)
 	//reslut2 := Utils.DeployContractWingGov(cfg, account, sdk)
 	//log.Infof("hash", reslut2.ToHexString())
 	//time.Sleep(time.Second * 3)
 	if false {
-		hash1, err := sdk.SendTransaction(Utils.SetFFactor(cfg, account, sdk))
+		hash1, err := sdk.SendTransaction(Utils.RegisterPool(cfg, account, sdk))
 		if err != nil {
 			log.Errorf("send  tx failed, err: %s********", err)
+			return
 		}
 		time.Sleep(time.Second * 3)
 		Utils.PrintSmartEventByHash_Ont(sdk, hash1.ToHexString())
 	}
-	//Utils.
+	Utils.QueryPoolCount(cfg, account, sdk)
+
 	//Utils.BatchUnStakeing(cfg, account, sdk, accts)
 }
 func deployContract(cfg *config.Config, account *goSdk.Account, genSdk *goSdk.OntologySdk) {
@@ -53,5 +56,5 @@ func deployContract(cfg *config.Config, account *goSdk.Account, genSdk *goSdk.On
 	log.Infof("hash", reslut3.ToHexString())
 	reslut4 := Utils.DeployContractOracle(cfg, account, sdk)
 	log.Infof("hash", reslut4.ToHexString())
-	Utils.DeployContractFlash(cfg, account, sdk)
+	//Utils.DeployContractFlash(cfg, account, sdk)
 }

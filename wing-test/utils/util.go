@@ -1,8 +1,10 @@
 package utils
 
 import (
+	"encoding/hex"
 	"fmt"
 	config "github.com/mockyz/AutoTestGo/wing-test/config_ont"
+	DbHelp "github.com/mockyz/AutoTestGo/wing-test/dbHelper"
 	"github.com/ontio/ontology-crypto/keypair"
 	ontology_go_sdk "github.com/ontio/ontology-go-sdk"
 	sdkcommon "github.com/ontio/ontology-go-sdk/common"
@@ -61,29 +63,24 @@ func getContractAddr(addr string) OntCommon.Address {
 	return ContractAddr
 }
 
-func GenerateAccounts(cfg *config.Config, admin *ontology_go_sdk.Account, goSdk *ontology_go_sdk.OntologySdk) []*ontology_go_sdk.Account {
-	pwd := []byte("123456")
-	wallet, _ := goSdk.CreateWallet("tmp2.dat")
-	accts := make([]*ontology_go_sdk.Account, cfg.AccountNum)
+func GenerateAccounts(cfg *config.Config, admin *ontology_go_sdk.Account, goSdk *ontology_go_sdk.OntologySdk) []ontology_go_sdk.Account {
+	//accts := make([]*ontology_go_sdk.Account, cfg.AccountNum)
 	before_amount_ont, _ := goSdk.Native.Ont.BalanceOf(admin.Address)
 	before_amount_ong, _ := goSdk.Native.Ong.BalanceOf(admin.Address)
+	accounts := DbHelp.QueryAccountFromDb(0, cfg.AccountNum)
 	for i := 0; i < cfg.AccountNum; i++ {
-		acct, _ := wallet.NewDefaultSettingAccount(pwd)
+		acct := accounts[i]
 		txhash, err := goSdk.Native.Ont.Transfer(cfg.GasPrice, cfg.GasLimit, admin, admin, acct.Address, cfg.Amount)
 		if err != nil {
 			log.Errorf("send tx failed, err: %s********", err)
 		} else {
 			log.Infof("send  Ont sentnum:***%d", txhash.ToHexString(), i)
 		}
-		//time.Sleep(time.Second * 3)
-		//PrintSmartEventByHash_Ont(goSdk,txHash.ToHexString())
 		txhash, err = goSdk.Native.Ong.Transfer(cfg.GasPrice, cfg.GasLimit, admin, admin, acct.Address, cfg.Amount*100000000)
 		if err != nil {
 			log.Errorf("send ONG tx failed, err: %s********", err)
 		}
-		accts[i] = acct
 	}
-	wallet.Save()
 	time.Sleep(time.Second * 6)
 	after_amount_ont, _ := goSdk.Native.Ont.BalanceOf(admin.Address)
 	after_amount_ong, _ := goSdk.Native.Ong.BalanceOf(admin.Address)
@@ -91,5 +88,18 @@ func GenerateAccounts(cfg *config.Config, admin *ontology_go_sdk.Account, goSdk 
 	log.Infof("before_amount_ong: %d , after_amount_ong  : %d", before_amount_ong, after_amount_ong)
 	log.Infof("balance change of ONT : %d", before_amount_ont-after_amount_ont)
 	log.Infof("balance change of ONG : %d", before_amount_ong-after_amount_ong)
-	return accts
+	return accounts
+}
+func NewAccountToDb() {
+	db := DbHelp.SetupConnect()
+	wallet, _ := ontology_go_sdk.NewOntologySdk().CreateWallet("tmp2.dat")
+	pwd := []byte("123456")
+	account, err := wallet.NewDefaultSettingAccount(pwd)
+	if err != nil {
+		log.Infof(" new account error : %s", err)
+	}
+	base58 := account.Address.ToBase58()
+	hexWif := keypair.SerializePrivateKey(account.PrivateKey)
+	DbHelp.Insert(db, base58, hex.EncodeToString(hexWif), 1, 2, 3)
+	db.Close()
 }

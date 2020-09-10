@@ -55,7 +55,7 @@ func DeployContractProfit(cfg *config.Config, account *goSdk.Account, genSdk *go
 	return result
 }
 func DeployContractWingGov(cfg *config.Config, account *goSdk.Account, genSdk *goSdk.OntologySdk) common.Uint256 {
-	bytes, err := ioutil.ReadFile("wing-test/contract/wing_dao_contracts.wasm.str")
+	bytes, err := ioutil.ReadFile("wing-test/contract/testnet/wing_dao_contracts.wasm.str")
 	if err != nil {
 		log.Fatal(err)
 	}
@@ -91,7 +91,7 @@ func DeployContractOracle(cfg *config.Config, account *goSdk.Account, genSdk *go
 }
 
 func DeployContractWingToken(cfg *config.Config, account *goSdk.Account, genSdk *goSdk.OntologySdk) common.Uint256 {
-	bytes, err := ioutil.ReadFile("wing-test/contract/wing.avm")
+	bytes, err := ioutil.ReadFile("wing-test/contract/testnet/wing.avm")
 	if err != nil {
 		log.Fatal(err)
 	}
@@ -101,21 +101,22 @@ func DeployContractWingToken(cfg *config.Config, account *goSdk.Account, genSdk 
 		log.Error(err)
 	}
 	log.Infof("Wing address : %s", CodeContractAddr.ToHexString())
-	result, err := genSdk.NeoVM.DeployNeoVMSmartContract(cfg.GasPrice, cfg.GasLimit, account, true, CodeStr, "name", "version", "author", "email", "desc")
+	result, err := genSdk.NeoVM.DeployNeoVMSmartContract(cfg.GasPrice, cfg.GasLimit, account, true, CodeStr, "WING Token", "1.0.1", "Wing Team", "support@wing.finance", "Wing is a credit-based, cross-chain DeFi platform.")
 	if err != nil {
 		log.Errorf("deployContreac  failed: %s", err)
 	}
 	return result
 }
-func BatchStaking(cfg *config.Config, account *goSdk.Account, genSdk *goSdk.OntologySdk, accts []*goSdk.Account) {
+func BatchStaking(cfg *config.Config, account *goSdk.Account, genSdk *goSdk.OntologySdk, accts []goSdk.Account) {
 	ZeroPoolAddr, _ := utils.AddressFromHexString(cfg.ZeroPool)
 	for i := 0; i < len(accts); i++ {
 		acct := accts[i]
 		params := []interface{}{acct.Address, cfg.StakeOnt}
 		mutTx, _ := genSdk.WasmVM.NewInvokeWasmVmTransaction(cfg.GasPrice, cfg.GasLimit, ZeroPoolAddr, "staking", params)
-		if err := signTx(genSdk, mutTx, cfg.StartNonce, acct); err != nil {
+		if err := signTx(genSdk, mutTx, cfg.StartNonce, &acct); err != nil {
 			log.Error(err)
 		}
+		time.Sleep(time.Second)
 		txhash, err := genSdk.SendTransaction(mutTx)
 		if err != nil {
 			log.Errorf("send tx failed, err: %s********", err)

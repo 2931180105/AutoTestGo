@@ -151,7 +151,7 @@ func GetAuthorizeStatus(cfg *config.Config, account *goSdk.Account, genSdk *goSd
 //register_pool
 func RegisterPool(cfg *config.Config, account *goSdk.Account, genSdk *goSdk.OntologySdk) *types.MutableTransaction {
 	WingGovAddr, _ := utils.AddressFromHexString(cfg.WingGov)
-	ZeroPoolAddr, _ := utils.AddressFromHexString(cfg.ZeroPool)
+	ZeroPoolAddr, _ := utils.AddressFromHexString(cfg.Comptroller)
 	params := []interface{}{account.Address, ZeroPoolAddr, cfg.Weight}
 	mutTx, err := genSdk.WasmVM.NewInvokeWasmVmTransaction(cfg.GasPrice, cfg.GasLimit, WingGovAddr, "register_pool", params)
 	if err != nil {
@@ -539,8 +539,8 @@ func Set_exchange_rate(cfg *config.Config, account *goSdk.Account, genSdk *goSdk
 //get_exchange_rate
 func Get_exchange_rate(cfg *config.Config, account *goSdk.Account, genSdk *goSdk.OntologySdk) {
 	WingGovAddr, _ := utils.AddressFromHexString(cfg.WingGov)
-	OETHAddr, _ := utils.AddressFromHexString(cfg.OETH)
-	token := NewToken("ETH", 2, OETHAddr)
+	OETHAddr, _ := utils.AddressFromBase58(cfg.ONT)
+	token := NewToken("ONT", 1, OETHAddr)
 	sink := OntCommon.NewZeroCopySink(nil)
 	sink.WriteString("get_exchange_rate")
 	token.Serialize(sink)
@@ -567,7 +567,7 @@ func Get_exchange_rate(cfg *config.Config, account *goSdk.Account, genSdk *goSdk
 	log.Infof("result: %s", resut.Result)
 }
 
-//set_exchange_rate batch TODO: invoke failed
+//set_exchange_rates batch TODO: invoke failed
 func Set_exchange_rates(cfg *config.Config, account *goSdk.Account, genSdk *goSdk.OntologySdk) *types.MutableTransaction {
 	WingGovAddr, _ := utils.AddressFromHexString(cfg.WingGov)
 	params := []interface{}{}
