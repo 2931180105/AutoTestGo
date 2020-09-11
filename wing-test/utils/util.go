@@ -46,7 +46,7 @@ func PrintSmartEventByHash_Ont(sdk *ontology_go_sdk.OntologySdk, txHash string) 
 	return evts.Notify
 }
 
-func signTx(sdk *ontology_go_sdk.OntologySdk, tx *types.MutableTransaction, nonce uint32, signer ontology_go_sdk.Signer) error {
+func SignTx(sdk *ontology_go_sdk.OntologySdk, tx *types.MutableTransaction, nonce uint32, signer ontology_go_sdk.Signer) error {
 	if nonce != 0 {
 		tx.Nonce = nonce
 	}
@@ -90,15 +90,14 @@ func GenerateAccounts(cfg *config.Config, admin *ontology_go_sdk.Account, goSdk 
 	log.Infof("balance change of ONG : %d", before_amount_ong-after_amount_ong)
 	return accounts
 }
-func NewAccountToDb(cfg *config.Config, admin *ontology_go_sdk.Account, goSdk *ontology_go_sdk.OntologySdk) {
+func NewAccountToDb(wallet *ontology_go_sdk.Wallet) {
 	db := DbHelp.SetupConnect()
-	wallet, _ := ontology_go_sdk.NewOntologySdk().CreateWallet("tmp2.dat")
 	pwd := []byte("123456")
 	account, err := wallet.NewDefaultSettingAccount(pwd)
 	if err != nil {
 		log.Infof(" new account error : %s", err)
 	}
-	log.Infof("%s", account.SigScheme.Name())
+	log.Infof("wallet account: %s", wallet.GetAccountCount())
 	base58 := account.Address.ToBase58()
 	hexWif := keypair.SerializePrivateKey(account.PrivateKey)
 	hexWifStr := hex.EncodeToString(hexWif)

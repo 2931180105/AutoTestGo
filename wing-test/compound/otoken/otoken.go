@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"github.com/mockyz/AutoTestGo/common/log"
 	config "github.com/mockyz/AutoTestGo/wing-test/config_ont"
+	WingUtils "github.com/mockyz/AutoTestGo/wing-test/utils"
 	goSdk "github.com/ontio/ontology-go-sdk"
 	"github.com/ontio/ontology-go-sdk/utils"
 	"github.com/ontio/ontology/core/types"
@@ -19,7 +20,7 @@ func OTokenInit(cfg *config.Config, account *goSdk.Account, genSdk *goSdk.Ontolo
 	if err != nil {
 		fmt.Println("construct tx err", err)
 	}
-	if err := signTx(genSdk, mutTx, cfg.StartNonce, account); err != nil {
+	if err := WingUtils.SignTx(genSdk, mutTx, cfg.StartNonce, account); err != nil {
 		log.Error(err)
 	}
 	return mutTx
@@ -34,7 +35,7 @@ func OTokenTransfer(cfg *config.Config, account *goSdk.Account, genSdk *goSdk.On
 	if err != nil {
 		fmt.Println("construct tx err", err)
 	}
-	if err := signTx(genSdk, mutTx, cfg.StartNonce, account); err != nil {
+	if err := WingUtils.SignTx(genSdk, mutTx, cfg.StartNonce, account); err != nil {
 		log.Error(err)
 	}
 	return mutTx
@@ -47,7 +48,7 @@ func OWBTCTokenTransfer(cfg *config.Config, account *goSdk.Account, sdk *goSdk.O
 	if err != nil {
 		fmt.Println("construct tx err", err)
 	}
-	if err := signTx(sdk, mutTx, cfg.StartNonce, account); err != nil {
+	if err := WingUtils.SignTx(sdk, mutTx, cfg.StartNonce, account); err != nil {
 		log.Error(err)
 	}
 	hash1, err := sdk.SendTransaction(mutTx)
@@ -70,7 +71,7 @@ func WingTokenTransfer(cfg *config.Config, account *goSdk.Account, genSdk *goSdk
 	if err != nil {
 		fmt.Println("construct tx err", err)
 	}
-	if err := signTx(genSdk, mutTx, cfg.StartNonce, account); err != nil {
+	if err := WingUtils.SignTx(genSdk, mutTx, cfg.StartNonce, account); err != nil {
 		log.Error(err)
 	}
 	hash1, err := genSdk.SendTransaction(mutTx)
@@ -89,7 +90,7 @@ func OETHTokenTransfer(cfg *config.Config, account *goSdk.Account, genSdk *goSdk
 	if err != nil {
 		fmt.Println("construct tx err", err)
 	}
-	if err := signTx(genSdk, mutTx, cfg.StartNonce, account); err != nil {
+	if err := WingUtils.SignTx(genSdk, mutTx, cfg.StartNonce, account); err != nil {
 		log.Error(err)
 	}
 	hash1, err := genSdk.SendTransaction(OTokenTransfer(cfg, account, genSdk))
@@ -108,7 +109,7 @@ func OUSDTTokenTransfer(cfg *config.Config, account *goSdk.Account, genSdk *goSd
 	if err != nil {
 		fmt.Println("construct tx err", err)
 	}
-	if err := signTx(genSdk, mutTx, cfg.StartNonce, account); err != nil {
+	if err := WingUtils.SignTx(genSdk, mutTx, cfg.StartNonce, account); err != nil {
 		log.Error(err)
 	}
 	hash1, err := genSdk.SendTransaction(mutTx)
@@ -127,7 +128,7 @@ func ApproveOToken(cfg *config.Config, account *goSdk.Account, genSdk *goSdk.Ont
 	if err != nil {
 		fmt.Println("construct tx err", err)
 	}
-	if err := signTx(genSdk, mutTx, cfg.StartNonce, account); err != nil {
+	if err := WingUtils.SignTx(genSdk, mutTx, cfg.StartNonce, account); err != nil {
 		log.Error(err)
 	}
 	hash1, err := genSdk.SendTransaction(mutTx)
