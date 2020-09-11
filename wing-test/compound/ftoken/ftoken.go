@@ -1,4 +1,4 @@
-package compound
+package ftoken
 
 import (
 	"fmt"
