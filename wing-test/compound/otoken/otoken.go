@@ -13,8 +13,8 @@ import (
 var ToAddres = "ANxSSzWmFnAtqWBtq2KthP73oX4bHf9FyZ"
 
 //init
-func OTokenInit(cfg *config.Config, account *goSdk.Account, genSdk *goSdk.OntologySdk) *types.MutableTransaction {
-	OTokenAddr, _ := utils.AddressFromHexString(cfg.OWBTC)
+func OTokenInit(cfg *config.Config, account *goSdk.Account, genSdk *goSdk.OntologySdk, oToken string) *types.MutableTransaction {
+	OTokenAddr, _ := utils.AddressFromHexString(oToken)
 	params := []interface{}{"init", []interface{}{}}
 	mutTx, err := genSdk.NeoVM.NewNeoVMInvokeTransaction(cfg.GasPrice, cfg.GasLimit, OTokenAddr, params)
 	if err != nil {
@@ -27,8 +27,8 @@ func OTokenInit(cfg *config.Config, account *goSdk.Account, genSdk *goSdk.Ontolo
 }
 
 //ATqpnrgVjzmkeHEqPiErnsxTEgi5goor2e
-func OTokenTransfer(cfg *config.Config, account *goSdk.Account, genSdk *goSdk.OntologySdk) *types.MutableTransaction {
-	OTokenAddr, _ := utils.AddressFromHexString(cfg.OWBTC)
+func OTokenTransfer(cfg *config.Config, account *goSdk.Account, genSdk *goSdk.OntologySdk, oToken string) *types.MutableTransaction {
+	OTokenAddr, _ := utils.AddressFromHexString(oToken)
 	toAddress, _ := utils.AddressFromBase58(ToAddres)
 	params := []interface{}{"transfer", []interface{}{account.Address, toAddress, 1000000000}}
 	mutTx, err := genSdk.NeoVM.NewNeoVMInvokeTransaction(cfg.GasPrice, cfg.GasLimit, OTokenAddr, params)
@@ -40,8 +40,8 @@ func OTokenTransfer(cfg *config.Config, account *goSdk.Account, genSdk *goSdk.On
 	}
 	return mutTx
 }
-func OWBTCTokenTransfer(cfg *config.Config, account *goSdk.Account, sdk *goSdk.OntologySdk, toAddrees string) {
-	OTokenAddr, _ := utils.AddressFromHexString(cfg.OWBTC)
+func OWBTCTokenTransfer(cfg *config.Config, account *goSdk.Account, sdk *goSdk.OntologySdk, toAddrees string, oToken string) {
+	OTokenAddr, _ := utils.AddressFromHexString(oToken)
 	toAddress, _ := utils.AddressFromBase58(toAddrees)
 	params := []interface{}{"transfer", []interface{}{account.Address, toAddress, 1000000000}}
 	mutTx, err := sdk.NeoVM.NewNeoVMInvokeTransaction(cfg.GasPrice, cfg.GasLimit, OTokenAddr, params)
@@ -82,8 +82,8 @@ func WingTokenTransfer(cfg *config.Config, account *goSdk.Account, genSdk *goSdk
 	}
 
 }
-func OETHTokenTransfer(cfg *config.Config, account *goSdk.Account, genSdk *goSdk.OntologySdk, toAddrees string) {
-	OTokenAddr, _ := utils.AddressFromHexString(cfg.OETH)
+func OETHTokenTransfer(cfg *config.Config, account *goSdk.Account, genSdk *goSdk.OntologySdk, toAddrees string, oToken string) {
+	OTokenAddr, _ := utils.AddressFromHexString(oToken)
 	toAddress, _ := utils.AddressFromBase58(toAddrees)
 	params := []interface{}{"transfer", []interface{}{account.Address, toAddress, 100000000000}}
 	mutTx, err := genSdk.NeoVM.NewNeoVMInvokeTransaction(cfg.GasPrice, cfg.GasLimit, OTokenAddr, params)
@@ -101,8 +101,8 @@ func OETHTokenTransfer(cfg *config.Config, account *goSdk.Account, genSdk *goSdk
 	}
 }
 
-func OUSDTTokenTransfer(cfg *config.Config, account *goSdk.Account, genSdk *goSdk.OntologySdk, toAddrees string) {
-	OTokenAddr, _ := utils.AddressFromHexString(cfg.OUSDT)
+func OUSDTTokenTransfer(cfg *config.Config, account *goSdk.Account, genSdk *goSdk.OntologySdk, toAddrees string, oToken string) {
+	OTokenAddr, _ := utils.AddressFromHexString(oToken)
 	toAddress, _ := utils.AddressFromBase58(toAddrees)
 	params := []interface{}{"transfer", []interface{}{account.Address, toAddress, 100000000000}}
 	mutTx, err := genSdk.NeoVM.NewNeoVMInvokeTransaction(cfg.GasPrice, cfg.GasLimit, OTokenAddr, params)
@@ -120,8 +120,27 @@ func OUSDTTokenTransfer(cfg *config.Config, account *goSdk.Account, genSdk *goSd
 	}
 }
 
-func ApproveOToken(cfg *config.Config, account *goSdk.Account, genSdk *goSdk.OntologySdk, toAddrees string) {
-	OTokenAddr, _ := utils.AddressFromHexString(cfg.OETH)
+func ApproveOToken(cfg *config.Config, account *goSdk.Account, genSdk *goSdk.OntologySdk, toAddrees string, oToken string) {
+	OTokenAddr, _ := utils.AddressFromHexString(oToken)
+	toAddress, _ := utils.AddressFromHexString(toAddrees)
+	params := []interface{}{"approve", []interface{}{account.Address, toAddress, 100000000000}}
+	mutTx, err := genSdk.NeoVM.NewNeoVMInvokeTransaction(cfg.GasPrice, cfg.GasLimit, OTokenAddr, params)
+	if err != nil {
+		fmt.Println("construct tx err", err)
+	}
+	if err := WingUtils.SignTx(genSdk, mutTx, cfg.StartNonce, account); err != nil {
+		log.Error(err)
+	}
+	hash1, err := genSdk.SendTransaction(mutTx)
+	if err != nil {
+		log.Errorf("send  tx failed, err: %s********", err)
+	} else {
+		log.Infof("txhash: %s", hash1.ToHexString())
+	}
+}
+
+func AllowanceToken(cfg *config.Config, account *goSdk.Account, genSdk *goSdk.OntologySdk, toAddrees string, oToken string) {
+	OTokenAddr, _ := utils.AddressFromHexString(oToken)
 	toAddress, _ := utils.AddressFromHexString(toAddrees)
 	params := []interface{}{"approve", []interface{}{account.Address, toAddress, 100000000000}}
 	mutTx, err := genSdk.NeoVM.NewNeoVMInvokeTransaction(cfg.GasPrice, cfg.GasLimit, OTokenAddr, params)
