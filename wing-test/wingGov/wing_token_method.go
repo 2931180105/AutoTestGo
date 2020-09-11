@@ -1,4 +1,4 @@
-package utils
+package wingGov
 
 import (
 	"fmt"
@@ -27,8 +27,8 @@ func GovTokenInit(cfg *config.Config, account *goSdk.Account, genSdk *goSdk.Onto
 	}
 	return mutTx
 }
-func GovTokenSetGov(cfg *config.Config, account *goSdk.Account, genSdk *goSdk.OntologySdk) *types.MutableTransaction {
-	WingGovAddr, _ := utils.AddressFromHexString(cfg.WingProfit)
+func WingTokenSetGov(cfg *config.Config, account *goSdk.Account, genSdk *goSdk.OntologySdk) *types.MutableTransaction {
+	WingGovAddr, _ := utils.AddressFromHexString(cfg.WingGov)
 	WingToken, _ := utils.AddressFromHexString(cfg.GovToken)
 	params := []interface{}{"setGovernanceAddress", []interface{}{WingGovAddr}}
 	mutTx, err := genSdk.NeoVM.NewNeoVMInvokeTransaction(cfg.GasPrice, cfg.GasLimit, WingToken, params)
@@ -58,5 +58,32 @@ func GovTokenBalanceOf(cfg *config.Config, addr string, genSdk *goSdk.OntologySd
 	params := []interface{}{"balanceOf", []interface{}{balanceAddr}}
 	resut, _ := genSdk.NeoVM.PreExecInvokeNeoVMContract(ContractAddr, params)
 	log.Infof("GovTokenBalanceOf: %s", resut.Result)
+	return resut
+}
+
+//query_pool_count
+func WingTokenGetGovAddr(cfg *config.Config, genSdk *goSdk.OntologySdk) *common.PreExecResult {
+	ContractAddr, _ := utils.AddressFromHexString(cfg.GovToken)
+	params := []interface{}{"getGovernanceAddress", []interface{}{}}
+	resut, _ := genSdk.NeoVM.PreExecInvokeNeoVMContract(ContractAddr, params)
+	log.Infof("GovTokenBalanceOf: %s", resut.Result)
+	return resut
+}
+
+//getGovernanceAddress
+func GetGovAddress(cfg *config.Config, genSdk *goSdk.OntologySdk) *common.PreExecResult {
+	ContractAddr, _ := utils.AddressFromHexString(cfg.GovToken)
+	params := []interface{}{"getGovernanceAddress", []interface{}{}}
+	resut, _ := genSdk.NeoVM.PreExecInvokeNeoVMContract(ContractAddr, params)
+	log.Infof("getGovernanceAddress: %s", resut.Result)
+	return resut
+}
+
+//getGovernanceAddress
+func WingTokenTotalSupply(cfg *config.Config, genSdk *goSdk.OntologySdk) *common.PreExecResult {
+	ContractAddr, _ := utils.AddressFromHexString(cfg.GovToken)
+	params := []interface{}{"totalSupply", []interface{}{}}
+	resut, _ := genSdk.NeoVM.PreExecInvokeNeoVMContract(ContractAddr, params)
+	log.Infof("getGovernanceAddress: %s", resut.Result)
 	return resut
 }

@@ -1,7 +1,8 @@
-package utils
+package wingGov
 
 import (
 	"github.com/mockyz/AutoTestGo/common/log"
+	Utils "github.com/mockyz/AutoTestGo/wing-test/utils"
 	goSdk "github.com/ontio/ontology-go-sdk"
 	"github.com/ontio/ontology-go-sdk/utils"
 	"github.com/ontio/ontology/common"
@@ -18,7 +19,7 @@ import (
 //contract  init TODO: add need more invoke
 func ContractInit(cfg *config.Config, account *goSdk.Account, genSdk *goSdk.OntologySdk) []*types.MutableTransaction {
 	var InitTx []*types.MutableTransaction
-	InitTx = append(InitTx, GovTokenInit(cfg, account, genSdk), GovTokenSetGov(cfg, account, genSdk), WingProfitInit(cfg, account, genSdk), WingGovInit(cfg, account, genSdk), OracleInit(cfg, account, genSdk), OracleSetDecimal(cfg, account, genSdk))
+	InitTx = append(InitTx, GovTokenInit(cfg, account, genSdk), WingTokenSetGov(cfg, account, genSdk), WingProfitInit(cfg, account, genSdk), WingGovInit(cfg, account, genSdk), OracleInit(cfg, account, genSdk), OracleSetDecimal(cfg, account, genSdk))
 	//GovTokenInit(cfg, account, genSdk)
 	//GovTokenSetGov(cfg, account, genSdk)
 	//WingProfitInit(cfg, account, genSdk)
@@ -55,7 +56,7 @@ func DeployContractProfit(cfg *config.Config, account *goSdk.Account, genSdk *go
 	return result
 }
 func DeployContractWingGov(cfg *config.Config, account *goSdk.Account, genSdk *goSdk.OntologySdk) common.Uint256 {
-	bytes, err := ioutil.ReadFile("wing-test/contract/testnet/wing_dao_contracts.wasm.str")
+	bytes, err := ioutil.ReadFile("/Users/yaoyao/go/src/github.com/mockyz/AutoTestGo/wing-test/contract/testnet/wing_dao_contracts.wasm.str")
 	if err != nil {
 		log.Fatal(err)
 	}
@@ -64,7 +65,7 @@ func DeployContractWingGov(cfg *config.Config, account *goSdk.Account, genSdk *g
 	if err != nil {
 		log.Error(err)
 	}
-	log.Infof("GovCodeContract address : %s", GovCodeContract.ToHexString())
+	log.Infof("wing Gov address : %s", GovCodeContract.ToHexString())
 	result, err := genSdk.WasmVM.DeployWasmVMSmartContract(cfg.GasPrice, cfg.GasLimit, account, GovCodeStr, "name", "version", "author", "email", "desc")
 	if err != nil {
 		log.Errorf("deployContreac  failed: %s", err)
@@ -126,7 +127,7 @@ func BatchStaking(cfg *config.Config, account *goSdk.Account, genSdk *goSdk.Onto
 	}
 }
 
-func BatchUnStakeing(cfg *config.Config, account *goSdk.Account, genSdk *goSdk.OntologySdk, accts []*goSdk.Account) {
+func BatchUnStaking(cfg *config.Config, account *goSdk.Account, genSdk *goSdk.OntologySdk, accts []*goSdk.Account) {
 	ZeroPoolAddr, _ := utils.AddressFromHexString(cfg.ZeroPool)
 	//accts := GenerateAccounts(cfg, account, genSdk)
 	for i := 0; i < len(accts); i++ {
@@ -147,4 +148,32 @@ func BatchUnStakeing(cfg *config.Config, account *goSdk.Account, genSdk *goSdk.O
 		resut2, _ := genSdk.NeoVM.PreExecInvokeNeoVMContract(ZeroPoolAddr, []interface{}{"balanceOf", []interface{}{acct.Address}})
 		log.Infof("Address %s , WIng Token BalanceOf : %s", acct.Address.ToBase58(), resut2)
 	}
+}
+func AddAllSuuportToken(cfg *config.Config, account *goSdk.Account, sdk *goSdk.OntologySdk) {
+	hash1, err := sdk.SendTransaction(Add_support_token(cfg, account, sdk, "DAI", cfg.ODAI))
+	if err != nil {
+		log.Errorf("send DAI tx failed, err: %s********", err)
+	}
+	time.Sleep(time.Second * 3)
+	Utils.PrintSmartEventByHash_Ont(sdk, hash1.ToHexString())
+	hash1, err = sdk.SendTransaction(Add_support_token(cfg, account, sdk, "ETH", cfg.OETH))
+	if err != nil {
+		log.Errorf("send  tx failed, err: %s********", err)
+		return
+	}
+	time.Sleep(time.Second * 3)
+	Utils.PrintSmartEventByHash_Ont(sdk, hash1.ToHexString())
+	hash1, err = sdk.SendTransaction(Add_support_token(cfg, account, sdk, "BTC", cfg.OWBTC))
+	if err != nil {
+		log.Errorf("send  tx failed, err: %s********", err)
+		return
+	}
+	hash1, err = sdk.SendTransaction(Add_support_token(cfg, account, sdk, "USDT", cfg.OUSDT))
+	if err != nil {
+		log.Errorf("send  tx failed, err: %s********", err)
+		return
+	}
+	time.Sleep(time.Second * 3)
+	Utils.PrintSmartEventByHash_Ont(sdk, hash1.ToHexString())
+
 }

@@ -1,12 +1,12 @@
 {
-  "Wallet": "wing-test/WING_OTHER_OWNER.dat",
+  "Wallet": "wing-test/WING_FLASH_ASSET_OPERATOR.dat",
   "Password": "12345678",
   "SDRate": 0,
   "WingStartTime": 20,
   "Oracle": "356fb121f0812e4be51d5668d3d26832d2121695",
   "GovToken": "00c59fcd27a562d6397883eab1f2fff56e58ef80",
   "ZeroPool": "3081fb6a2b72d5b1a78111886b37bee48b7f5965",
-  "WingGov": "32cce7c8d4d887f5e5f29acff0b76e9eeb473c02",
+  "WingGov": "38f957755afd12b2149a3490af00a13385f2073e",
   "WingProfit": "b1865486666558f6c628bdaee2ee08921288a9ef",
   "GlobalParam": "a7e169ef9ab7930d573850c1152780d8d7530458",
   "Pool2": "09489abaedf02734d012d6617edcb6aa029f239b",
@@ -32,10 +32,9 @@
   "GasPrice": 2500,
   "GasLimit": 32000000000,
   "Rpc": [
-    "http://172.168.3.151:20336",
-    "http://172.168.3.152:20336",
-    "http://polaris3.ont.io:20336",
-    "http://dappnode3.ont.io:20336"
+    "http://dappnode3.ont.io:20336",
+    "http://dappnode2.ont.io:20336",
+    "http://dappnode1.ont.io:20336"
   ],
   "TotalStaticProfit": 100,
   "LendAmount": [

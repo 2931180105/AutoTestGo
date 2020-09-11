@@ -45,7 +45,6 @@ func main() {
 				}
 			}
 			for j := uint(0); j < txNumPerRoutine; j++ {
-
 				if cfg.SendTx {
 					sentNum++
 					now := time.Now().UnixNano() / 1e6 // ms

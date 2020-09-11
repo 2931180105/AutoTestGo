@@ -1,7 +1,6 @@
 package main
 
 import (
-	OToken "github.com/mockyz/AutoTestGo/wing-test/compound/otoken"
 	config "github.com/mockyz/AutoTestGo/wing-test/config_ont"
 	Utils "github.com/mockyz/AutoTestGo/wing-test/utils"
 	WingGov "github.com/mockyz/AutoTestGo/wing-test/wingGov"
@@ -15,52 +14,37 @@ var sdk = goSdk.NewOntologySdk()
 
 func main() {
 	log.InitLog(log.InfoLog, log.PATH, log.Stdout)
-	configPath := "wing-test/config_testnet.json"
-	cfg, _ := config.ParseConfig(configPath)
-	wallet, _ := sdk.OpenWallet(cfg.Wallet)
+	configPath := "wing-test/config_main.json"
+	cfg, err := config.ParseConfig(configPath)
+	if err != nil {
+		log.Errorf("error: %s", err)
+	}
+	wallet, err := sdk.OpenWallet(cfg.Wallet)
+	if err != nil {
+		log.Errorf("error: %s", err)
+	}
 	account, _ := wallet.GetDefaultAccount([]byte(cfg.Password))
 	rpcClient := client.NewRpcClient()
-	rpcClient.SetAddress(cfg.Rpc[2])
+	rpcClient.SetAddress(cfg.Rpc[1])
 	sdk.SetDefaultClient(rpcClient)
+	//WingGov.BatchStaking(cfg, account, sdk,Utils.GetAccounts(cfg))
+	//time.Sleep(time.Second*10)
+	//WingGov.BatchUnStaking(cfg, account, sdk,Utils.GetAccounts(cfg))
+	//
 	//WingGov.WingGovMigrate(cfg, account, sdk)
-	//Compound.BalanceOfOToken(cfg,account, sdk, "BalanceOfOToken")
-	OToken.TransferAllTestToken(cfg, account, sdk, "ANxSSzWmFnAtqWBtq2KthP73oX4bHf9FyZ")
-	//accts := Utils.GenerateAccounts(cfg, account, sdk)
-	//Utils.BatchStaking(cfg, account, sdk, accts)
-	//reslut2 := Utils.DeployContractWingToken(cfg, account, sdk)
-	//log.Infof("hash", reslut2.ToHexString())
-	//WingGov.QueryPoolByAddress(cfg, account, sdk)
-	//time.Sleep(time.Second * 3)
+	//WingGov.Get_admin_address(cfg, account, sdk)
+	//WingGov.DeployContractWingGov(cfg, account, sdk)
+	//WingGov.WingTokenGetGovAddr(cfg, sdk)
+	WingGov.Query_unbound_to_pool(cfg, account, sdk)
 	if false {
-		hash1, err := sdk.SendTransaction(WingGov.Add_support_token(cfg, account, sdk))
+		hash1, err := sdk.SendTransaction(WingGov.UnboundToPool(cfg, account, sdk))
 		if err != nil {
 			log.Errorf("send  tx failed, err: %s********", err)
 			return
 		}
 		time.Sleep(time.Second * 3)
 		Utils.PrintSmartEventByHash_Ont(sdk, hash1.ToHexString())
-		//
-		//hash1, err = sdk.SendTransaction(Utils.Set_pool_operator(cfg, account, sdk))
-		//if err != nil {
-		//	log.Errorf("send  tx failed, err: %s********", err)
-		//	return
-		//}
-		//time.Sleep(time.Second * 3)
-		//Utils.PrintSmartEventByHash_Ont(sdk, hash1.ToHexString())
 	}
-	//Compound.ApproveOToken(cfg, account, sdk, cfg.FETH)
-	//if false {
-	//	hash1, err := sdk.SendTransaction(Compound.OUSDTTokenTransfer(cfg, account, sdk))
-	//	if err != nil {
-	//		log.Errorf("send  tx failed, err: %s********", err)
-	//		return
-	//	}
-	//	time.Sleep(time.Second * 3)
-	//	Utils.PrintSmartEventByHash_Ont(sdk, hash1.ToHexString())
-	//}
-	//Utils.QueryPoolCount(cfg, account, sdk)
-
-	//Utils.BatchUnStakeing(cfg, account, sdk, accts)
 }
 func deployContract(cfg *config.Config, account *goSdk.Account, genSdk *goSdk.OntologySdk) {
 	//reslut := Utils.DeployContractOracle(cfg, account, sdk)

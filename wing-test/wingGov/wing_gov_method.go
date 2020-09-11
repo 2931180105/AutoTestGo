@@ -1,4 +1,4 @@
-package utils
+package wingGov
 
 import (
 	"encoding/hex"
@@ -47,6 +47,14 @@ func Set_oracle_address(cfg *config.Config, account *goSdk.Account, genSdk *goSd
 		log.Error(err)
 	}
 	return mutTx
+}
+
+//get_oracle_address
+func Get_admin_address(cfg *config.Config, account *goSdk.Account, genSdk *goSdk.OntologySdk) {
+	WingGovAddr, _ := utils.AddressFromHexString(cfg.WingGov)
+	params := []interface{}{}
+	resut, _ := genSdk.WasmVM.PreExecInvokeWasmVMContract(WingGovAddr, "get_admin", params)
+	log.Infof("get_oracle_address: %s", resut.Result)
 }
 
 //get_oracle_address
@@ -152,11 +160,11 @@ func GetAuthorizeStatus(cfg *config.Config, account *goSdk.Account, genSdk *goSd
 //register_pool
 func RegisterPool(cfg *config.Config, account *goSdk.Account, genSdk *goSdk.OntologySdk) *types.MutableTransaction {
 	WingGovAddr, _ := utils.AddressFromHexString(cfg.WingGov)
-	PoolAddr, _ := utils.AddressFromHexString(cfg.Comptroller)
+	PoolAddr, _ := utils.AddressFromHexString(cfg.ZeroPool)
 	params := []interface{}{PoolAddr, cfg.Weight}
 	mutTx, err := genSdk.WasmVM.NewInvokeWasmVmTransaction(cfg.GasPrice, cfg.GasLimit, WingGovAddr, "register_pool", params)
 	if err != nil {
-		fmt.Println("construct tx err", err)
+		fmt.Println(" register_pool construct tx err", err)
 	}
 	if err := signTx(genSdk, mutTx, cfg.StartNonce, account); err != nil {
 		log.Error(err)
@@ -176,9 +184,8 @@ func GetProductPools(cfg *config.Config, account *goSdk.Account, genSdk *goSdk.O
 //update_pool_weight
 func UpdatePoolWeight(cfg *config.Config, account *goSdk.Account, genSdk *goSdk.OntologySdk) *types.MutableTransaction {
 	WingGovAddr, _ := utils.AddressFromHexString(cfg.WingGov)
-	AuthAddr, _ := utils.AddressFromBase58(cfg.Owner)
-	ZeroPoolAddr, _ := utils.AddressFromHexString(cfg.ZeroPool)
-	params := []interface{}{AuthAddr, ZeroPoolAddr, cfg.Weight}
+	ZeroPoolAddr, _ := utils.AddressFromHexString(cfg.Comptroller)
+	params := []interface{}{ZeroPoolAddr, cfg.Weight}
 	mutTx, err := genSdk.WasmVM.NewInvokeWasmVmTransaction(cfg.GasPrice, cfg.GasLimit, WingGovAddr, "update_pool_weight", params)
 	if err != nil {
 		fmt.Println("construct tx err", err)
@@ -192,7 +199,7 @@ func UpdatePoolWeight(cfg *config.Config, account *goSdk.Account, genSdk *goSdk.
 //query_pool_by_address
 func QueryPoolByAddress(cfg *config.Config, account *goSdk.Account, genSdk *goSdk.OntologySdk) *types.MutableTransaction {
 	WingGovAddr, _ := utils.AddressFromHexString(cfg.WingGov)
-	ZeroPoolAddr, _ := utils.AddressFromHexString(cfg.Comptroller)
+	ZeroPoolAddr, _ := utils.AddressFromHexString(cfg.ZeroPool)
 	params := []interface{}{ZeroPoolAddr}
 	resut, _ := genSdk.WasmVM.PreExecInvokeWasmVMContract(WingGovAddr, "query_pool_by_address", params)
 	log.Infof("query_pool_by_address: %s", resut.Result)
@@ -277,7 +284,7 @@ func UnboundToken(cfg *config.Config, account *goSdk.Account, genSdk *goSdk.Onto
 	params := []interface{}{}
 	mutTx, err := genSdk.WasmVM.NewInvokeWasmVmTransaction(cfg.GasPrice, cfg.GasLimit, WingGovAddr, "unbound_token", params)
 	if err != nil {
-		fmt.Println("construct tx err", err)
+		fmt.Println("construct unbound_token tx err", err)
 	}
 	if err := signTx(genSdk, mutTx, cfg.StartNonce, account); err != nil {
 		log.Error(err)
@@ -523,10 +530,10 @@ func SetFFactor(cfg *config.Config, account *goSdk.Account, genSdk *goSdk.Ontolo
 }
 
 //add_support_token
-func Add_support_token(cfg *config.Config, account *goSdk.Account, genSdk *goSdk.OntologySdk) *types.MutableTransaction {
+func Add_support_token(cfg *config.Config, account *goSdk.Account, genSdk *goSdk.OntologySdk, oTokenName, oToken string) *types.MutableTransaction {
 	WingGovAddr, _ := utils.AddressFromHexString(cfg.WingGov)
-	OETHAddr, _ := utils.AddressFromHexString(cfg.OUSDT)
-	token := Utils.NewToken("USDT", 2, OETHAddr)
+	oToeknAddr, _ := utils.AddressFromHexString(oToken)
+	token := Utils.NewToken(oTokenName, 2, oToeknAddr)
 	sink := OntCommon.NewZeroCopySink(nil)
 	sink.WriteString("add_support_token")
 	token.Serialize(sink)
@@ -650,7 +657,7 @@ func Set_exchange_rates(cfg *config.Config, account *goSdk.Account, genSdk *goSd
 //migrate
 func WingGovMigrate(cfg *config.Config, account *goSdk.Account, genSdk *goSdk.OntologySdk) {
 	WingGovAddr, _ := utils.AddressFromHexString(cfg.WingGov)
-	bytes, err := ioutil.ReadFile("wing-test/contract/testnet/wing_dao_contracts_new.wasm.str")
+	bytes, err := ioutil.ReadFile("wing-test/contract/mainnet/wing_dao_contracts_new.wasm.str")
 	if err != nil {
 		log.Fatal(err)
 	}
@@ -662,7 +669,7 @@ func WingGovMigrate(cfg *config.Config, account *goSdk.Account, genSdk *goSdk.On
 	log.Infof("CodeContractAddr address : %s", CodeContractAddr.ToBase58())
 	log.Infof("CodeContractAddr address : %s", CodeContractAddr.ToHexString())
 
-	params := []interface{}{CodeStr, 3, "WING Token", "1.0.1", "Wing Team", "support@wing.finance", "Wing is a credit-based, cross-chain DeFi platform."}
+	params := []interface{}{CodeStr, 3, "WING Governance", "1.0.1", "Wing Team", "support@wing.finance", "Wing is a credit-based, cross-chain DeFi platform."}
 	mutTx, _ := genSdk.WasmVM.NewInvokeWasmVmTransaction(cfg.GasPrice, cfg.GasLimit, WingGovAddr, "migrate", params)
 
 	if err := signTx(genSdk, mutTx, cfg.StartNonce, account); err != nil {

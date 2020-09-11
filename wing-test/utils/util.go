@@ -90,6 +90,12 @@ func GenerateAccounts(cfg *config.Config, admin *ontology_go_sdk.Account, goSdk 
 	log.Infof("balance change of ONG : %d", before_amount_ong-after_amount_ong)
 	return accounts
 }
+
+func GetAccounts(cfg *config.Config) []*ontology_go_sdk.Account {
+
+	accounts := DbHelp.QueryAccountFromDb(0, cfg.AccountNum)
+	return accounts
+}
 func NewAccountToDb(wallet *ontology_go_sdk.Wallet) {
 	db := DbHelp.SetupConnect()
 	pwd := []byte("123456")
