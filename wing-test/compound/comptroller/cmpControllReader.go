@@ -19,7 +19,7 @@ type CmpControllReader struct {
 }
 
 func NewCmpControllReader() *CmpControllReader {
-	configPath := "wing-test/config_testnet.json"
+	configPath := "/home/ubuntu/go/src/github.com/mockyz/AutoTestGo/wing-test/config_testnet.json"
 	cfg, _ := config.ParseConfig(configPath)
 	//account,_ := Utils.NewAccountByWif("L1nfGvz19cWXHDLeEMMC6vozhSLANCy9E2gNxh3YwHJMXReLddNw")
 	rpcClient := client.NewRpcClient()
@@ -57,7 +57,7 @@ func (self *CmpControllReader) SendPreExecuteTx(contractAddrHex, methodName stri
 	preExecResult, _ := self.GenSdk.WasmVM.PreExecInvokeWasmVMContract(
 		contractAddr, methodName, params)
 
-	log.Infof("execute result: %s", preExecResult.Result.ToString())
+	log.Infof("execute result: %s", preExecResult.Result)
 }
 
 func (self *CmpControllReader) Mintallowed(contractAddrHex, fTokenHex, minterHex string) {

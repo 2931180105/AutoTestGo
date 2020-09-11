@@ -148,3 +148,89 @@ func BatchUnStakeing(cfg *config.Config, account *goSdk.Account, genSdk *goSdk.O
 		log.Infof("Address %s , WIng Token BalanceOf : %s", acct.Address.ToBase58(), resut2)
 	}
 }
+
+func DeployContractOWBTCToken(cfg *config.Config, account *goSdk.Account, genSdk *goSdk.OntologySdk) common.Uint256 {
+	bytes, err := ioutil.ReadFile("wing-test/contract/testnet/OWBTC.avm")
+	if err != nil {
+		log.Fatal(err)
+	}
+	CodeStr := string(bytes)
+	CodeContractAddr, err := utils.GetContractAddress(CodeStr)
+	if err != nil {
+		log.Error(err)
+	}
+	log.Infof("OWBTC address : %s", CodeContractAddr.ToHexString())
+	result, err := genSdk.NeoVM.DeployNeoVMSmartContract(cfg.GasPrice, cfg.GasLimit, account, true, CodeStr, "OWBTC", "1.0.1", "Wing Team", "support@wing.finance", "Wing is a credit-based, cross-chain DeFi platform.")
+	if err != nil {
+		log.Errorf("deployContreac  failed: %s", err)
+	}
+	return result
+}
+func DeployContractOUSDTToken(cfg *config.Config, account *goSdk.Account, genSdk *goSdk.OntologySdk) common.Uint256 {
+	bytes, err := ioutil.ReadFile("wing-test/contract/testnet/OUSDT.avm")
+	if err != nil {
+		log.Fatal(err)
+	}
+	CodeStr := string(bytes)
+	CodeContractAddr, err := utils.GetContractAddress(CodeStr)
+	if err != nil {
+		log.Error(err)
+	}
+	log.Infof("OUSDT address : %s", CodeContractAddr.ToHexString())
+	result, err := genSdk.NeoVM.DeployNeoVMSmartContract(cfg.GasPrice, cfg.GasLimit, account, true, CodeStr, "OUSDT", "1.0.1", "Wing Team", "support@wing.finance", "Wing is a credit-based, cross-chain DeFi platform.")
+	if err != nil {
+		log.Errorf("deployContreac  failed: %s", err)
+	}
+	return result
+}
+func DeployContractONTDToken(cfg *config.Config, account *goSdk.Account, genSdk *goSdk.OntologySdk) common.Uint256 {
+	bytes, err := ioutil.ReadFile("wing-test/contract/testnet/ONTD.avm")
+	if err != nil {
+		log.Fatal(err)
+	}
+	CodeStr := string(bytes)
+	CodeContractAddr, err := utils.GetContractAddress(CodeStr)
+	if err != nil {
+		log.Error(err)
+	}
+	log.Infof("ONTD address : %s", CodeContractAddr.ToHexString())
+	result, err := genSdk.NeoVM.DeployNeoVMSmartContract(cfg.GasPrice, cfg.GasLimit, account, true, CodeStr, "ONTD", "1.0.1", "Wing Team", "support@wing.finance", "Wing is a credit-based, cross-chain DeFi platform.")
+	if err != nil {
+		log.Errorf("deployContreac  failed: %s", err)
+	}
+	return result
+}
+func DeployContractOETHToken(cfg *config.Config, account *goSdk.Account, genSdk *goSdk.OntologySdk) common.Uint256 {
+	bytes, err := ioutil.ReadFile("wing-test/contract/testnet/OETH.avm")
+	if err != nil {
+		log.Fatal(err)
+	}
+	CodeStr := string(bytes)
+	CodeContractAddr, err := utils.GetContractAddress(CodeStr)
+	if err != nil {
+		log.Error(err)
+	}
+	log.Infof("OETH address : %s", CodeContractAddr.ToHexString())
+	result, err := genSdk.NeoVM.DeployNeoVMSmartContract(cfg.GasPrice, cfg.GasLimit, account, true, CodeStr, "OETH", "1.0.1", "Wing Team", "support@wing.finance", "Wing is a credit-based, cross-chain DeFi platform.")
+	if err != nil {
+		log.Errorf("deployContreac  failed: %s", err)
+	}
+	return result
+}
+func DeployContractODAIToken(cfg *config.Config, account *goSdk.Account, genSdk *goSdk.OntologySdk) common.Uint256 {
+	bytes, err := ioutil.ReadFile("/home/ubuntu/go/src/github.com/mockyz/AutoTestGo/wing-test/contract/testnet/ODAI.avm")
+	if err != nil {
+		log.Fatal(err)
+	}
+	CodeStr := string(bytes)
+	CodeContractAddr, err := utils.GetContractAddress(CodeStr)
+	if err != nil {
+		log.Error(err)
+	}
+	log.Infof("ODAI address : %s", CodeContractAddr.ToHexString())
+	result, err := genSdk.NeoVM.DeployNeoVMSmartContract(cfg.GasPrice, cfg.GasLimit, account, true, CodeStr, "ODAI", "1.0.1", "Wing Team", "support@wing.finance", "Wing is a credit-based, cross-chain DeFi platform.")
+	if err != nil {
+		log.Errorf("deployContreac  failed: %s", err)
+	}
+	return result
+}
