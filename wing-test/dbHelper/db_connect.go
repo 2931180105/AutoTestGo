@@ -44,7 +44,7 @@ func Insert(db *sql.DB, base58 string, wif string, balance_ont int, balance_wing
 	}
 }
 
-var UPDATE_DATA = `UPDATE student SET age=28 WHERE sname="唐僧";`
+var UPDATE_DATA = `UPDATE account_info SET staking_amount=? WHERE base58="?";`
 
 // 修改数据
 func Update(db *sql.DB) {

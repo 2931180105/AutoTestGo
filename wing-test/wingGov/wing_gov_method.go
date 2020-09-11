@@ -4,6 +4,7 @@ import (
 	"encoding/hex"
 	"fmt"
 	config "github.com/mockyz/AutoTestGo/wing-test/config_ont"
+	Utils "github.com/mockyz/AutoTestGo/wing-test/utils"
 	goSdk "github.com/ontio/ontology-go-sdk"
 	"github.com/ontio/ontology-go-sdk/common"
 	"github.com/ontio/ontology-go-sdk/utils"
@@ -19,10 +20,10 @@ import (
 //gov init
 func WingGovInit(cfg *config.Config, account *goSdk.Account, genSdk *goSdk.OntologySdk) *types.MutableTransaction {
 	WingGovAddr, _ := utils.AddressFromHexString(cfg.WingGov)
-	WingProfit := getContractAddr(cfg.WingProfit)
-	Oracle := getContractAddr(cfg.Oracle)
+	WingProfit, _ := utils.AddressFromHexString(cfg.WingProfit)
+	Oracle, _ := utils.AddressFromHexString(cfg.Oracle)
 	WingToken, _ := utils.AddressFromHexString(cfg.GovToken)
-	GlobalParam := getContractAddr(cfg.GlobalParam)
+	GlobalParam, _ := utils.AddressFromHexString(cfg.GlobalParam)
 	params := []interface{}{WingToken, WingProfit, Oracle, GlobalParam, cfg.SDRate}
 	mutTx, err := genSdk.WasmVM.NewInvokeWasmVmTransaction(cfg.GasPrice, cfg.GasLimit, WingGovAddr, "init", params)
 	if err != nil {
@@ -36,7 +37,7 @@ func WingGovInit(cfg *config.Config, account *goSdk.Account, genSdk *goSdk.Ontol
 
 func Set_oracle_address(cfg *config.Config, account *goSdk.Account, genSdk *goSdk.OntologySdk) *types.MutableTransaction {
 	WingGovAddr, _ := utils.AddressFromHexString(cfg.WingGov)
-	Oracle := getContractAddr(cfg.Oracle)
+	Oracle, _ := utils.AddressFromHexString(cfg.Oracle)
 	params := []interface{}{Oracle}
 	mutTx, err := genSdk.WasmVM.NewInvokeWasmVmTransaction(cfg.GasPrice, cfg.GasLimit, WingGovAddr, "set_oracle_address", params)
 	if err != nil {
@@ -194,10 +195,10 @@ func QueryPoolByAddress(cfg *config.Config, account *goSdk.Account, genSdk *goSd
 	ZeroPoolAddr, _ := utils.AddressFromHexString(cfg.Comptroller)
 	params := []interface{}{ZeroPoolAddr}
 	resut, _ := genSdk.WasmVM.PreExecInvokeWasmVMContract(WingGovAddr, "query_pool_by_address", params)
-	log.Infof("get_product_pools: %s", resut.Result)
+	log.Infof("query_pool_by_address: %s", resut.Result)
 	mutTx, err := genSdk.WasmVM.NewInvokeWasmVmTransaction(cfg.GasPrice, cfg.GasLimit, WingGovAddr, "query_pool_by_address", params)
 	if err != nil {
-		fmt.Println("construct tx err", err)
+		fmt.Println("construct query_pool_by_address tx err", err)
 	}
 	if err := signTx(genSdk, mutTx, cfg.StartNonce, account); err != nil {
 		log.Error(err)
@@ -524,8 +525,8 @@ func SetFFactor(cfg *config.Config, account *goSdk.Account, genSdk *goSdk.Ontolo
 //add_support_token
 func Add_support_token(cfg *config.Config, account *goSdk.Account, genSdk *goSdk.OntologySdk) *types.MutableTransaction {
 	WingGovAddr, _ := utils.AddressFromHexString(cfg.WingGov)
-	OETHAddr, _ := utils.AddressFromHexString(cfg.OETH)
-	token := NewToken("OETH", 2, OETHAddr)
+	OETHAddr, _ := utils.AddressFromHexString(cfg.OWBTC)
+	token := Utils.NewToken("BTC", 2, OETHAddr)
 	sink := OntCommon.NewZeroCopySink(nil)
 	sink.WriteString("add_support_token")
 	token.Serialize(sink)
@@ -574,7 +575,7 @@ func Get_f_fatcor(cfg *config.Config, account *goSdk.Account, genSdk *goSdk.Onto
 func Set_exchange_rate(cfg *config.Config, account *goSdk.Account, genSdk *goSdk.OntologySdk) *types.MutableTransaction {
 	WingGovAddr, _ := utils.AddressFromHexString(cfg.WingGov)
 	ONT, _ := utils.AddressFromBase58(cfg.ONT)
-	token := NewToken("ONT", 1, ONT)
+	token := Utils.NewToken("ONT", 1, ONT)
 	sink := OntCommon.NewZeroCopySink(nil)
 	sink.WriteString("set_exchange_rate")
 	token.Serialize(sink)
@@ -605,7 +606,7 @@ func Set_exchange_rate(cfg *config.Config, account *goSdk.Account, genSdk *goSdk
 func Get_exchange_rate(cfg *config.Config, account *goSdk.Account, genSdk *goSdk.OntologySdk) {
 	WingGovAddr, _ := utils.AddressFromHexString(cfg.WingGov)
 	OETHAddr, _ := utils.AddressFromBase58(cfg.ONT)
-	token := NewToken("ONT", 1, OETHAddr)
+	token := Utils.NewToken("ONT", 1, OETHAddr)
 	sink := OntCommon.NewZeroCopySink(nil)
 	sink.WriteString("get_exchange_rate")
 	token.Serialize(sink)
@@ -673,7 +674,7 @@ func WingGovMigrate(cfg *config.Config, account *goSdk.Account, genSdk *goSdk.On
 	}
 	log.Infof("txhash ", hash1.ToHexString())
 	time.Sleep(time.Second * 3)
-	PrintSmartEventByHash_Ont(genSdk, hash1.ToHexString())
+	Utils.PrintSmartEventByHash_Ont(genSdk, hash1.ToHexString())
 }
 
 //migrate TODO: not finished

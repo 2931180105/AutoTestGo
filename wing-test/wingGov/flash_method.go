@@ -386,3 +386,15 @@ func SetMarketAddr(cfg *config.Config, account *goSdk.Account, genSdk *goSdk.Ont
 		log.Infof("send tx %s****sentnum:***%d", hash.ToHexString(), cfg.StartNonce)
 	}
 }
+
+func signTx(sdk *goSdk.OntologySdk, tx *types.MutableTransaction, nonce uint32, signer goSdk.Signer) error {
+	if nonce != 0 {
+		tx.Nonce = nonce
+	}
+	tx.Sigs = nil
+	err := sdk.SignToTransaction(tx, signer)
+	if err != nil {
+		return fmt.Errorf("sign tx failed, err: %s", err)
+	}
+	return nil
+}
