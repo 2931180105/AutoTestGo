@@ -1,6 +1,7 @@
 package main
 
 import (
+	OToken "github.com/mockyz/AutoTestGo/wing-test/compound/otoken"
 	config "github.com/mockyz/AutoTestGo/wing-test/config_ont"
 	Utils "github.com/mockyz/AutoTestGo/wing-test/utils"
 	WingGov "github.com/mockyz/AutoTestGo/wing-test/wingGov"
@@ -23,15 +24,15 @@ func main() {
 	sdk.SetDefaultClient(rpcClient)
 	//WingGov.WingGovMigrate(cfg, account, sdk)
 	//Compound.BalanceOfOToken(cfg,account, sdk, "BalanceOfOToken")
-	//Compound.TransferAllTestToken(cfg,account, sdk, "BalanceOfOToken")
+	OToken.TransferAllTestToken(cfg, account, sdk, "ANxSSzWmFnAtqWBtq2KthP73oX4bHf9FyZ")
 	//accts := Utils.GenerateAccounts(cfg, account, sdk)
 	//Utils.BatchStaking(cfg, account, sdk, accts)
 	//reslut2 := Utils.DeployContractWingToken(cfg, account, sdk)
 	//log.Infof("hash", reslut2.ToHexString())
-	WingGov.QueryPoolByAddress(cfg, account, sdk)
+	//WingGov.QueryPoolByAddress(cfg, account, sdk)
 	//time.Sleep(time.Second * 3)
 	if false {
-		hash1, err := sdk.SendTransaction(WingGov.RegisterPool(cfg, account, sdk))
+		hash1, err := sdk.SendTransaction(WingGov.Add_support_token(cfg, account, sdk))
 		if err != nil {
 			log.Errorf("send  tx failed, err: %s********", err)
 			return

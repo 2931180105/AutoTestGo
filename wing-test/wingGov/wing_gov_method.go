@@ -525,8 +525,8 @@ func SetFFactor(cfg *config.Config, account *goSdk.Account, genSdk *goSdk.Ontolo
 //add_support_token
 func Add_support_token(cfg *config.Config, account *goSdk.Account, genSdk *goSdk.OntologySdk) *types.MutableTransaction {
 	WingGovAddr, _ := utils.AddressFromHexString(cfg.WingGov)
-	OETHAddr, _ := utils.AddressFromHexString(cfg.OWBTC)
-	token := Utils.NewToken("BTC", 2, OETHAddr)
+	OETHAddr, _ := utils.AddressFromHexString(cfg.OUSDT)
+	token := Utils.NewToken("USDT", 2, OETHAddr)
 	sink := OntCommon.NewZeroCopySink(nil)
 	sink.WriteString("add_support_token")
 	token.Serialize(sink)

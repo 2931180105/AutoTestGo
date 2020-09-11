@@ -93,7 +93,7 @@ func OETHTokenTransfer(cfg *config.Config, account *goSdk.Account, genSdk *goSdk
 	if err := WingUtils.SignTx(genSdk, mutTx, cfg.StartNonce, account); err != nil {
 		log.Error(err)
 	}
-	hash1, err := genSdk.SendTransaction(OTokenTransfer(cfg, account, genSdk))
+	hash1, err := genSdk.SendTransaction(OTokenTransfer(cfg, account, genSdk, oToken))
 	if err != nil {
 		log.Errorf("send  tx failed, err: %s********", err)
 	} else {
@@ -169,7 +169,9 @@ func BalanceOfOToken(cfg *config.Config, account *goSdk.Account, genSdk *goSdk.O
 
 func TransferAllTestToken(cfg *config.Config, account *goSdk.Account, sdk *goSdk.OntologySdk, toAddrees string) {
 	WingTokenTransfer(cfg, account, sdk, toAddrees)
-	OUSDTTokenTransfer(cfg, account, sdk, toAddrees)
-	OWBTCTokenTransfer(cfg, account, sdk, toAddrees)
-	OETHTokenTransfer(cfg, account, sdk, toAddrees)
+	OUSDTTokenTransfer(cfg, account, sdk, toAddrees, cfg.OUSDT)
+	OWBTCTokenTransfer(cfg, account, sdk, toAddrees, cfg.OWBTC)
+	OETHTokenTransfer(cfg, account, sdk, toAddrees, cfg.OETH)
+	OETHTokenTransfer(cfg, account, sdk, toAddrees, cfg.ODAI)
+
 }
