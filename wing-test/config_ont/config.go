@@ -34,6 +34,7 @@ type Config struct {
 	OUSDT              string
 	OWBTC              string
 	OETH               string
+	ONTD               string
 	ONT                string
 	FBTC               string
 	FETH               string
