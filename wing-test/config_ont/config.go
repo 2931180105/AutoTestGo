@@ -35,6 +35,7 @@ type Config struct {
 	OWBTC              string
 	OETH               string
 	ONTD               string
+	ODAI               string
 	ONT                string
 	FBTC               string
 	FETH               string
