@@ -9,7 +9,7 @@ import (
 
 func GetTestConfig() (*config.Config, *goSdk.Account, *goSdk.OntologySdk) {
 	var sdk = goSdk.NewOntologySdk()
-	configPath := "../config_prv.json"
+	configPath := "../config_testnet.json"
 	cfg, _ := config.ParseConfig(configPath)
 	wallet, _ := sdk.OpenWallet("../wallet.dat")
 	account, _ := wallet.GetDefaultAccount([]byte(cfg.Password))

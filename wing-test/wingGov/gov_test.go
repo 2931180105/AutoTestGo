@@ -90,3 +90,9 @@ func TestMigrateGov(t *testing.T) {
 	WingGovMigrate(cfg, account, sdk, "/Users/yaoyao/go/src/github.com/mockyz/AutoTestGo/wing-test/contract/private/wing_dao_contracts_new.wasm.str")
 
 }
+func TestOracle(t *testing.T) {
+	cfg, account, sdk := GetTestConfig()
+	OraclePutUnderlyingPrice(cfg, account, sdk)
+	OracleGetUnderlyingPrice(cfg, account, sdk, "ONT")
+
+}
