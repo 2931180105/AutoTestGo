@@ -29,7 +29,9 @@ func OTokenInit(cfg *config.Config, account *goSdk.Account, genSdk *goSdk.Ontolo
 func OTokenTransfer(cfg *config.Config, account *goSdk.Account, sdk *goSdk.OntologySdk, toAddres, oToken string) {
 	OTokenAddr, _ := utils.AddressFromHexString(oToken)
 	toAddress, _ := utils.AddressFromBase58(toAddres)
-	params := []interface{}{"transfer", []interface{}{account.Address, toAddress, 1000000000}}
+	//big.{10000000000000000000000000}
+	amount := WingUtils.ToIntByPrecise("100", 18)
+	params := []interface{}{"transfer", []interface{}{account.Address, toAddress, amount}}
 	mutTx, err := sdk.NeoVM.NewNeoVMInvokeTransaction(cfg.GasPrice, cfg.GasLimit, OTokenAddr, params)
 	if err != nil {
 		fmt.Println("construct tx err", err)
@@ -89,7 +91,8 @@ func WingTokenTransfer(cfg *config.Config, account *goSdk.Account, genSdk *goSdk
 }
 func OTokenDelegateToProxy(cfg *config.Config, account *goSdk.Account, genSdk *goSdk.OntologySdk, oToken string) {
 	OTokenAddr, _ := utils.AddressFromHexString(oToken)
-	params := []interface{}{"delegateToProxy", []interface{}{account.Address, 1000000000000}}
+	amount := WingUtils.ToIntByPrecise("100", 18)
+	params := []interface{}{"delegateToProxy", []interface{}{account.Address, amount}}
 	mutTx, err := genSdk.NeoVM.NewNeoVMInvokeTransaction(cfg.GasPrice, cfg.GasLimit, OTokenAddr, params)
 	if err != nil {
 		fmt.Println("construct tx err", err)

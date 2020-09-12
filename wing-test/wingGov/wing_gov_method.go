@@ -232,7 +232,7 @@ func UpdatePoolAddress(cfg *config.Config, account *goSdk.Account, genSdk *goSdk
 }
 
 //query_pool_count
-func QueryPoolCount(cfg *config.Config, account *goSdk.Account, genSdk *goSdk.OntologySdk) *common.PreExecResult {
+func QueryPoolCount(cfg *config.Config, genSdk *goSdk.OntologySdk) *common.PreExecResult {
 	WingGovAddr, _ := utils.AddressFromHexString(cfg.WingGov)
 	params := []interface{}{}
 	resut, _ := genSdk.WasmVM.PreExecInvokeWasmVMContract(WingGovAddr, "query_pool_count", params)
@@ -388,14 +388,14 @@ func Get_pool_operator(cfg *config.Config, account *goSdk.Account, genSdk *goSdk
 func Query_unbound_to_pool(cfg *config.Config, account *goSdk.Account, genSdk *goSdk.OntologySdk) *common.PreExecResult {
 	WingGovAddr, _ := utils.AddressFromHexString(cfg.WingGov)
 	ZeroPoolAddr, _ := utils.AddressFromHexString(cfg.ZeroPool)
-	params := []interface{}{ZeroPoolAddr, 1}
+	params := []interface{}{ZeroPoolAddr, 9}
 	resut, _ := genSdk.WasmVM.PreExecInvokeWasmVMContract(WingGovAddr, "query_unbound_to_pool", params)
 	log.Infof("Query_unbound_to_pool: %s", resut.Result)
 	return resut
 }
 
 //query_unbound_to_pool_count ToDO : name ?
-func Query_unbound_to_pool_count(cfg *config.Config, account *goSdk.Account, genSdk *goSdk.OntologySdk) *common.PreExecResult {
+func Query_unbound_to_pool_count(cfg *config.Config, genSdk *goSdk.OntologySdk) *common.PreExecResult {
 	WingGovAddr, _ := utils.AddressFromHexString(cfg.WingGov)
 	ZeroPoolAddr, _ := utils.AddressFromHexString(cfg.ZeroPool)
 	params := []interface{}{ZeroPoolAddr}
@@ -655,9 +655,9 @@ func Set_exchange_rates(cfg *config.Config, account *goSdk.Account, genSdk *goSd
 }
 
 //migrate
-func WingGovMigrate(cfg *config.Config, account *goSdk.Account, genSdk *goSdk.OntologySdk) {
+func WingGovMigrate(cfg *config.Config, account *goSdk.Account, genSdk *goSdk.OntologySdk, contract string) {
 	WingGovAddr, _ := utils.AddressFromHexString(cfg.WingGov)
-	bytes, err := ioutil.ReadFile("wing-test/contract/mainnet/wing_dao_contracts_new.wasm.str")
+	bytes, err := ioutil.ReadFile(contract)
 	if err != nil {
 		log.Fatal(err)
 	}

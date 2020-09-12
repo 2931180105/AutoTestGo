@@ -1,9 +1,9 @@
 package main
 
 import (
+	OToken "github.com/mockyz/AutoTestGo/wing-test/compound/otoken"
 	config "github.com/mockyz/AutoTestGo/wing-test/config_ont"
 	Utils "github.com/mockyz/AutoTestGo/wing-test/utils"
-	WingGov "github.com/mockyz/AutoTestGo/wing-test/wingGov"
 	goSdk "github.com/ontio/ontology-go-sdk"
 	"github.com/ontio/ontology-go-sdk/client"
 	"github.com/ontio/ontology/common/log"
@@ -13,8 +13,9 @@ import (
 var sdk = goSdk.NewOntologySdk()
 
 func main() {
+
 	log.InitLog(log.InfoLog, log.PATH, log.Stdout)
-	configPath := "wing-test/config_main.json"
+	configPath := "wing-test/config_testnet.json"
 	cfg, err := config.ParseConfig(configPath)
 	if err != nil {
 		log.Errorf("error: %s", err)
@@ -35,30 +36,25 @@ func main() {
 	//WingGov.Get_admin_address(cfg, account, sdk)
 	//WingGov.DeployContractWingGov(cfg, account, sdk)
 	//WingGov.WingTokenGetGovAddr(cfg, sdk)
-	WingGov.Query_unbound_to_pool(cfg, account, sdk)
-	if false {
-		hash1, err := sdk.SendTransaction(WingGov.UnboundToPool(cfg, account, sdk))
-		if err != nil {
-			log.Errorf("send  tx failed, err: %s********", err)
-			return
-		}
-		time.Sleep(time.Second * 3)
-		Utils.PrintSmartEventByHash_Ont(sdk, hash1.ToHexString())
-	}
+	OToken.OTokenDelegateToProxy(cfg, account, sdk, cfg.ODAI)
+	//OToken.OTokenTransfer(cfg, account, sdk,"ANxSSzWmFnAtqWBtq2KthP73oX4bHf9FyZ",cfg.OETH)
+	//OToken.DelegateToProxyAllTestToken(cfg, account, sdk)
+	//OToken.TransferAllTestToken(cfg, account, sdk,"ANxSSzWmFnAtqWBtq2KthP73oX4bHf9FyZ")
 }
-func deployContract(cfg *config.Config, account *goSdk.Account, genSdk *goSdk.OntologySdk) {
-	//reslut := Utils.DeployContractOracle(cfg, account, sdk)
-	//log.Infof("hash",reslut.ToHexString())
-	reslut1 := WingGov.DeployContractWingToken(cfg, account, sdk)
-	log.Infof("hash", reslut1.ToHexString())
-	reslut2 := WingGov.DeployContractWingGov(cfg, account, sdk)
-	log.Infof("hash", reslut2.ToHexString())
-	reslut3 := WingGov.DeployContractProfit(cfg, account, sdk)
-	log.Infof("hash", reslut3.ToHexString())
-	reslut4 := WingGov.DeployContractOracle(cfg, account, sdk)
-	log.Infof("hash", reslut4.ToHexString())
-	//Utils.DeployContractFlash(cfg, account, sdk)
-}
+
+//func deployContract(cfg *config.Config, account *goSdk.Account, genSdk *goSdk.OntologySdk) {
+//	//reslut := Utils.DeployContractOracle(cfg, account, sdk)
+//	//log.Infof("hash",reslut.ToHexString())
+//	reslut1 := DeployContractWingToken(cfg, account, sdk)
+//	log.Infof("hash", reslut1.ToHexString())
+//	reslut2 := DeployContractWingGov(cfg, account, sdk)
+//	log.Infof("hash", reslut2.ToHexString())
+//	reslut3 := DeployContractProfit(cfg, account, sdk)
+//	log.Infof("hash", reslut3.ToHexString())
+//	reslut4 := DeployContractOracle(cfg, account, sdk)
+//	log.Infof("hash", reslut4.ToHexString())
+//	//Utils.DeployContractFlash(cfg, account, sdk)
+//}
 
 func bacthTest(cfg *config.Config, account *goSdk.Account, genSdk *goSdk.OntologySdk) {
 	exitChan := make(chan int)
