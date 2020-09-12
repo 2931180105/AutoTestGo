@@ -158,9 +158,9 @@ func GetAuthorizeStatus(cfg *config.Config, account *goSdk.Account, genSdk *goSd
 }
 
 //register_pool
-func RegisterPool(cfg *config.Config, account *goSdk.Account, genSdk *goSdk.OntologySdk) *types.MutableTransaction {
+func RegisterPool(cfg *config.Config, account *goSdk.Account, genSdk *goSdk.OntologySdk, poolAddr string) *types.MutableTransaction {
 	WingGovAddr, _ := utils.AddressFromHexString(cfg.WingGov)
-	PoolAddr, _ := utils.AddressFromHexString(cfg.ZeroPool)
+	PoolAddr, _ := utils.AddressFromHexString(poolAddr)
 	params := []interface{}{PoolAddr, cfg.Weight}
 	mutTx, err := genSdk.WasmVM.NewInvokeWasmVmTransaction(cfg.GasPrice, cfg.GasLimit, WingGovAddr, "register_pool", params)
 	if err != nil {
@@ -197,9 +197,9 @@ func UpdatePoolWeight(cfg *config.Config, account *goSdk.Account, genSdk *goSdk.
 }
 
 //query_pool_by_address
-func QueryPoolByAddress(cfg *config.Config, account *goSdk.Account, genSdk *goSdk.OntologySdk) *types.MutableTransaction {
+func QueryPoolByAddress(cfg *config.Config, account *goSdk.Account, genSdk *goSdk.OntologySdk, pollAddr string) *types.MutableTransaction {
 	WingGovAddr, _ := utils.AddressFromHexString(cfg.WingGov)
-	ZeroPoolAddr, _ := utils.AddressFromHexString(cfg.ZeroPool)
+	ZeroPoolAddr, _ := utils.AddressFromHexString(pollAddr)
 	params := []interface{}{ZeroPoolAddr}
 	resut, _ := genSdk.WasmVM.PreExecInvokeWasmVMContract(WingGovAddr, "query_pool_by_address", params)
 	log.Infof("query_pool_by_address: %s", resut.Result)
