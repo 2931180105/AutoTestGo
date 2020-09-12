@@ -64,6 +64,19 @@ func TestWingGovRegisterPool(t *testing.T) {
 	Utils.PrintSmartEventByHash_Ont(sdk, hash1.ToHexString())
 	QueryPoolByAddress(cfg, account, sdk, cfg.Comptroller)
 }
+
+func TestWingGovRegisterPoolToAddress(t *testing.T) {
+	cfg, account, sdk := GetTestConfig()
+	acct := Utils.GetAccounts(cfg)
+	hash1, err := sdk.SendTransaction(RegisterPoolToAddress(cfg, account, sdk, acct[0].Address))
+	if err != nil {
+		log.Errorf("send  tx failed, err: %s********", err)
+		return
+	}
+	time.Sleep(time.Second * 3)
+	Utils.PrintSmartEventByHash_Ont(sdk, hash1.ToHexString())
+	QueryPoolByAddress(cfg, account, sdk, acct[0].Address.ToHexString())
+}
 func TestStakingMore(t *testing.T) {
 	cfg, account, sdk := GetTestConfig()
 	accounts := DbHelp.QueryAccountFromDb(0, cfg.AccountNum)
@@ -94,5 +107,4 @@ func TestOracle(t *testing.T) {
 	cfg, account, sdk := GetTestConfig()
 	OraclePutUnderlyingPrice(cfg, account, sdk)
 	OracleGetUnderlyingPrice(cfg, account, sdk, "ONT")
-
 }

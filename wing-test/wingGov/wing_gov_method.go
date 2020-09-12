@@ -172,6 +172,21 @@ func RegisterPool(cfg *config.Config, account *goSdk.Account, genSdk *goSdk.Onto
 	return mutTx
 }
 
+//register_pool
+func RegisterPoolToAddress(cfg *config.Config, account *goSdk.Account, genSdk *goSdk.OntologySdk, poolAddr OntCommon.Address) *types.MutableTransaction {
+	WingGovAddr, _ := utils.AddressFromHexString(cfg.WingGov)
+	//PoolAddr, _ := utils.AddressFromBase58(poolAddr)
+	params := []interface{}{poolAddr, cfg.Weight}
+	mutTx, err := genSdk.WasmVM.NewInvokeWasmVmTransaction(cfg.GasPrice, cfg.GasLimit, WingGovAddr, "register_pool", params)
+	if err != nil {
+		fmt.Println(" register_pool construct tx err", err)
+	}
+	if err := signTx(genSdk, mutTx, cfg.StartNonce, account); err != nil {
+		log.Error(err)
+	}
+	return mutTx
+}
+
 //get_product_pools, TODO: need read struct
 func GetProductPools(cfg *config.Config, account *goSdk.Account, genSdk *goSdk.OntologySdk) {
 	WingGovAddr, _ := utils.AddressFromHexString(cfg.WingGov)
