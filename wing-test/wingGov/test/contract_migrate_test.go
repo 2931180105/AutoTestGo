@@ -38,7 +38,6 @@ func TestMigrateZeroPool(t *testing.T) {
 	oldAddr, _ := utils.AddressFromBase58("AW7yqoJUbV2WGjesGGyLSJVtegMzwCvEGB")
 	WingGovMethod.QueryPoolByAddress(cfg, account, sdk, oldAddr.ToHexString())
 	//WingGovMethod.QueryPoolByAddress(cfg,account,sdk,cfg.ZeroPool)
-
 	hash1, err := sdk.SendTransaction(WingGovMethod.UpdatePoolAddress(cfg, account, sdk, cfg.ZeroPool, oldAddr.ToHexString()))
 	if err != nil {
 		log.Errorf("send  tx failed, err: %s********", err)
@@ -53,8 +52,8 @@ func TestMigrateZeroPool(t *testing.T) {
 
 //Deploy zero pool Todo : finish deploy
 func TestDeployZeroPool(t *testing.T) {
-	cfg, account, sdk := GetTestConfig()
-	wasmFile := "../../contract/private/zero_pool5.wasm.str"
+	cfg, account, sdk := GetPrvConfig()
+	wasmFile := "../../contract/private/zero_pool3.wasm.str"
 	zeroPoolAddr := WingGovMethod.DeployContractt(cfg, account, sdk, wasmFile)
 	//WingGovMethod.QueryPoolByAddress(cfg, account, sdk, zeroPoolAddr)
 	WingGovMethod.ZeroPoolInit(cfg, account, sdk, zeroPoolAddr)

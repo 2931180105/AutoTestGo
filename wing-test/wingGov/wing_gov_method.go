@@ -233,7 +233,6 @@ func UpdatePoolAddress(cfg *config.Config, account *goSdk.Account, genSdk *goSdk
 	WingGovAddr, _ := utils.AddressFromHexString(cfg.WingGov)
 	OldPoolAddr, _ := utils.AddressFromHexString(oldZeroPool)
 	NewPoolAddr, _ := utils.AddressFromHexString(newZeroPool)
-
 	params := []interface{}{OldPoolAddr, NewPoolAddr}
 	mutTx, err := genSdk.WasmVM.NewInvokeWasmVmTransaction(cfg.GasPrice, cfg.GasLimit, WingGovAddr, "update_pool_address", params)
 	if err != nil {

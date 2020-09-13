@@ -37,11 +37,11 @@ func PrintSmartEventByHash_Ont(sdk *goSdk.OntologySdk, txHash string) []*sdkcomm
 	time.Sleep(time.Second * 3)
 	evts, err := sdk.GetSmartContractEvent(txHash)
 	if err != nil {
-		fmt.Printf("GetSmartContractEvent error:%s", err)
+		log.Errorf("GetSmartContractEvent error:%s", err)
 	}
-	fmt.Printf("evts = %+v\n", evts)
-	fmt.Printf("TxHash:%s\n", txHash)
-	fmt.Printf("State:%d\n", evts.State)
+	log.Infof("evts = %s\n", evts)
+	log.Infof("TxHash:%s\n", txHash)
+	log.Infof("State:%d\n", evts.State)
 	for _, notify := range evts.Notify {
 		fmt.Printf("ContractAddress:%s\n", notify.ContractAddress)
 		fmt.Printf("States:%+v\n", notify.States)

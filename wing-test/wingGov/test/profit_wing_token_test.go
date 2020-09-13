@@ -54,6 +54,7 @@ func TestStakingCaseStep01(t *testing.T) {
 	time.Sleep(time.Second * SleepTime)
 	log.Infof("fist time invoke unbound to pool")
 	//invoke unbound to pool before 10 min
+	WingGovMethod.UnboundTokenSend(cfg, account, sdk)
 	WingGovMethod.UnboundToPoolSend(cfg, account, sdk)
 }
 func TestStakingCaseStep02(t *testing.T) {
@@ -70,7 +71,7 @@ func TestStakingCaseStep02(t *testing.T) {
 	time.Sleep(time.Second * 60 * 5)
 }
 func TestStakingCaseStep03(t *testing.T) {
-	cfg, _, sdk, accts := GetTestConfigAddAccts()
+	cfg, account, sdk, accts := GetTestConfigAddAccts()
 	// F : +100; G:+1000;H:+500;F:-100;G:-500
 	WingGovMethod.ZeroPoolStaking(cfg, accts[6], sdk, 100)
 	time.Sleep(time.Second * SleepTime)
@@ -91,7 +92,7 @@ func TestStakingCaseStep03(t *testing.T) {
 
 //
 func TestStakingCaseStep04(t *testing.T) {
-	cfg, _, sdk, accts := GetTestConfigAddAccts()
+	cfg, account, sdk, accts := GetTestConfigAddAccts()
 	//J : +100 ; L:+200;G:-200
 	WingGovMethod.ZeroPoolStaking(cfg, accts[10], sdk, 100)
 	time.Sleep(time.Second * SleepTime)
@@ -110,11 +111,14 @@ func TestStakingCaseStep04(t *testing.T) {
 	time.Sleep(time.Second * SleepTime)
 }
 func TestStakingCaseStep05(t *testing.T) {
-	cfg, _, sdk, accts := GetTestConfigAddAccts()
+	cfg, admin, sdk, accts := GetTestConfigAddAccts()
 	//	upgrade pool to new pool
-	WingGovMethod.ZeroPoolStaking(cfg, accts[13], sdk, 200)
+	zeroPoolPath := "../../contract/private/zero_pool4.wasm.str"
+
+	newZeroPoolAddr := WingGovMethod.MigrateZeroPool(cfg, admin, sdk, zeroPoolPath)
+	WingGovMethod.ZeroPoolStakingByAddr(cfg, accts[13], sdk, 200, newZeroPoolAddr)
 	time.Sleep(time.Second * SleepTime)
-	WingGovMethod.ZeroPoolUnStaking(cfg, accts[12], sdk, 100)
+	WingGovMethod.ZeroPoolUnStakingByAddr(cfg, accts[12], sdk, 100, newZeroPoolAddr)
 	time.Sleep(time.Second * SleepTime)
 	// TODO:start check address get unbound wing
 }

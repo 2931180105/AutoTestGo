@@ -80,12 +80,28 @@ func ZeroPoolStaking(cfg *config.Config, account *goSdk.Account, genSdk *goSdk.O
 	if err := signTx(genSdk, mutTx, cfg.StartNonce, account); err != nil {
 		log.Error(err)
 	}
-	time.Sleep(time.Second)
 	txhash, err := genSdk.SendTransaction(mutTx)
 	if err != nil {
 		log.Errorf("send tx failed, err: %s********", err)
 	} else {
-		log.Infof("send staking tx %s***", txhash.ToHexString())
+		log.Infof("send staking tx: %s", txhash.ToHexString())
+		time.Sleep(time.Second * 3)
+		Utils.PrintSmartEventByHash_Ont(genSdk, txhash.ToHexString())
+	}
+}
+func ZeroPoolStakingByAddr(cfg *config.Config, account *goSdk.Account, genSdk *goSdk.OntologySdk, StakeOnt int, zeroPooAddr string) {
+	ZeroPoolAddr, _ := utils.AddressFromHexString(zeroPooAddr)
+	params := []interface{}{account.Address, StakeOnt}
+	mutTx, _ := genSdk.WasmVM.NewInvokeWasmVmTransaction(cfg.GasPrice, cfg.GasLimit, ZeroPoolAddr, "staking", params)
+	if err := signTx(genSdk, mutTx, cfg.StartNonce, account); err != nil {
+		log.Error(err)
+	}
+	txhash, err := genSdk.SendTransaction(mutTx)
+	if err != nil {
+		log.Errorf("send tx failed, err: %s********", err)
+	} else {
+		log.Infof("send staking tx: %s", txhash.ToHexString())
+		time.Sleep(time.Second * 3)
 		Utils.PrintSmartEventByHash_Ont(genSdk, txhash.ToHexString())
 	}
 }
@@ -106,6 +122,22 @@ func ZeroPoolUnStaking(cfg *config.Config, account *goSdk.Account, genSdk *goSdk
 	}
 }
 
+func ZeroPoolUnStakingByAddr(cfg *config.Config, account *goSdk.Account, genSdk *goSdk.OntologySdk, StakeOnt int, zeroPoolAddr string) {
+	ZeroPoolAddr, _ := utils.AddressFromHexString(zeroPoolAddr)
+	params := []interface{}{account.Address, StakeOnt}
+	mutTx, _ := genSdk.WasmVM.NewInvokeWasmVmTransaction(cfg.GasPrice, cfg.GasLimit, ZeroPoolAddr, "unstaking", params)
+	if err := signTx(genSdk, mutTx, cfg.StartNonce, account); err != nil {
+		log.Error(err)
+	}
+	time.Sleep(time.Second)
+	txhash, err := genSdk.SendTransaction(mutTx)
+	if err != nil {
+		log.Errorf("send tx failed, err: %s********", err)
+	} else {
+		log.Infof("send staking tx %s****", txhash.ToHexString())
+		Utils.PrintSmartEventByHash_Ont(genSdk, txhash.ToHexString())
+	}
+}
 func ZeroPooWithdrawWing(cfg *config.Config, account *goSdk.Account, genSdk *goSdk.OntologySdk) {
 	ZeroPoolAddr, _ := utils.AddressFromHexString(cfg.ZeroPool)
 	params := []interface{}{account.Address, cfg.StakeOnt}
@@ -121,4 +153,20 @@ func ZeroPooWithdrawWing(cfg *config.Config, account *goSdk.Account, genSdk *goS
 		log.Infof("send staking tx %s****", txhash.ToHexString())
 		Utils.PrintSmartEventByHash_Ont(genSdk, txhash.ToHexString())
 	}
+}
+
+func MigrateZeroPool(cfg *config.Config, account *goSdk.Account, sdk *goSdk.OntologySdk, codePath string) string {
+	//time.Sleep(time.Second*3)
+	newContractString := ContractMigrate(cfg, account, sdk, cfg.ZeroPool, codePath)
+	log.Infof("new zero pool2 : %s", newContractString)
+	time.Sleep(time.Second * 3)
+	//	update pool address
+	hash, err := sdk.SendTransaction(UpdatePoolAddress(cfg, account, sdk, newContractString, cfg.ZeroPool))
+	if err != nil {
+		log.Errorf("send  tx failed, err: %s********", err)
+		return ""
+	}
+	log.Infof("UpdatePoolAddress hash : %s", hash.ToHexString())
+	Utils.PrintSmartEventByHash_Ont(sdk, hash.ToHexString())
+	return newContractString
 }
