@@ -110,11 +110,22 @@ func TestStakingCaseStep04(t *testing.T) {
 	WingGovMethod.ZeroPoolUnStaking(cfg, accts[7], sdk, 100)
 	time.Sleep(time.Second * SleepTime)
 }
+
 func TestStakingCaseStep05(t *testing.T) {
 	cfg, admin, sdk, accts := GetTestConfigAddAccts()
 	//	upgrade pool to new pool
+	zeroPoolPath := "../../contract/testnet/wing_dao_contracts_new.wasm.str"
+	newZeroPoolAddr := WingGovMethod.MigrateZeroPool(cfg, admin, sdk, zeroPoolPath)
+	WingGovMethod.ZeroPoolStakingByAddr(cfg, accts[13], sdk, 200, newZeroPoolAddr)
+	time.Sleep(time.Second * SleepTime)
+	WingGovMethod.ZeroPoolUnStakingByAddr(cfg, accts[12], sdk, 100, newZeroPoolAddr)
+	time.Sleep(time.Second * SleepTime)
+	// TODO:start check address get unbound wing
+}
+func TestStakingCaseStep06(t *testing.T) {
+	cfg, admin, sdk, accts := GetTestConfigAddAccts()
+	//	upgrade pool to new pool
 	zeroPoolPath := "../../contract/private/zero_pool4.wasm.str"
-
 	newZeroPoolAddr := WingGovMethod.MigrateZeroPool(cfg, admin, sdk, zeroPoolPath)
 	WingGovMethod.ZeroPoolStakingByAddr(cfg, accts[13], sdk, 200, newZeroPoolAddr)
 	time.Sleep(time.Second * SleepTime)
