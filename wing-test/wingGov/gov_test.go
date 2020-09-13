@@ -50,12 +50,12 @@ func TestWingGovUpdatePoolWeight(t *testing.T) {
 func TestQuery_unbound_to_pool(t *testing.T) {
 	cfg, account, sdk := GetTestConfig()
 	Query_unbound_to_pool_count(cfg, sdk)
-	Query_unbound_to_pool(cfg, account, sdk)
+	Query_unbound_to_pool(cfg, account, sdk, 1)
 }
 
 func TestWingGovRegisterPool(t *testing.T) {
 	cfg, account, sdk := GetTestConfig()
-	hash1, err := sdk.SendTransaction(RegisterPool(cfg, account, sdk, cfg.Comptroller))
+	hash1, err := sdk.SendTransaction(RegisterPool(cfg, account, sdk, cfg.ZeroPool))
 	if err != nil {
 		log.Errorf("send  tx failed, err: %s********", err)
 		return
@@ -88,7 +88,7 @@ func TestAddSuuportToken(t *testing.T) {
 	cfg, account, sdk := GetTestConfig()
 	//accounts := DbHelp.QueryAccountFromDb(0, cfg.AccountNum)
 
-	hash1, err := sdk.SendTransaction(Add_support_token(cfg, account, sdk, "DAI", cfg.ODAI))
+	hash1, err := sdk.SendTransaction(Add_support_token(cfg, account, sdk, "ONTd", cfg.ONTD))
 	if err != nil {
 		log.Errorf("send DAI tx failed, err: %s********", err)
 	}
@@ -100,7 +100,7 @@ func TestMigrateGov(t *testing.T) {
 	//accounts := DbHelp.QueryAccountFromDb(0, cfg.AccountNum)
 
 	//wing-test/contract/private/wing_dao_contracts_new.wasm.str
-	WingGovMigrate(cfg, account, sdk, "/Users/yaoyao/go/src/github.com/mockyz/AutoTestGo/wing-test/contract/private/wing_dao_contracts_new.wasm.str")
+	WingGovMigrate(cfg, account, sdk, "../contract/private/wing_dao_contracts.wasm.str")
 
 }
 func TestOracle(t *testing.T) {

@@ -11,7 +11,7 @@
   "GlobalParam": "a7e169ef9ab7930d573850c1152780d8d7530458",
   "Pool2": "09489abaedf02734d012d6617edcb6aa029f239b",
   "InterestRate" : "530caa967eba9365d90dd88897cf21b49dee58c2",
-  "Comptroller" : "6e34815bfffe0033e22824053397b7b4fa2227d9",
+  "Comptroller" : "1e298fdf9d8bae1a40862fdde68a51b9ac4dfb65",
   "FBTC": "d6738a8513fe0c5d052e54f9fd14d6670ca28bfe",
   "FETH" : "064cede1eb3a91b80f82fe168fcb25bc1a0b3ac0",
   "FUSDT" : "657843c526db92c4ac42d50cd621dfa3842b1ba4",
@@ -55,7 +55,7 @@
   "RoutineNum": 3,
   "TPS": 3,
   "AccountNum": 10,
-  "StakeOnt": 5,
+  "StakeOnt": 10,
   "StartNonce": 0,
   "SaveTx": false,
   "SendTx": true

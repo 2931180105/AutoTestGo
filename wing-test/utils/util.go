@@ -67,7 +67,7 @@ func GenerateAccounts(cfg *config.Config, admin *ontology_go_sdk.Account, goSdk 
 	//accts := make([]*ontology_go_sdk.Account, cfg.AccountNum)
 	before_amount_ont, _ := goSdk.Native.Ont.BalanceOf(admin.Address)
 	before_amount_ong, _ := goSdk.Native.Ong.BalanceOf(admin.Address)
-	accounts := DbHelp.QueryAccountFromDb(0, cfg.AccountNum)
+	accounts := DbHelp.QueryAccountFromDb(21, cfg.AccountNum)
 	for i := 0; i < cfg.AccountNum; i++ {
 		acct := accounts[i]
 		txhash, err := goSdk.Native.Ont.Transfer(cfg.GasPrice, cfg.GasLimit, admin, admin, acct.Address, cfg.Amount)
@@ -92,7 +92,6 @@ func GenerateAccounts(cfg *config.Config, admin *ontology_go_sdk.Account, goSdk 
 }
 
 func GetAccounts(cfg *config.Config) []*ontology_go_sdk.Account {
-
 	accounts := DbHelp.QueryAccountFromDb(0, cfg.AccountNum)
 	return accounts
 }

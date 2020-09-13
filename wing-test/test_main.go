@@ -36,8 +36,9 @@ func main() {
 	//WingGov.Get_admin_address(cfg, account, sdk)
 	//WingGov.DeployContractWingGov(cfg, account, sdk)
 	//WingGov.WingTokenGetGovAddr(cfg, sdk)
+
 	OToken.OTokenDelegateToProxy(cfg, account, sdk, cfg.ODAI)
-	//OToken.OTokenTransfer(cfg, account, sdk,"ANxSSzWmFnAtqWBtq2KthP73oX4bHf9FyZ",cfg.OETH)
+	OToken.OTokenTransfer(cfg, account, sdk, "ANxSSzWmFnAtqWBtq2KthP73oX4bHf9FyZ", cfg.OETH)
 	//OToken.DelegateToProxyAllTestToken(cfg, account, sdk)
 	//OToken.TransferAllTestToken(cfg, account, sdk,"ANxSSzWmFnAtqWBtq2KthP73oX4bHf9FyZ")
 }

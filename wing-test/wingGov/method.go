@@ -38,8 +38,8 @@ func ContractInit(cfg *config.Config, account *goSdk.Account, genSdk *goSdk.Onto
 
 }
 
-func DeployContractProfit(cfg *config.Config, account *goSdk.Account, genSdk *goSdk.OntologySdk) common.Uint256 {
-	bytes, err := ioutil.ReadFile("wing-test/contract/testnet/profit.wasm.str")
+func DeployContractProfit(cfg *config.Config, account *goSdk.Account, genSdk *goSdk.OntologySdk, wasmFilePath string) common.Uint256 {
+	bytes, err := ioutil.ReadFile(wasmFilePath)
 	if err != nil {
 		log.Fatal(err)
 	}

@@ -400,10 +400,10 @@ func Get_pool_operator(cfg *config.Config, account *goSdk.Account, genSdk *goSdk
 }
 
 //query_unbound_to_pool
-func Query_unbound_to_pool(cfg *config.Config, account *goSdk.Account, genSdk *goSdk.OntologySdk) *common.PreExecResult {
+func Query_unbound_to_pool(cfg *config.Config, account *goSdk.Account, genSdk *goSdk.OntologySdk, index int) *common.PreExecResult {
 	WingGovAddr, _ := utils.AddressFromHexString(cfg.WingGov)
 	ZeroPoolAddr, _ := utils.AddressFromHexString(cfg.ZeroPool)
-	params := []interface{}{ZeroPoolAddr, 9}
+	params := []interface{}{ZeroPoolAddr, index}
 	resut, _ := genSdk.WasmVM.PreExecInvokeWasmVMContract(WingGovAddr, "query_unbound_to_pool", params)
 	log.Infof("Query_unbound_to_pool: %s", resut.Result)
 	return resut
@@ -681,8 +681,8 @@ func WingGovMigrate(cfg *config.Config, account *goSdk.Account, genSdk *goSdk.On
 	if err != nil {
 		log.Error(err)
 	}
-	log.Infof("CodeContractAddr address : %s", CodeContractAddr.ToBase58())
-	log.Infof("CodeContractAddr address : %s", CodeContractAddr.ToHexString())
+	log.Infof("WingGovContractAddr address : %s", CodeContractAddr.ToBase58())
+	log.Infof("WingGovContractAddr address : %s", CodeContractAddr.ToHexString())
 
 	params := []interface{}{CodeStr, 3, "WING Governance", "1.0.1", "Wing Team", "support@wing.finance", "Wing is a credit-based, cross-chain DeFi platform."}
 	mutTx, _ := genSdk.WasmVM.NewInvokeWasmVmTransaction(cfg.GasPrice, cfg.GasLimit, WingGovAddr, "migrate", params)
