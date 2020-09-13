@@ -212,25 +212,19 @@ func UpdatePoolWeight(cfg *config.Config, account *goSdk.Account, genSdk *goSdk.
 }
 
 //query_pool_by_address
-func QueryPoolByAddress(cfg *config.Config, account *goSdk.Account, genSdk *goSdk.OntologySdk, pollAddr string) *types.MutableTransaction {
+func QueryPoolByAddress(cfg *config.Config, account *goSdk.Account, genSdk *goSdk.OntologySdk, pollAddr string) {
 	WingGovAddr, _ := utils.AddressFromHexString(cfg.WingGov)
 	ZeroPoolAddr, _ := utils.AddressFromHexString(pollAddr)
 	params := []interface{}{ZeroPoolAddr}
 	resut, _ := genSdk.WasmVM.PreExecInvokeWasmVMContract(WingGovAddr, "query_pool_by_address", params)
 	log.Infof("query_pool_by_address: %s", resut.Result)
-	mutTx, err := genSdk.WasmVM.NewInvokeWasmVmTransaction(cfg.GasPrice, cfg.GasLimit, WingGovAddr, "query_pool_by_address", params)
-	if err != nil {
-		fmt.Println("construct query_pool_by_address tx err", err)
-	}
-	if err := signTx(genSdk, mutTx, cfg.StartNonce, account); err != nil {
-		log.Error(err)
-	}
-	return mutTx
+
 }
 
 //update_pool_address,
 func UpdatePoolAddress(cfg *config.Config, account *goSdk.Account, genSdk *goSdk.OntologySdk, newZeroPool, oldZeroPool string) *types.MutableTransaction {
 	WingGovAddr, _ := utils.AddressFromHexString(cfg.WingGov)
+	//log.Infof("")
 	OldPoolAddr, _ := utils.AddressFromHexString(oldZeroPool)
 	NewPoolAddr, _ := utils.AddressFromHexString(newZeroPool)
 	params := []interface{}{OldPoolAddr, NewPoolAddr}
@@ -732,8 +726,8 @@ func ContractMigrate(cfg *config.Config, account *goSdk.Account, genSdk *goSdk.O
 	if err != nil {
 		log.Error(err)
 	}
-	log.Infof("WingGovContractAddr address : %s", CodeContractAddr.ToBase58())
-	log.Infof("WingGovContractAddr address : %s", CodeContractAddr.ToHexString())
+	log.Infof("ContractAddr address base58 : %s", CodeContractAddr.ToBase58())
+	log.Infof("ContractAddr address hex : %s", CodeContractAddr.ToHexString())
 
 	params := []interface{}{CodeStr, 3, "WING Governance", "1.0.1", "Wing Team", "support@wing.finance", "Wing is a credit-based, cross-chain DeFi platform."}
 	mutTx, _ := genSdk.WasmVM.NewInvokeWasmVmTransaction(cfg.GasPrice, cfg.GasLimit, WingGovAddr, "migrate", params)

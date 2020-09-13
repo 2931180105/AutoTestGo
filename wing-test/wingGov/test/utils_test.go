@@ -19,6 +19,18 @@ func GetTestConfig() (*config.Config, *goSdk.Account, *goSdk.OntologySdk) {
 	return cfg, account, sdk
 }
 
+func GetMainConfig() (*config.Config, *goSdk.Account, *goSdk.OntologySdk) {
+	var sdk = goSdk.NewOntologySdk()
+	configPath := "/Users/yaoyao/go/src/github.com/mockyz/AutoTestGo/wing-test/config_main.json"
+	cfg, _ := config.ParseConfig(configPath)
+	wallet, _ := sdk.OpenWallet("/Users/yaoyao/go/src/github.com/mockyz/AutoTestGo/wing-test/WING_OTHER_OWNER.dat")
+	account, _ := wallet.GetDefaultAccount([]byte(cfg.Password))
+	rpcClient := client.NewRpcClient()
+	rpcClient.SetAddress(cfg.Rpc[2])
+	sdk.SetDefaultClient(rpcClient)
+	return cfg, account, sdk
+}
+
 func GetPrvConfig() (*config.Config, *goSdk.Account, *goSdk.OntologySdk) {
 	var sdk = goSdk.NewOntologySdk()
 	configPath := "../../config_testnet.json"

@@ -11,11 +11,11 @@ import (
 
 //Migrate gov
 func TestMigrateGov(t *testing.T) {
-	cfg, account, sdk := GetTestConfig()
-	//accounts := DbHelp.QueryAccountFromDb(0, cfg.AccountNum)
-	newGovString := WingGovMethod.WingGovMigrate(cfg, account, sdk, "/Users/yaoyao/go/src/github.com/mockyz/AutoTestGo/wing-test/contract/testnet/wing_dao_contracts.wasm_new.str")
+	cfg, account, sdk := GetMainConfig()
+	//contractPath :="/Users/yaoyao/go/src/github.com/mockyz/AutoTestGo/wing-test/contract/mainnet/wing_dao_contracts_new0914.wasm.str"
+	//newGovString := WingGovMethod.WingGovMigrate(cfg, account, sdk, contractPath)
 	//	set wing token gov
-	hash1, err := sdk.SendTransaction(WingGovMethod.WingTokenSetGov(cfg, account, sdk, newGovString))
+	hash1, err := sdk.SendTransaction(WingGovMethod.WingTokenSetGov(cfg, account, sdk, cfg.WingGov))
 	if err != nil {
 		log.Errorf("send  tx failed, err: %s********", err)
 		return
@@ -25,24 +25,45 @@ func TestMigrateGov(t *testing.T) {
 	//	TODO:update config file
 }
 
-// upgrade zero pool
-
 //Migrate Zero pool
 func TestMigrateZeroPool(t *testing.T) {
-	cfg, account, sdk := GetTestConfig()
-	zeroPoolPath := "../../contract/testnet/zero_pool_new2.wasm.str"
+	cfg, account, sdk := GetMainConfig()
+	//TODO: change path
+	zeroPoolPath := "/Users/yaoyao/go/src/github.com/mockyz/AutoTestGo/wing-test/contract/mainnet/zero_pool_new0914.wasm.str"
 	newContractString := WingGovMethod.ContractMigrate(cfg, account, sdk, cfg.ZeroPool, zeroPoolPath)
-	time.Sleep(time.Second * 3)
+	time.Sleep(time.Second * 6)
 	log.Infof("new zero pool2 : %s", newContractString)
-	//	update pool address
-	hash1, err := sdk.SendTransaction(WingGovMethod.UpdatePoolAddress(cfg, account, sdk, newContractString, cfg.ZeroPool))
+	//update pool address
+	hash1, err := sdk.SendTransaction(WingGovMethod.UpdatePoolAddress(cfg, account, sdk, "20e2322eb48f0aeda8f9208280aaa6d15c46d769", cfg.ZeroPool))
 	if err != nil {
 		log.Errorf("send  tx failed, err: %s********", err)
 		return
 	}
+	time.Sleep(time.Second * 6)
 	log.Infof("UpdatePoolAddress hash : %s", hash1.ToHexString())
 	Utils.PrintSmartEventByHash_Ont(sdk, hash1.ToHexString())
-	WingGovMethod.QueryPoolByAddress(cfg, account, sdk, newContractString)
+	WingGovMethod.QueryPoolByAddress(cfg, account, sdk, "20e2322eb48f0aeda8f9208280aaa6d15c46d769")
+
+	//	TODO:update config file
+}
+
+//Migrate Zero pool
+func TestDev(t *testing.T) {
+	cfg, account, sdk := GetMainConfig()
+	//zeroPoolPath := "/Users/yaoyao/go/src/github.com/mockyz/AutoTestGo/wing-test/contract/testnet/zero_pool_new02.wasm.str"
+	//newContractString := WingGovMethod.ContractMigrate(cfg, account, sdk, cfg.ZeroPool, zeroPoolPath)
+	//time.Sleep(time.Second * 3)
+	//log.Infof("new zero pool2 : %s", newContractString)
+	////	update pool address
+	//
+	//hash1, err := sdk.SendTransaction(WingGovMethod.UpdatePoolAddress(cfg, account, sdk, "11", cfg.ZeroPool))
+	//if err != nil {
+	//	log.Errorf("send  tx failed, err: %s********", err)
+	//	return
+	//}
+	//log.Infof("UpdatePoolAddress hash : %s", hash1.ToHexString())
+	////Utils.PrintSmartEventByHash_Ont(sdk, hash1.ToHexString())
+	WingGovMethod.QueryPoolByAddress(cfg, account, sdk, cfg.ZeroPool)
 
 	//	TODO:update config file
 }
