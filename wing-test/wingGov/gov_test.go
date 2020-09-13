@@ -32,7 +32,6 @@ func TestWingGovUnboundTokenToPool(t *testing.T) {
 		log.Errorf("send  tx failed, err: %s********", err)
 		return
 	}
-	time.Sleep(time.Second * 3)
 	Utils.PrintSmartEventByHash_Ont(sdk, hash1.ToHexString())
 }
 
@@ -45,12 +44,6 @@ func TestWingGovUpdatePoolWeight(t *testing.T) {
 	}
 	time.Sleep(time.Second * 3)
 	Utils.PrintSmartEventByHash_Ont(sdk, hash1.ToHexString())
-}
-
-func TestQuery_unbound_to_pool(t *testing.T) {
-	cfg, account, sdk := GetTestConfig()
-	Query_unbound_to_pool_count(cfg, sdk)
-	Query_unbound_to_pool(cfg, account, sdk, 1)
 }
 
 func TestWingGovRegisterPool(t *testing.T) {
@@ -80,7 +73,6 @@ func TestWingGovRegisterPoolToAddress(t *testing.T) {
 func TestStakingMore(t *testing.T) {
 	cfg, account, sdk := GetTestConfig()
 	accounts := DbHelp.QueryAccountFromDb(0, cfg.AccountNum)
-
 	BatchStaking(cfg, account, sdk, accounts)
 
 }

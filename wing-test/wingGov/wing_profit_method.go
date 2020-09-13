@@ -24,6 +24,20 @@ func WingProfitInit(cfg *config.Config, account *goSdk.Account, genSdk *goSdk.On
 	return mutTx
 }
 
+//wing token init
+func WingProfitInit2(cfg *config.Config, account *goSdk.Account, genSdk *goSdk.OntologySdk, WingProfit string) *types.MutableTransaction {
+	WingProfitAddr, _ := utils.AddressFromHexString(WingProfit)
+	params := []interface{}{cfg.Eta, cfg.Gama}
+	mutTx, err := genSdk.WasmVM.NewInvokeWasmVmTransaction(cfg.GasPrice, cfg.GasLimit, WingProfitAddr, "init", params)
+	if err != nil {
+		fmt.Println("construct tx err", err)
+	}
+	if err := signTx(genSdk, mutTx, cfg.StartNonce, account); err != nil {
+		log.Error(err)
+	}
+	return mutTx
+}
+
 //get_eta
 func Get_eta(cfg *config.Config, account *goSdk.Account, genSdk *goSdk.OntologySdk) *common.PreExecResult {
 	WingProfitAddr, _ := utils.AddressFromHexString(cfg.WingProfit)

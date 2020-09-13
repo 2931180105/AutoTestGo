@@ -19,6 +19,7 @@ type Config struct {
 	WingGov            string
 	GovToken           string
 	ZeroPool           string
+	OldZeroPool        string
 	Password           string
 	SDRate             int // static and dyamic profit
 	ContractCodePath   string

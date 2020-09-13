@@ -27,8 +27,8 @@ func GovTokenInit(cfg *config.Config, account *goSdk.Account, genSdk *goSdk.Onto
 	}
 	return mutTx
 }
-func WingTokenSetGov(cfg *config.Config, account *goSdk.Account, genSdk *goSdk.OntologySdk) *types.MutableTransaction {
-	WingGovAddr, _ := utils.AddressFromHexString(cfg.WingGov)
+func WingTokenSetGov(cfg *config.Config, account *goSdk.Account, genSdk *goSdk.OntologySdk, newWingGovAddr string) *types.MutableTransaction {
+	WingGovAddr, _ := utils.AddressFromHexString(newWingGovAddr)
 	WingToken, _ := utils.AddressFromHexString(cfg.GovToken)
 	params := []interface{}{"setGovernanceAddress", []interface{}{WingGovAddr}}
 	mutTx, err := genSdk.NeoVM.NewNeoVMInvokeTransaction(cfg.GasPrice, cfg.GasLimit, WingToken, params)

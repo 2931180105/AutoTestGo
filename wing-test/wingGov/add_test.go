@@ -10,7 +10,7 @@ import (
 
 func TestWingTokenSetGov(t *testing.T) {
 	cfg, account, sdk := GetTestConfig()
-	hash1, err := sdk.SendTransaction(WingTokenSetGov(cfg, account, sdk))
+	hash1, err := sdk.SendTransaction(WingTokenSetGov(cfg, account, sdk, cfg.WingGov))
 	if err != nil {
 		log.Errorf("send  tx failed, err: %s********", err)
 		return
@@ -20,14 +20,14 @@ func TestWingTokenSetGov(t *testing.T) {
 }
 func TestDep(t *testing.T) {
 	cfg, account, sdk := GetTestConfig()
-	wasmFile := "../contract/private/profit.wasm.str"
+	wasmFile := "../contract/private/zero_pool.wasm.str"
 	DeployContractProfit(cfg, account, sdk, wasmFile)
 }
 
 //部署后init的所有合约
 func TestIint(t *testing.T) {
 	cfg, account, sdk := GetTestConfig()
-	hash1, err := sdk.SendTransaction(WingTokenSetGov(cfg, account, sdk))
+	hash1, err := sdk.SendTransaction(WingTokenSetGov(cfg, account, sdk, cfg.WingGov))
 	if err != nil {
 		log.Errorf("send DAI tx failed, err: %s********", err)
 	}
@@ -62,6 +62,7 @@ func TestStaking(t *testing.T) {
 	accts := Utils.GenerateAccounts(cfg, account, sdk)
 	//accts := dbHelper.QueryAccountFromDb(0,10)
 	BatchStaking(cfg, account, sdk, accts)
+	BatchUnStaking(cfg, account, sdk, accts)
 }
 
 func TestUnStaking(t *testing.T) {
@@ -85,14 +86,18 @@ func TestGetUndlying(t *testing.T) {
 		}
 		log.Infof("wing_balance: %d", balance_int)
 		Utils.UpdateWingBalance(balance_int, accts[i].Address.ToBase58())
+		if 1 < balance_int.Uint64() {
+			log.Infof("withDraw address: %s", accts[i].Address.ToBase58())
+			ZeroPoolWithDraw(cfg, accts[i], sdk)
+		}
 	}
 }
 
 //withDraw
 func TestWithDrawWing(t *testing.T) {
-	cfg, _, sdk := GetTestConfig()
-	//accts := Utils.GenerateAccounts(cfg, account, sdk)
-	accts := dbHelper.QueryAccountFromDb(0, 33)
+	cfg, account, sdk := GetTestConfig()
+	accts := Utils.GenerateAccounts(cfg, account, sdk)
+	//accts := dbHelper.QueryAccountFromDb(0, 33)
 	for i := 0; i < len(accts); i++ {
 		ZeroPoolWithDraw(cfg, accts[i], sdk)
 	}

@@ -95,7 +95,8 @@ func QueryAccountFromDb(start, end int) []*goSdk.Account {
 		var balance_ont int
 		var balance_wing int
 		var stakeing_amount int
-		if err := rows.Scan(&id, &base58, &wif, &balance_ont, &balance_wing, &stakeing_amount); err != nil {
+		var stakeing_time int
+		if err := rows.Scan(&id, &base58, &wif, &balance_ont, &balance_wing, &stakeing_amount, &stakeing_time); err != nil {
 			log.Infof("error ", err)
 		}
 		pkey, _ := hex.DecodeString(wif)

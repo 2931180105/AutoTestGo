@@ -6,7 +6,6 @@ import (
 	goSdk "github.com/ontio/ontology-go-sdk"
 	"github.com/ontio/ontology-go-sdk/utils"
 	"github.com/ontio/ontology/common"
-	"github.com/ontio/ontology/core/types"
 	"io/ioutil"
 	"time"
 )
@@ -15,28 +14,6 @@ import (
 import (
 	config "github.com/mockyz/AutoTestGo/wing-test/config_ont"
 )
-
-//contract  init TODO: add need more invoke
-func ContractInit(cfg *config.Config, account *goSdk.Account, genSdk *goSdk.OntologySdk) []*types.MutableTransaction {
-	var InitTx []*types.MutableTransaction
-	InitTx = append(InitTx, GovTokenInit(cfg, account, genSdk), WingTokenSetGov(cfg, account, genSdk), WingProfitInit(cfg, account, genSdk), WingGovInit(cfg, account, genSdk), OracleInit(cfg, account, genSdk), OracleSetDecimal(cfg, account, genSdk))
-	//GovTokenInit(cfg, account, genSdk)
-	//GovTokenSetGov(cfg, account, genSdk)
-	//WingProfitInit(cfg, account, genSdk)
-	//WingGovInit(cfg, account, genSdk)
-	////zero pool init
-	//// init zero pool (global , wing token)
-	//// invoke gov regsiter pool
-	//// staking , unstaking ,withdraw_wing ,get amount_wing,
-	//// global init
-	////	ADD Token support
-	//
-	////	 oracle init : admin address ,setDecimal
-	//OracleInit(cfg, account, genSdk)
-	//OracleSetDecimal(cfg, account, genSdk)
-	return InitTx
-
-}
 
 func DeployContractProfit(cfg *config.Config, account *goSdk.Account, genSdk *goSdk.OntologySdk, wasmFilePath string) common.Uint256 {
 	bytes, err := ioutil.ReadFile(wasmFilePath)
@@ -55,22 +32,25 @@ func DeployContractProfit(cfg *config.Config, account *goSdk.Account, genSdk *go
 	}
 	return result
 }
-func DeployContractWingGov(cfg *config.Config, account *goSdk.Account, genSdk *goSdk.OntologySdk) common.Uint256 {
-	bytes, err := ioutil.ReadFile("/Users/yaoyao/go/src/github.com/mockyz/AutoTestGo/wing-test/contract/testnet/wing_dao_contracts.wasm.str")
+
+func DeployContractt(cfg *config.Config, account *goSdk.Account, genSdk *goSdk.OntologySdk, wasmFilePath string) string {
+	bytes, err := ioutil.ReadFile(wasmFilePath)
 	if err != nil {
 		log.Fatal(err)
 	}
-	GovCodeStr := string(bytes)
-	GovCodeContract, err := utils.GetContractAddress(GovCodeStr)
+	contractCodeStr := string(bytes)
+	Contract, err := utils.GetContractAddress(contractCodeStr)
 	if err != nil {
 		log.Error(err)
 	}
-	log.Infof("wing Gov address : %s", GovCodeContract.ToHexString())
-	result, err := genSdk.WasmVM.DeployWasmVMSmartContract(cfg.GasPrice, cfg.GasLimit, account, GovCodeStr, "name", "version", "author", "email", "desc")
+	log.Infof("contract address : %s", Contract.ToHexString())
+	result, err := genSdk.WasmVM.DeployWasmVMSmartContract(cfg.GasPrice, cfg.GasLimit, account, contractCodeStr, "name", "version", "author", "email", "desc")
 	if err != nil {
 		log.Errorf("deployContreac  failed: %s", err)
 	}
-	return result
+	log.Infof("DeployContractt reslut : %s", result.ToHexString())
+	Utils.PrintSmartEventByHash_Ont(genSdk, result.ToHexString())
+	return Contract.ToHexString()
 }
 
 func DeployContractOracle(cfg *config.Config, account *goSdk.Account, genSdk *goSdk.OntologySdk) common.Uint256 {

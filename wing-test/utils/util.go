@@ -6,7 +6,8 @@ import (
 	config "github.com/mockyz/AutoTestGo/wing-test/config_ont"
 	DbHelp "github.com/mockyz/AutoTestGo/wing-test/dbHelper"
 	"github.com/ontio/ontology-crypto/keypair"
-	ontology_go_sdk "github.com/ontio/ontology-go-sdk"
+	goSdk "github.com/ontio/ontology-go-sdk"
+	"github.com/ontio/ontology-go-sdk/client"
 	sdkcommon "github.com/ontio/ontology-go-sdk/common"
 	"github.com/ontio/ontology-go-sdk/utils"
 	OntCommon "github.com/ontio/ontology/common"
@@ -16,7 +17,7 @@ import (
 	"time"
 )
 
-func NewAccountByWif(Wif string) (*ontology_go_sdk.Account, error) {
+func NewAccountByWif(Wif string) (*goSdk.Account, error) {
 	privateKey, err := keypair.WIF2Key([]byte(Wif))
 	if err != nil {
 		log.Errorf("decrypt privateKey error:%s", err)
@@ -24,14 +25,16 @@ func NewAccountByWif(Wif string) (*ontology_go_sdk.Account, error) {
 	pub := privateKey.Public()
 	address := types.AddressFromPubKey(pub)
 	log.Infof("address: %s\n", address.ToBase58())
-	return &ontology_go_sdk.Account{
+	return &goSdk.Account{
 		PrivateKey: privateKey,
 		PublicKey:  pub,
 		Address:    address,
 	}, nil
 }
 
-func PrintSmartEventByHash_Ont(sdk *ontology_go_sdk.OntologySdk, txHash string) []*sdkcommon.NotifyEventInfo {
+func PrintSmartEventByHash_Ont(sdk *goSdk.OntologySdk, txHash string) []*sdkcommon.NotifyEventInfo {
+	//wait hash
+	time.Sleep(time.Second * 3)
 	evts, err := sdk.GetSmartContractEvent(txHash)
 	if err != nil {
 		fmt.Printf("GetSmartContractEvent error:%s", err)
@@ -46,7 +49,7 @@ func PrintSmartEventByHash_Ont(sdk *ontology_go_sdk.OntologySdk, txHash string) 
 	return evts.Notify
 }
 
-func SignTx(sdk *ontology_go_sdk.OntologySdk, tx *types.MutableTransaction, nonce uint32, signer ontology_go_sdk.Signer) error {
+func SignTx(sdk *goSdk.OntologySdk, tx *types.MutableTransaction, nonce uint32, signer goSdk.Signer) error {
 	if nonce != 0 {
 		tx.Nonce = nonce
 	}
@@ -63,11 +66,23 @@ func getContractAddr(addr string) OntCommon.Address {
 	return ContractAddr
 }
 
-func GenerateAccounts(cfg *config.Config, admin *ontology_go_sdk.Account, goSdk *ontology_go_sdk.OntologySdk) []*ontology_go_sdk.Account {
-	//accts := make([]*ontology_go_sdk.Account, cfg.AccountNum)
+func GetTestConfig() (*config.Config, *goSdk.Account, *goSdk.OntologySdk) {
+	var sdk = goSdk.NewOntologySdk()
+	configPath := "../config_testnet.json"
+	cfg, _ := config.ParseConfig(configPath)
+	wallet, _ := sdk.OpenWallet("../wallet.dat")
+	account, _ := wallet.GetDefaultAccount([]byte(cfg.Password))
+	rpcClient := client.NewRpcClient()
+	rpcClient.SetAddress(cfg.Rpc[2])
+	sdk.SetDefaultClient(rpcClient)
+	return cfg, account, sdk
+}
+
+func GenerateAccounts(cfg *config.Config, admin *goSdk.Account, goSdk *goSdk.OntologySdk) []*goSdk.Account {
+	//accts := make([]*goSdk.Account, cfg.AccountNum)
 	before_amount_ont, _ := goSdk.Native.Ont.BalanceOf(admin.Address)
 	before_amount_ong, _ := goSdk.Native.Ong.BalanceOf(admin.Address)
-	accounts := DbHelp.QueryAccountFromDb(21, cfg.AccountNum)
+	accounts := DbHelp.QueryAccountFromDb(0, cfg.AccountNum)
 	for i := 0; i < cfg.AccountNum; i++ {
 		acct := accounts[i]
 		txhash, err := goSdk.Native.Ont.Transfer(cfg.GasPrice, cfg.GasLimit, admin, admin, acct.Address, cfg.Amount)
@@ -76,7 +91,7 @@ func GenerateAccounts(cfg *config.Config, admin *ontology_go_sdk.Account, goSdk 
 		} else {
 			log.Infof("send  Ont sentnum:***%d", txhash.ToHexString(), i)
 		}
-		txhash, err = goSdk.Native.Ong.Transfer(cfg.GasPrice, cfg.GasLimit, admin, admin, acct.Address, cfg.Amount*100000000)
+		txhash, err = goSdk.Native.Ong.Transfer(cfg.GasPrice, cfg.GasLimit, admin, admin, acct.Address, 1000000000)
 		if err != nil {
 			log.Errorf("send ONG tx failed, err: %s********", err)
 		}
@@ -91,11 +106,11 @@ func GenerateAccounts(cfg *config.Config, admin *ontology_go_sdk.Account, goSdk 
 	return accounts
 }
 
-func GetAccounts(cfg *config.Config) []*ontology_go_sdk.Account {
+func GetAccounts(cfg *config.Config) []*goSdk.Account {
 	accounts := DbHelp.QueryAccountFromDb(0, cfg.AccountNum)
 	return accounts
 }
-func NewAccountToDb(wallet *ontology_go_sdk.Wallet) {
+func NewAccountToDb(wallet *goSdk.Wallet) {
 	db := DbHelp.SetupConnect()
 	pwd := []byte("123456")
 	account, err := wallet.NewDefaultSettingAccount(pwd)

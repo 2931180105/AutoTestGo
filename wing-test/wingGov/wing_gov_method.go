@@ -228,14 +228,13 @@ func QueryPoolByAddress(cfg *config.Config, account *goSdk.Account, genSdk *goSd
 	return mutTx
 }
 
-//update_pool_address, ToDo: need test more
-func UpdatePoolAddress(cfg *config.Config, account *goSdk.Account, genSdk *goSdk.OntologySdk) *types.MutableTransaction {
+//update_pool_address,
+func UpdatePoolAddress(cfg *config.Config, account *goSdk.Account, genSdk *goSdk.OntologySdk, newZeroPool, oldZeroPool string) *types.MutableTransaction {
 	WingGovAddr, _ := utils.AddressFromHexString(cfg.WingGov)
-	AuthAddr, _ := utils.AddressFromBase58(cfg.Owner)
-	OldPoolAddr, _ := utils.AddressFromHexString(cfg.ZeroPool)
-	NewPoolAddr, _ := utils.AddressFromHexString(cfg.ZeroPool)
+	OldPoolAddr, _ := utils.AddressFromHexString(oldZeroPool)
+	NewPoolAddr, _ := utils.AddressFromHexString(newZeroPool)
 
-	params := []interface{}{AuthAddr, OldPoolAddr, NewPoolAddr}
+	params := []interface{}{OldPoolAddr, NewPoolAddr}
 	mutTx, err := genSdk.WasmVM.NewInvokeWasmVmTransaction(cfg.GasPrice, cfg.GasLimit, WingGovAddr, "update_pool_address", params)
 	if err != nil {
 		fmt.Println("construct tx err", err)
@@ -308,7 +307,7 @@ func UnboundToken(cfg *config.Config, account *goSdk.Account, genSdk *goSdk.Onto
 }
 
 //unbound_token
-func UnboundToPool2(cfg *config.Config, account *goSdk.Account, genSdk *goSdk.OntologySdk) *types.MutableTransaction {
+func UnboundToPool(cfg *config.Config, account *goSdk.Account, genSdk *goSdk.OntologySdk) *types.MutableTransaction {
 	WingGovAddr, _ := utils.AddressFromHexString(cfg.WingGov)
 	log.Infof("wing gov %s", cfg.WingGov)
 	params := []interface{}{}
@@ -323,7 +322,26 @@ func UnboundToPool2(cfg *config.Config, account *goSdk.Account, genSdk *goSdk.On
 }
 
 //unbound_token
-func UnboundToPool(cfg *config.Config, account *goSdk.Account, genSdk *goSdk.OntologySdk) *types.MutableTransaction {
+func UnboundTokenSend(cfg *config.Config, account *goSdk.Account, genSdk *goSdk.OntologySdk) {
+	WingGovAddr, _ := utils.AddressFromHexString(cfg.WingGov)
+	log.Infof("wing gov %s", cfg.WingGov)
+	params := []interface{}{}
+	mutTx, err := genSdk.WasmVM.NewInvokeWasmVmTransaction(cfg.GasPrice, cfg.GasLimit, WingGovAddr, "unbound_token", params)
+	if err != nil {
+		fmt.Println("construct unbound_token tx err", err)
+	}
+	if err := signTx(genSdk, mutTx, cfg.StartNonce, account); err != nil {
+		log.Error(err)
+	}
+	hash1, err := genSdk.SendTransaction(mutTx)
+	if err != nil {
+		log.Errorf("send  tx failed, err: %s********", err)
+	}
+	Utils.PrintSmartEventByHash_Ont(genSdk, hash1.ToHexString())
+}
+
+//unbound_token
+func UnboundToPoolSend(cfg *config.Config, account *goSdk.Account, genSdk *goSdk.OntologySdk) {
 	WingGovAddr, _ := utils.AddressFromHexString(cfg.WingGov)
 	log.Infof("wing gov %s", cfg.WingGov)
 	params := []interface{}{}
@@ -334,7 +352,11 @@ func UnboundToPool(cfg *config.Config, account *goSdk.Account, genSdk *goSdk.Ont
 	if err := signTx(genSdk, mutTx, cfg.StartNonce, account); err != nil {
 		log.Error(err)
 	}
-	return mutTx
+	hash1, err := genSdk.SendTransaction(mutTx)
+	if err != nil {
+		log.Errorf("send  tx failed, err: %s********", err)
+	}
+	Utils.PrintSmartEventByHash_Ont(genSdk, hash1.ToHexString())
 }
 
 //set_token_operator ToDo: invoke failed
@@ -400,7 +422,7 @@ func Get_pool_operator(cfg *config.Config, account *goSdk.Account, genSdk *goSdk
 }
 
 //query_unbound_to_pool
-func Query_unbound_to_pool(cfg *config.Config, account *goSdk.Account, genSdk *goSdk.OntologySdk, index int) *common.PreExecResult {
+func Query_unbound_to_pool(cfg *config.Config, genSdk *goSdk.OntologySdk, index int) *common.PreExecResult {
 	WingGovAddr, _ := utils.AddressFromHexString(cfg.WingGov)
 	ZeroPoolAddr, _ := utils.AddressFromHexString(cfg.ZeroPool)
 	params := []interface{}{ZeroPoolAddr, index}
@@ -415,7 +437,7 @@ func Query_unbound_to_pool_count(cfg *config.Config, genSdk *goSdk.OntologySdk) 
 	ZeroPoolAddr, _ := utils.AddressFromHexString(cfg.ZeroPool)
 	params := []interface{}{ZeroPoolAddr}
 	resut, _ := genSdk.WasmVM.PreExecInvokeWasmVMContract(WingGovAddr, "query_unbound_to_pool_count", params)
-	log.Infof("Get_unbound_pool: %s", resut.Result)
+	log.Infof("query_unbound_to_pool_count: %s", resut.Result)
 	return resut
 }
 
@@ -670,7 +692,7 @@ func Set_exchange_rates(cfg *config.Config, account *goSdk.Account, genSdk *goSd
 }
 
 //migrate
-func WingGovMigrate(cfg *config.Config, account *goSdk.Account, genSdk *goSdk.OntologySdk, contract string) {
+func WingGovMigrate(cfg *config.Config, account *goSdk.Account, genSdk *goSdk.OntologySdk, contract string) string {
 	WingGovAddr, _ := utils.AddressFromHexString(cfg.WingGov)
 	bytes, err := ioutil.ReadFile(contract)
 	if err != nil {
@@ -695,11 +717,42 @@ func WingGovMigrate(cfg *config.Config, account *goSdk.Account, genSdk *goSdk.On
 		log.Errorf("send  tx failed, err: %s********", err)
 	}
 	log.Infof("txhash ", hash1.ToHexString())
-	time.Sleep(time.Second * 3)
 	Utils.PrintSmartEventByHash_Ont(genSdk, hash1.ToHexString())
+	return CodeContractAddr.ToHexString()
 }
 
-//migrate TODO: not finished
+//migrate
+func ContractMigrate(cfg *config.Config, account *goSdk.Account, genSdk *goSdk.OntologySdk, contractAddr, contractPath string) string {
+	WingGovAddr, _ := utils.AddressFromHexString(contractAddr)
+	bytes, err := ioutil.ReadFile(contractPath)
+	if err != nil {
+		log.Fatal(err)
+	}
+	CodeStr, _ := hex.DecodeString(string(bytes))
+	CodeContractAddr, err := utils.GetContractAddress(string(bytes))
+	if err != nil {
+		log.Error(err)
+	}
+	log.Infof("WingGovContractAddr address : %s", CodeContractAddr.ToBase58())
+	log.Infof("WingGovContractAddr address : %s", CodeContractAddr.ToHexString())
+
+	params := []interface{}{CodeStr, 3, "WING Governance", "1.0.1", "Wing Team", "support@wing.finance", "Wing is a credit-based, cross-chain DeFi platform."}
+	mutTx, _ := genSdk.WasmVM.NewInvokeWasmVmTransaction(cfg.GasPrice, cfg.GasLimit, WingGovAddr, "migrate", params)
+
+	if err := signTx(genSdk, mutTx, cfg.StartNonce, account); err != nil {
+		log.Error(err)
+	}
+	hash1, err := genSdk.SendTransaction(mutTx)
+	if err != nil {
+		log.Errorf("send  tx failed, err: %s********", err)
+	}
+	log.Infof("txhash ", hash1.ToHexString())
+	time.Sleep(time.Second * 3)
+	Utils.PrintSmartEventByHash_Ont(genSdk, hash1.ToHexString())
+	return CodeContractAddr.ToHexString()
+}
+
+//Destroy TODO: not finished
 func Destroy(cfg *config.Config, account *goSdk.Account, genSdk *goSdk.OntologySdk) *types.MutableTransaction {
 	WingGovAddr, _ := utils.AddressFromHexString(cfg.WingGov)
 	params := []interface{}{}
