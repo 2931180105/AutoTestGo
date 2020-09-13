@@ -72,11 +72,47 @@ func TestUnStaking(t *testing.T) {
 	BatchUnStaking(cfg, account, sdk, accounts)
 }
 
+//query account balance of wing
 func TestGetUndlying(t *testing.T) {
-	cfg, account, sdk := GetTestConfig()
-	accts := Utils.GenerateAccounts(cfg, account, sdk)
-	//accts := dbHelper.QueryAccountFromDb(0,10)
-	ZeroPoolGetUndlying(cfg, accts[0], sdk)
+	cfg, _, sdk := GetTestConfig()
+	//accts := Utils.GenerateAccounts(cfg, account, sdk)
+	accts := dbHelper.QueryAccountFromDb(0, 33)
+	for i := 0; i < len(accts); i++ {
+		wing_balance := ZeroPoolGetUndlying(cfg, accts[i], sdk)
+		balance_int, err := wing_balance.ToInteger()
+		if err != nil {
+			log.Errorf("balance error: %s", err)
+		}
+		log.Infof("wing_balance: %d", balance_int)
+		Utils.UpdateWingBalance(balance_int, accts[i].Address.ToBase58())
+	}
+}
+
+//withDraw
+func TestWithDrawWing(t *testing.T) {
+	cfg, _, sdk := GetTestConfig()
+	//accts := Utils.GenerateAccounts(cfg, account, sdk)
+	accts := dbHelper.QueryAccountFromDb(0, 33)
+	for i := 0; i < len(accts); i++ {
+		ZeroPoolWithDraw(cfg, accts[i], sdk)
+	}
+}
+
+//query account balance of Staking
+func TestGetStakingBalance(t *testing.T) {
+	cfg, _, sdk := GetTestConfig()
+	//accts := Utils.GenerateAccounts(cfg, account, sdk)
+	accts := dbHelper.QueryAccountFromDb(0, 33)
+	for i := 0; i < len(accts); i++ {
+		wing_balance := ZeroPoolGetStakingBalance(cfg, accts[i], sdk)
+		balance_int, err := wing_balance.ToInteger()
+		if err != nil {
+			log.Errorf("balance error: %s", err)
+		}
+		log.Infof("wing_balance: %d", balance_int)
+		Utils.UpdateStakingBalance(balance_int, accts[i].Address.ToBase58())
+	}
+
 }
 
 //分润合约更新：先部署再init，然后更新治理合约里的分润地址

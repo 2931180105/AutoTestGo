@@ -38,6 +38,18 @@ func ZeroPoolGetUndlying(cfg *config.Config, account *goSdk.Account, genSdk *goS
 	return result.Result
 }
 
+//TODO : GetStaking
+func ZeroPoolGetStakingBalance(cfg *config.Config, account *goSdk.Account, genSdk *goSdk.OntologySdk) *common.ResultItem {
+	ZeroPoolAddr, _ := utils.AddressFromHexString(cfg.ZeroPool)
+	params := []interface{}{account.Address}
+	result, err := genSdk.WasmVM.PreExecInvokeWasmVMContract(ZeroPoolAddr, "get_staking_balance", params)
+	if err != nil {
+		fmt.Println("construct tx err", err)
+	}
+	log.Infof("get_unbound_wing :%s", result.Result)
+	return result.Result
+}
+
 func ZeroPoolInit(cfg *config.Config, account *goSdk.Account, genSdk *goSdk.OntologySdk) {
 	ZeroPoolAddr, _ := utils.AddressFromHexString(cfg.ZeroPool)
 	Global, _ := utils.AddressFromHexString(cfg.GlobalParam)

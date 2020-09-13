@@ -37,10 +37,12 @@ func main() {
 	//WingGov.DeployContractWingGov(cfg, account, sdk)
 	//WingGov.WingTokenGetGovAddr(cfg, sdk)
 
-	OToken.OTokenDelegateToProxy(cfg, account, sdk, cfg.ODAI)
-	OToken.OTokenTransfer(cfg, account, sdk, "ANxSSzWmFnAtqWBtq2KthP73oX4bHf9FyZ", cfg.OETH)
-	//OToken.DelegateToProxyAllTestToken(cfg, account, sdk)
-	//OToken.TransferAllTestToken(cfg, account, sdk,"ANxSSzWmFnAtqWBtq2KthP73oX4bHf9FyZ")
+	//AT9sH4s84NGJYVqNHQWN6vkgb7jQ12eR7p
+	//AJkQo3Fo7JKxtrKZPqYJQuh9cXH38w7rVt
+	//OToken.OTokenDelegateToProxy(cfg, account, sdk, cfg.ODAI)
+	//OToken.OTokenTransfer(cfg, account, sdk, "ANxSSzWmFnAtqWBtq2KthP73oX4bHf9FyZ", cfg.ODAI)
+	OToken.DelegateToProxyAllTestToken(cfg, account, sdk)
+	OToken.TransferAllTestToken(cfg, account, sdk, "AT9sH4s84NGJYVqNHQWN6vkgb7jQ12eR7p")
 }
 
 //func deployContract(cfg *config.Config, account *goSdk.Account, genSdk *goSdk.OntologySdk) {

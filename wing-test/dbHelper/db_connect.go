@@ -44,12 +44,18 @@ func Insert(db *sql.DB, base58 string, wif string, balance_ont int, balance_wing
 	}
 }
 
-var UPDATE_DATA = `UPDATE account_info SET staking_amount=? WHERE base58="?";`
+var UPDATE_DATA = `UPDATE account_info SET balance_wing=? WHERE base58=?;`
 
 // 修改数据
-func Update(db *sql.DB) {
-	db.Exec(UPDATE_DATA)
+func Update(db *sql.DB, wing_balance uint64, base58 string) (sql.Result, error) {
+	return db.Exec(UPDATE_DATA, wing_balance, base58)
+}
 
+var UPDATE_Staking = `UPDATE account_info SET staking_amount=? WHERE base58=?;`
+
+// 修改数据
+func UpdateStakingBalance(db *sql.DB, wing_balance uint64, base58 string) (sql.Result, error) {
+	return db.Exec(UPDATE_Staking, wing_balance, base58)
 }
 
 var DELETE_DATA = `DELETE FROM student WHERE age>=30`

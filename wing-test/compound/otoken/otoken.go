@@ -8,6 +8,7 @@ import (
 	goSdk "github.com/ontio/ontology-go-sdk"
 	"github.com/ontio/ontology-go-sdk/utils"
 	"github.com/ontio/ontology/core/types"
+	"time"
 )
 
 //var ToAddres = "ANxSSzWmFnAtqWBtq2KthP73oX4bHf9FyZ"
@@ -26,11 +27,11 @@ func OTokenInit(cfg *config.Config, account *goSdk.Account, genSdk *goSdk.Ontolo
 	return mutTx
 }
 
-func OTokenTransfer(cfg *config.Config, account *goSdk.Account, sdk *goSdk.OntologySdk, toAddres, oToken string) {
+//DAI ETH 18
+func OTokenTransfer(cfg *config.Config, account *goSdk.Account, sdk *goSdk.OntologySdk, toAddres, oToken string, precise uint64) {
 	OTokenAddr, _ := utils.AddressFromHexString(oToken)
 	toAddress, _ := utils.AddressFromBase58(toAddres)
-	//big.{10000000000000000000000000}
-	amount := WingUtils.ToIntByPrecise("100", 18)
+	amount := WingUtils.ToIntByPrecise("100", precise)
 	params := []interface{}{"transfer", []interface{}{account.Address, toAddress, amount}}
 	mutTx, err := sdk.NeoVM.NewNeoVMInvokeTransaction(cfg.GasPrice, cfg.GasLimit, OTokenAddr, params)
 	if err != nil {
@@ -46,6 +47,8 @@ func OTokenTransfer(cfg *config.Config, account *goSdk.Account, sdk *goSdk.Ontol
 	} else {
 		log.Infof("txhash: %s", hash1.ToHexString())
 	}
+	time.Sleep(time.Second * 3)
+	WingUtils.PrintSmartEventByHash_Ont(sdk, hash1.ToHexString())
 }
 
 //
@@ -89,9 +92,9 @@ func WingTokenTransfer(cfg *config.Config, account *goSdk.Account, genSdk *goSdk
 	}
 
 }
-func OTokenDelegateToProxy(cfg *config.Config, account *goSdk.Account, genSdk *goSdk.OntologySdk, oToken string) {
+func OTokenDelegateToProxy(cfg *config.Config, account *goSdk.Account, genSdk *goSdk.OntologySdk, oToken string, precise uint64) {
 	OTokenAddr, _ := utils.AddressFromHexString(oToken)
-	amount := WingUtils.ToIntByPrecise("100", 18)
+	amount := WingUtils.ToIntByPrecise("100", precise)
 	params := []interface{}{"delegateToProxy", []interface{}{account.Address, amount}}
 	mutTx, err := genSdk.NeoVM.NewNeoVMInvokeTransaction(cfg.GasPrice, cfg.GasLimit, OTokenAddr, params)
 	if err != nil {
@@ -106,6 +109,8 @@ func OTokenDelegateToProxy(cfg *config.Config, account *goSdk.Account, genSdk *g
 	} else {
 		log.Infof("txhash: %s", hash1.ToHexString())
 	}
+	time.Sleep(time.Second * 3)
+	WingUtils.PrintSmartEventByHash_Ont(genSdk, hash1.ToHexString())
 }
 
 //
@@ -170,15 +175,15 @@ func BalanceOfOToken(cfg *config.Config, account *goSdk.Account, genSdk *goSdk.O
 
 func TransferAllTestToken(cfg *config.Config, account *goSdk.Account, sdk *goSdk.OntologySdk, toAddrees string) {
 	WingTokenTransfer(cfg, account, sdk, toAddrees)
-	OTokenTransfer(cfg, account, sdk, toAddrees, cfg.OUSDT)
-	OTokenTransfer(cfg, account, sdk, toAddrees, cfg.OWBTC)
-	OTokenTransfer(cfg, account, sdk, toAddrees, cfg.OETH)
-	OTokenTransfer(cfg, account, sdk, toAddrees, cfg.ODAI)
+	OTokenTransfer(cfg, account, sdk, toAddrees, cfg.OUSDT, 6)
+	OTokenTransfer(cfg, account, sdk, toAddrees, cfg.OWBTC, 8)
+	OTokenTransfer(cfg, account, sdk, toAddrees, cfg.OETH, 18)
+	OTokenTransfer(cfg, account, sdk, toAddrees, cfg.ODAI, 18)
 }
 
 func DelegateToProxyAllTestToken(cfg *config.Config, account *goSdk.Account, sdk *goSdk.OntologySdk) {
-	OTokenDelegateToProxy(cfg, account, sdk, cfg.OUSDT)
-	OTokenDelegateToProxy(cfg, account, sdk, cfg.OWBTC)
-	OTokenDelegateToProxy(cfg, account, sdk, cfg.OETH)
-	OTokenDelegateToProxy(cfg, account, sdk, cfg.ODAI)
+	OTokenDelegateToProxy(cfg, account, sdk, cfg.OUSDT, 6)
+	OTokenDelegateToProxy(cfg, account, sdk, cfg.OWBTC, 8)
+	OTokenDelegateToProxy(cfg, account, sdk, cfg.OETH, 18)
+	OTokenDelegateToProxy(cfg, account, sdk, cfg.ODAI, 18)
 }

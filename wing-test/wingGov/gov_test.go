@@ -55,7 +55,7 @@ func TestQuery_unbound_to_pool(t *testing.T) {
 
 func TestWingGovRegisterPool(t *testing.T) {
 	cfg, account, sdk := GetTestConfig()
-	hash1, err := sdk.SendTransaction(RegisterPool(cfg, account, sdk, cfg.ZeroPool))
+	hash1, err := sdk.SendTransaction(RegisterPool(cfg, account, sdk, cfg.Comptroller))
 	if err != nil {
 		log.Errorf("send  tx failed, err: %s********", err)
 		return

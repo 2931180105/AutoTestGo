@@ -12,6 +12,7 @@ import (
 	OntCommon "github.com/ontio/ontology/common"
 	"github.com/ontio/ontology/common/log"
 	"github.com/ontio/ontology/core/types"
+	"math/big"
 	"time"
 )
 
@@ -34,7 +35,6 @@ func PrintSmartEventByHash_Ont(sdk *ontology_go_sdk.OntologySdk, txHash string) 
 	evts, err := sdk.GetSmartContractEvent(txHash)
 	if err != nil {
 		fmt.Printf("GetSmartContractEvent error:%s", err)
-		return nil
 	}
 	fmt.Printf("evts = %+v\n", evts)
 	fmt.Printf("TxHash:%s\n", txHash)
@@ -107,5 +107,25 @@ func NewAccountToDb(wallet *ontology_go_sdk.Wallet) {
 	hexWif := keypair.SerializePrivateKey(account.PrivateKey)
 	hexWifStr := hex.EncodeToString(hexWif)
 	DbHelp.Insert(db, base58, hexWifStr, 1, 2, 3)
+	db.Close()
+}
+
+func UpdateWingBalance(wing_balance *big.Int, base58 string) {
+	db := DbHelp.SetupConnect()
+	reslut, err := DbHelp.Update(db, wing_balance.Uint64(), base58)
+	if err != nil {
+		log.Errorf("update error: %s", err)
+	}
+	log.Infof("execute resulte:%s", reslut)
+	db.Close()
+}
+
+func UpdateStakingBalance(wing_balance *big.Int, base58 string) {
+	db := DbHelp.SetupConnect()
+	reslut, err := DbHelp.UpdateStakingBalance(db, wing_balance.Uint64(), base58)
+	if err != nil {
+		log.Errorf("update error: %s", err)
+	}
+	log.Infof("execute resulte:%s", reslut)
 	db.Close()
 }
