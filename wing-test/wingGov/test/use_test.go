@@ -24,3 +24,19 @@ func TestRegsiterComptroller(t *testing.T) {
 	Utils.PrintSmartEventByHash_Ont(sdk, hash1.ToHexString())
 	WingGovMethod.QueryPoolByAddress(cfg, account, sdk, cfg.Comptroller)
 }
+
+func TestUpdatePoolWeight(t *testing.T) {
+	cfg, account, sdk := GetTestConfig()
+
+	hash1, err := sdk.SendTransaction(WingGovMethod.UpdatePoolWeight(cfg, account, sdk, cfg.Comptroller, 0))
+	if err != nil {
+		log.Errorf("send  tx failed, err: %s********", err)
+		return
+	}
+	hash1, err = sdk.SendTransaction(WingGovMethod.UpdatePoolWeight(cfg, account, sdk, "1f99f0a0bae1c3df3ce6cc1adf975767bdd2dfa7", 1))
+	if err != nil {
+		log.Errorf("send  tx failed, err: %s********", err)
+		return
+	}
+	Utils.PrintSmartEventByHash_Ont(sdk, hash1.ToHexString())
+}
