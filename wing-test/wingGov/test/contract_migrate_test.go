@@ -27,14 +27,14 @@ func TestMigrateGov(t *testing.T) {
 
 //Migrate Zero pool
 func TestMigrateZeroPool(t *testing.T) {
-	cfg, account, sdk := GetMainConfig()
+	cfg, account, sdk := GetTestConfig()
 	//TODO: change path
-	zeroPoolPath := "/Users/yaoyao/go/src/github.com/mockyz/AutoTestGo/wing-test/contract/mainnet/zero_pool_new0914.wasm.str"
+	zeroPoolPath := "/Users/yaoyao/go/src/github.com/mockyz/AutoTestGo/wing-test/contract/testnet/zero_pool_091403.wasm.str"
 	newContractString := WingGovMethod.ContractMigrate(cfg, account, sdk, cfg.ZeroPool, zeroPoolPath)
 	time.Sleep(time.Second * 6)
 	log.Infof("new zero pool2 : %s", newContractString)
 	//update pool address
-	hash1, err := sdk.SendTransaction(WingGovMethod.UpdatePoolAddress(cfg, account, sdk, "20e2322eb48f0aeda8f9208280aaa6d15c46d769", cfg.ZeroPool))
+	hash1, err := sdk.SendTransaction(WingGovMethod.UpdatePoolAddress(cfg, account, sdk, newContractString, cfg.ZeroPool))
 	if err != nil {
 		log.Errorf("send  tx failed, err: %s********", err)
 		return
@@ -42,8 +42,7 @@ func TestMigrateZeroPool(t *testing.T) {
 	time.Sleep(time.Second * 6)
 	log.Infof("UpdatePoolAddress hash : %s", hash1.ToHexString())
 	Utils.PrintSmartEventByHash_Ont(sdk, hash1.ToHexString())
-	WingGovMethod.QueryPoolByAddress(cfg, account, sdk, "20e2322eb48f0aeda8f9208280aaa6d15c46d769")
-
+	WingGovMethod.QueryPoolByAddress(cfg, account, sdk, newContractString)
 	//	TODO:update config file
 }
 
@@ -72,11 +71,13 @@ func TestDev(t *testing.T) {
 
 //Deploy zero pool Todo : finish deploy
 func TestDeployZeroPool(t *testing.T) {
-	cfg, account, sdk := GetPrvConfig()
+	cfg, account, sdk := GetTestConfig()
 	wasmFile := "../../contract/testnet/zero_pool.wasm.str"
 	zeroPoolAddr := WingGovMethod.DeployContractt(cfg, account, sdk, wasmFile)
 	//WingGovMethod.QueryPoolByAddress(cfg, account, sdk, zeroPoolAddr)
+	time.Sleep(time.Second * 3)
 	WingGovMethod.ZeroPoolInit(cfg, account, sdk, zeroPoolAddr)
+	time.Sleep(time.Second * 3)
 	hash1, err := sdk.SendTransaction(WingGovMethod.RegisterPool(cfg, account, sdk, zeroPoolAddr))
 	if err != nil {
 		log.Errorf("send  tx failed, err: %s********", err)
@@ -88,13 +89,12 @@ func TestDeployZeroPool(t *testing.T) {
 	//	TODO:update config file
 }
 
-//Deploy zero pool Todo : finish deploy
+//TestDeployGov pool Todo : finish deploy
 func TestDeployGov(t *testing.T) {
-	cfg, account, sdk := GetPrvConfig()
-	wasmFile := "../../contract/testnet/wing_dao_contracts_old.wasm.str"
+	cfg, account, sdk := GetTestConfig()
+	wasmFile := "../../contract/testnet/wing_dao_contracts.wasm.str"
 	WingGovAddr := WingGovMethod.DeployContractt(cfg, account, sdk, wasmFile)
-	time.Sleep(time.Second * 3)
-	//WingGovMethod.QueryPoolByAddress(cfg, account, sdk, zeroPoolAddr)
+	log.Infof("wing gov:%s", WingGovAddr)
 	hash1, err := sdk.SendTransaction(WingGovMethod.WingGovInit(cfg, account, sdk))
 	if err != nil {
 		log.Errorf("send  tx failed, err: %s********", err)

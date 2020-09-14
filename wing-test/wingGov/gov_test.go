@@ -35,20 +35,45 @@ func TestWingGovUnboundTokenToPool(t *testing.T) {
 	Utils.PrintSmartEventByHash_Ont(sdk, hash1.ToHexString())
 }
 
+//
+//"a22fde0b0284d4e850558b4a5f95f2e2d36654d2",
+//"5de3ac0c8863db961f2c3d3a832d5063dda51777",
+//"d69e51230c0f096888c259c6f29a1f5c7cf3542a",
+//"386bc44661fef273e6627261736ebc2944273c62",
+
 func TestWingGovUpdatePoolWeight(t *testing.T) {
 	cfg, account, sdk := GetTestConfig()
-	hash1, err := sdk.SendTransaction(UpdatePoolWeight(cfg, account, sdk))
+	hash1, err := sdk.SendTransaction(UpdatePoolWeight(cfg, account, sdk, "1f99f0a0bae1c3df3ce6cc1adf975767bdd2dfa7", 0))
 	if err != nil {
 		log.Errorf("send  tx failed, err: %s********", err)
 		return
 	}
+	time.Sleep(time.Second * 3)
+	hash1, err = sdk.SendTransaction(UpdatePoolWeight(cfg, account, sdk, "5de3ac0c8863db961f2c3d3a832d5063dda51777", 0))
+	if err != nil {
+		log.Errorf("send  tx failed, err: %s********", err)
+		return
+	}
+	time.Sleep(time.Second * 3)
+	hash1, err = sdk.SendTransaction(UpdatePoolWeight(cfg, account, sdk, "d69e51230c0f096888c259c6f29a1f5c7cf3542a", 0))
+	if err != nil {
+		log.Errorf("send  tx failed, err: %s********", err)
+		return
+	}
+	time.Sleep(time.Second * 3)
+	hash1, err = sdk.SendTransaction(UpdatePoolWeight(cfg, account, sdk, "386bc44661fef273e6627261736ebc2944273c62", 0))
+	if err != nil {
+		log.Errorf("send  tx failed, err: %s********", err)
+		return
+	}
+
 	time.Sleep(time.Second * 3)
 	Utils.PrintSmartEventByHash_Ont(sdk, hash1.ToHexString())
 }
 
 func TestWingGovRegisterPool(t *testing.T) {
 	cfg, account, sdk := GetTestConfig()
-	hash1, err := sdk.SendTransaction(RegisterPool(cfg, account, sdk, cfg.Comptroller))
+	hash1, err := sdk.SendTransaction(RegisterPool(cfg, account, sdk, "cfg.Comptroller"))
 	if err != nil {
 		log.Errorf("send  tx failed, err: %s********", err)
 		return
@@ -78,25 +103,47 @@ func TestStakingMore(t *testing.T) {
 }
 func TestAddSuuportToken(t *testing.T) {
 	cfg, account, sdk := GetTestConfig()
-	//accounts := DbHelp.QueryAccountFromDb(0, cfg.AccountNum)
-
-	hash1, err := sdk.SendTransaction(Add_support_token(cfg, account, sdk, "ONTd", cfg.ONTD))
+	hash1, err := sdk.SendTransaction(Add_support_token(cfg, account, sdk, "renBTC", cfg.RENBTC))
 	if err != nil {
 		log.Errorf("send DAI tx failed, err: %s********", err)
 	}
 	time.Sleep(time.Second * 3)
 	Utils.PrintSmartEventByHash_Ont(sdk, hash1.ToHexString())
 }
-func TestMigrateGov(t *testing.T) {
+func TestUpdateSuuportToken(t *testing.T) {
 	cfg, account, sdk := GetTestConfig()
-	//accounts := DbHelp.QueryAccountFromDb(0, cfg.AccountNum)
-
-	//wing-test/contract/private/wing_dao_contracts_new.wasm.str
-	WingGovMigrate(cfg, account, sdk, "../contract/private/wing_dao_contracts.wasm.str")
-
+	hash1, err := sdk.SendTransaction(Update_support_token(cfg, account, sdk, "renBTC", cfg.RENBTC))
+	if err != nil {
+		log.Errorf("send DAI tx failed, err: %s********", err)
+	}
+	time.Sleep(time.Second * 3)
+	Utils.PrintSmartEventByHash_Ont(sdk, hash1.ToHexString())
 }
 func TestOracle(t *testing.T) {
 	cfg, account, sdk := GetTestConfig()
 	OraclePutUnderlyingPrice(cfg, account, sdk)
 	OracleGetUnderlyingPrice(cfg, account, sdk, "ONT")
+}
+
+//GetProductPools
+
+func TestGetProductPools(t *testing.T) {
+	cfg, account, sdk := GetTestConfig()
+	GetProductPools(cfg, account, sdk)
+}
+
+func TestUpdatePoolWeight(t *testing.T) {
+	cfg, account, sdk := GetTestConfig()
+
+	hash1, err := sdk.SendTransaction(UpdatePoolWeight(cfg, account, sdk, cfg.Comptroller, 0))
+	if err != nil {
+		log.Errorf("send  tx failed, err: %s********", err)
+		return
+	}
+	hash1, err = sdk.SendTransaction(UpdatePoolWeight(cfg, account, sdk, cfg.ZeroPool, 1))
+	if err != nil {
+		log.Errorf("send  tx failed, err: %s********", err)
+		return
+	}
+	Utils.PrintSmartEventByHash_Ont(sdk, hash1.ToHexString())
 }

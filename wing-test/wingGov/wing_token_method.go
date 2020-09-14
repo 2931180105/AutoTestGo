@@ -8,14 +8,14 @@ import (
 	"github.com/ontio/ontology-go-sdk/utils"
 	"github.com/ontio/ontology/common/log"
 	"github.com/ontio/ontology/core/types"
-	"time"
 )
 
 //wing token init
 func GovTokenInit(cfg *config.Config, account *goSdk.Account, genSdk *goSdk.OntologySdk) *types.MutableTransaction {
 	WingGovAddr, _ := utils.AddressFromHexString(cfg.WingGov)
 	WingToken, _ := utils.AddressFromHexString(cfg.GovToken)
-	CuurTime := time.Now().Unix() + 100
+	//CuurTime := time.Now().Unix() + 100
+	CuurTime := 1599814800
 	log.Infof("curr time : %d", CuurTime)
 	params := []interface{}{"init", []interface{}{WingGovAddr, CuurTime}}
 	mutTx, err := genSdk.NeoVM.NewNeoVMInvokeTransaction(cfg.GasPrice, cfg.GasLimit, WingToken, params)

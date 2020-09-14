@@ -170,3 +170,19 @@ func MigrateZeroPool(cfg *config.Config, account *goSdk.Account, sdk *goSdk.Onto
 	Utils.PrintSmartEventByHash_Ont(sdk, hash.ToHexString())
 	return newContractString
 }
+
+//d69e51230c0f096888c259c6f29a1f5c7cf3542a
+
+func MigrateComptroller(cfg *config.Config, account *goSdk.Account, sdk *goSdk.OntologySdk, newCompAddr string) {
+	//time.Sleep(time.Second*3)
+	//newContractString := ContractMigrate(cfg, account, sdk, cfg.ZeroPool, codePath)
+	//log.Infof("new zero pool2 : %s", newContractString)
+	//time.Sleep(time.Second * 3)
+	//	update pool address
+	hash, err := sdk.SendTransaction(UpdatePoolAddress(cfg, account, sdk, newCompAddr, cfg.Comptroller))
+	if err != nil {
+		log.Errorf("send  tx failed, err: %s********", err)
+	}
+	log.Infof("UpdatePoolAddress hash : %s", hash.ToHexString())
+	Utils.PrintSmartEventByHash_Ont(sdk, hash.ToHexString())
+}

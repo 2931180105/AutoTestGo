@@ -120,6 +120,24 @@ func TestGetStakingBalance(t *testing.T) {
 
 }
 
+//query account balance of Staking
+func TestAddAllSuuportToken(t *testing.T) {
+	cfg, account, sdk := GetTestConfig()
+	//Query_total_pool_bonus(cfg, sdk )
+	AddAllSuuportToken(cfg, account, sdk)
+
+}
+func TestUpdateAllSuuportToken(t *testing.T) {
+	cfg, account, sdk := GetTestConfig()
+	UpdateAllSuuportToken(cfg, account, sdk)
+
+}
+func TestSetOracleAddr(t *testing.T) {
+	cfg, account, sdk := GetTestConfig()
+	Set_oracle_address(cfg, account, sdk)
+
+}
+
 //分润合约更新：先部署再init，然后更新治理合约里的分润地址
 func TestOracleSetValue(t *testing.T) {
 	cfg, account, sdk := GetTestConfig()

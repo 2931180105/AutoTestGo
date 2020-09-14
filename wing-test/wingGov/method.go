@@ -130,25 +130,65 @@ func BatchUnStaking(cfg *config.Config, account *goSdk.Account, genSdk *goSdk.On
 	}
 }
 func AddAllSuuportToken(cfg *config.Config, account *goSdk.Account, sdk *goSdk.OntologySdk) {
-	hash1, err := sdk.SendTransaction(Add_support_token(cfg, account, sdk, "DAI", cfg.ODAI))
+	hash1, err := sdk.SendTransaction(Add_support_token(cfg, account, sdk, "ONTd", cfg.ONTD))
 	if err != nil {
 		log.Errorf("send DAI tx failed, err: %s********", err)
 	}
 	time.Sleep(time.Second * 3)
 	Utils.PrintSmartEventByHash_Ont(sdk, hash1.ToHexString())
-	hash1, err = sdk.SendTransaction(Add_support_token(cfg, account, sdk, "ETH", cfg.OETH))
+	hash1, err = sdk.SendTransaction(Add_support_token(cfg, account, sdk, "USDC", cfg.OUSDC))
 	if err != nil {
 		log.Errorf("send  tx failed, err: %s********", err)
 		return
 	}
 	time.Sleep(time.Second * 3)
 	Utils.PrintSmartEventByHash_Ont(sdk, hash1.ToHexString())
-	hash1, err = sdk.SendTransaction(Add_support_token(cfg, account, sdk, "BTC", cfg.OWBTC))
+	hash1, err = sdk.SendTransaction(Add_support_token(cfg, account, sdk, "WBTC", cfg.OWBTC))
 	if err != nil {
 		log.Errorf("send  tx failed, err: %s********", err)
 		return
 	}
 	hash1, err = sdk.SendTransaction(Add_support_token(cfg, account, sdk, "USDT", cfg.OUSDT))
+	if err != nil {
+		log.Errorf("send  tx failed, err: %s********", err)
+		return
+	}
+	time.Sleep(time.Second * 3)
+	hash1, err = sdk.SendTransaction(Add_support_token(cfg, account, sdk, "renBTC", cfg.RENBTC))
+	if err != nil {
+		log.Errorf("send  tx failed, err: %s********", err)
+		return
+	}
+	time.Sleep(time.Second * 3)
+	Utils.PrintSmartEventByHash_Ont(sdk, hash1.ToHexString())
+}
+
+func UpdateAllSuuportToken(cfg *config.Config, account *goSdk.Account, sdk *goSdk.OntologySdk) {
+	hash1, err := sdk.SendTransaction(Update_support_token(cfg, account, sdk, "DAI", cfg.ODAI))
+	if err != nil {
+		log.Errorf("send DAI tx failed, err: %s********", err)
+	}
+	time.Sleep(time.Second * 3)
+	Utils.PrintSmartEventByHash_Ont(sdk, hash1.ToHexString())
+	hash1, err = sdk.SendTransaction(Update_support_token(cfg, account, sdk, "ETH", cfg.OETH))
+	if err != nil {
+		log.Errorf("send  tx failed, err: %s********", err)
+		return
+	}
+	time.Sleep(time.Second * 3)
+	Utils.PrintSmartEventByHash_Ont(sdk, hash1.ToHexString())
+	hash1, err = sdk.SendTransaction(Update_support_token(cfg, account, sdk, "BTC", cfg.OWBTC))
+	if err != nil {
+		log.Errorf("send  tx failed, err: %s********", err)
+		return
+	}
+	hash1, err = sdk.SendTransaction(Update_support_token(cfg, account, sdk, "USDT", cfg.OUSDT))
+	if err != nil {
+		log.Errorf("send  tx failed, err: %s********", err)
+		return
+	}
+	time.Sleep(time.Second * 3)
+	hash1, err = sdk.SendTransaction(Update_support_token(cfg, account, sdk, "ONTd", cfg.ONTD))
 	if err != nil {
 		log.Errorf("send  tx failed, err: %s********", err)
 		return

@@ -33,7 +33,9 @@ type Config struct {
 	GlobalParam        string // HexString
 	AuthAddr           string
 	OUSDT              string
+	OUSDC              string
 	OWBTC              string
+	RENBTC             string
 	OETH               string
 	ONTD               string
 	ODAI               string
