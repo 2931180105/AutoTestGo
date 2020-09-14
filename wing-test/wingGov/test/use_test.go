@@ -8,14 +8,23 @@ import (
 	"time"
 )
 
+//03d830df793d80137343731f799d5be40637a310
 func TestUpdateComptroller(t *testing.T) {
 	cfg, account, sdk := GetTestConfig()
-	WingGovMethod.MigrateComptroller(cfg, account, sdk, "e58749f563f14488fae547e35ad2120cbf922eba")
+	WingGovMethod.MigrateComptroller(cfg, account, sdk, "a5a9e4131aa80531acdfed4e24962cb091cae3a7")
+}
+
+//Add support token
+func TestAddAllSuuportToken(t *testing.T) {
+	cfg, account, sdk := GetTestConfig()
+	WingGovMethod.AddAllSuuportToken(cfg, account, sdk)
+	WingGovMethod.Get_support_token(cfg, account, sdk)
+
 }
 
 func TestRegsiterComptroller(t *testing.T) {
 	cfg, account, sdk := GetTestConfig()
-	hash1, err := sdk.SendTransaction(WingGovMethod.RegisterPool(cfg, account, sdk, "1f99f0a0bae1c3df3ce6cc1adf975767bdd2dfa7"))
+	hash1, err := sdk.SendTransaction(WingGovMethod.RegisterPool(cfg, account, sdk, cfg.Comptroller))
 	if err != nil {
 		log.Errorf("send  tx failed, err: %s********", err)
 		return
@@ -28,12 +37,12 @@ func TestRegsiterComptroller(t *testing.T) {
 func TestUpdatePoolWeight(t *testing.T) {
 	cfg, account, sdk := GetTestConfig()
 
-	hash1, err := sdk.SendTransaction(WingGovMethod.UpdatePoolWeight(cfg, account, sdk, cfg.Comptroller, 0))
+	hash1, err := sdk.SendTransaction(WingGovMethod.UpdatePoolWeight(cfg, account, sdk, cfg.Comptroller, 1))
 	if err != nil {
 		log.Errorf("send  tx failed, err: %s********", err)
 		return
 	}
-	hash1, err = sdk.SendTransaction(WingGovMethod.UpdatePoolWeight(cfg, account, sdk, "1f99f0a0bae1c3df3ce6cc1adf975767bdd2dfa7", 1))
+	hash1, err = sdk.SendTransaction(WingGovMethod.UpdatePoolWeight(cfg, account, sdk, cfg.ZeroPool, 0))
 	if err != nil {
 		log.Errorf("send  tx failed, err: %s********", err)
 		return

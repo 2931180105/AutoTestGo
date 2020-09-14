@@ -8,7 +8,6 @@ import (
 	"github.com/ontio/ontology-crypto/keypair"
 	goSdk "github.com/ontio/ontology-go-sdk"
 	"github.com/ontio/ontology-go-sdk/client"
-	sdkcommon "github.com/ontio/ontology-go-sdk/common"
 	"github.com/ontio/ontology-go-sdk/utils"
 	OntCommon "github.com/ontio/ontology/common"
 	"github.com/ontio/ontology/common/log"
@@ -32,21 +31,23 @@ func NewAccountByWif(Wif string) (*goSdk.Account, error) {
 	}, nil
 }
 
-func PrintSmartEventByHash_Ont(sdk *goSdk.OntologySdk, txHash string) []*sdkcommon.NotifyEventInfo {
+func PrintSmartEventByHash_Ont(sdk *goSdk.OntologySdk, txHash string) {
 	//wait hash
-	time.Sleep(time.Second * 3)
-	evts, err := sdk.GetSmartContractEvent(txHash)
-	if err != nil {
-		log.Errorf("GetSmartContractEvent error:%s", err)
+	for j := 0; j < 10; j++ {
+		time.Sleep(time.Second * 3)
+		evts, err := sdk.GetSmartContractEvent(txHash)
+		if err != nil {
+			continue
+		}
+		log.Infof("evts = %s\n", evts)
+		log.Infof("TxHash:%s\n", txHash)
+		log.Infof("State:%d\n", evts.State)
+		for _, notify := range evts.Notify {
+			fmt.Printf("ContractAddress:%s\n", notify.ContractAddress)
+			fmt.Printf("States:%+v\n", notify.States)
+		}
 	}
-	log.Infof("evts = %s\n", evts)
-	log.Infof("TxHash:%s\n", txHash)
-	log.Infof("State:%d\n", evts.State)
-	for _, notify := range evts.Notify {
-		fmt.Printf("ContractAddress:%s\n", notify.ContractAddress)
-		fmt.Printf("States:%+v\n", notify.States)
-	}
-	return evts.Notify
+
 }
 
 func SignTx(sdk *goSdk.OntologySdk, tx *types.MutableTransaction, nonce uint32, signer goSdk.Signer) error {

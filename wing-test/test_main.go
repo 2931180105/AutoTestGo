@@ -42,7 +42,7 @@ func main() {
 	//OToken.OTokenTransfer(cfg, account, sdk, "ANxSSzWmFnAtqWBtq2KthP73oX4bHf9FyZ", cfg.ODAI)
 	//OToken.DelegateToProxyAllTestToken(cfg, account, sdk)
 	//AT9sH4s84NGJYVqNHQWN6vkgb7jQ12eR7p
-	OToken.TransferAllTestToken(cfg, account, sdk, "AHLQ1SBwRZf7ncg9P6KCET6aSthASqFxPi")
+	OToken.TransferAllTestToken(cfg, account, sdk, "AbG3ZgFrMK6fqwXWR1WkQ1d1EYVunCwknu")
 }
 
 //func deployContract(cfg *config.Config, account *goSdk.Account, genSdk *goSdk.OntologySdk) {

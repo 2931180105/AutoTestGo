@@ -103,9 +103,10 @@ func TestStakingMore(t *testing.T) {
 }
 func TestAddSuuportToken(t *testing.T) {
 	cfg, account, sdk := GetTestConfig()
-	hash1, err := sdk.SendTransaction(Add_support_token(cfg, account, sdk, "renBTC", cfg.RENBTC))
+	hash1, err := sdk.SendTransaction(Add_support_token(cfg, account, sdk, "WBTC", cfg.OWBTC))
+	log.Infof("hexstring: %s", cfg.OWBTC)
 	if err != nil {
-		log.Errorf("send DAI tx failed, err: %s********", err)
+		log.Errorf("send Add_support_token tx failed, err: %s********", err)
 	}
 	time.Sleep(time.Second * 3)
 	Utils.PrintSmartEventByHash_Ont(sdk, hash1.ToHexString())
@@ -113,8 +114,9 @@ func TestAddSuuportToken(t *testing.T) {
 func TestUpdateSuuportToken(t *testing.T) {
 	cfg, account, sdk := GetTestConfig()
 	hash1, err := sdk.SendTransaction(Update_support_token(cfg, account, sdk, "renBTC", cfg.RENBTC))
+	log.Infof("hexstring: %s", cfg.RENBTC)
 	if err != nil {
-		log.Errorf("send DAI tx failed, err: %s********", err)
+		log.Errorf("send Update_support_token tx failed, err: %s********", err)
 	}
 	time.Sleep(time.Second * 3)
 	Utils.PrintSmartEventByHash_Ont(sdk, hash1.ToHexString())
@@ -130,20 +132,4 @@ func TestOracle(t *testing.T) {
 func TestGetProductPools(t *testing.T) {
 	cfg, account, sdk := GetTestConfig()
 	GetProductPools(cfg, account, sdk)
-}
-
-func TestUpdatePoolWeight(t *testing.T) {
-	cfg, account, sdk := GetTestConfig()
-
-	hash1, err := sdk.SendTransaction(UpdatePoolWeight(cfg, account, sdk, cfg.Comptroller, 0))
-	if err != nil {
-		log.Errorf("send  tx failed, err: %s********", err)
-		return
-	}
-	hash1, err = sdk.SendTransaction(UpdatePoolWeight(cfg, account, sdk, cfg.ZeroPool, 1))
-	if err != nil {
-		log.Errorf("send  tx failed, err: %s********", err)
-		return
-	}
-	Utils.PrintSmartEventByHash_Ont(sdk, hash1.ToHexString())
 }

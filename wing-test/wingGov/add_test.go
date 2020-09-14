@@ -34,7 +34,7 @@ func TestIint(t *testing.T) {
 	time.Sleep(time.Second * 3)
 	Utils.PrintSmartEventByHash_Ont(sdk, hash1.ToHexString())
 
-	hash1, err = sdk.SendTransaction(WingGovInit(cfg, account, sdk))
+	hash1, err = sdk.SendTransaction(WingGovInit(cfg, account, sdk, cfg.WingGov))
 	if err != nil {
 		log.Errorf("send DAI tx failed, err: %s********", err)
 	}
@@ -120,13 +120,6 @@ func TestGetStakingBalance(t *testing.T) {
 
 }
 
-//query account balance of Staking
-func TestAddAllSuuportToken(t *testing.T) {
-	cfg, account, sdk := GetTestConfig()
-	//Query_total_pool_bonus(cfg, sdk )
-	AddAllSuuportToken(cfg, account, sdk)
-
-}
 func TestUpdateAllSuuportToken(t *testing.T) {
 	cfg, account, sdk := GetTestConfig()
 	UpdateAllSuuportToken(cfg, account, sdk)

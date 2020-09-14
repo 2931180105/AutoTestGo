@@ -18,8 +18,8 @@ import (
 )
 
 //gov init
-func WingGovInit(cfg *config.Config, account *goSdk.Account, genSdk *goSdk.OntologySdk) *types.MutableTransaction {
-	WingGovAddr, _ := utils.AddressFromHexString(cfg.WingGov)
+func WingGovInit(cfg *config.Config, account *goSdk.Account, genSdk *goSdk.OntologySdk, wingGovAddr string) *types.MutableTransaction {
+	WingGovAddr, _ := utils.AddressFromHexString(wingGovAddr)
 	Oracle, _ := utils.AddressFromHexString(cfg.Oracle)
 	WingToken, _ := utils.AddressFromHexString(cfg.GovToken)
 	GlobalParam, _ := utils.AddressFromHexString(cfg.GlobalParam)
