@@ -33,7 +33,7 @@ func NewAccountByWif(Wif string) (*goSdk.Account, error) {
 
 func PrintSmartEventByHash_Ont(sdk *goSdk.OntologySdk, txHash string) {
 	//wait hash
-	for j := 0; j < 10; j++ {
+	for j := 0; j < 50; j++ {
 		time.Sleep(time.Second * 3)
 		evts, err := sdk.GetSmartContractEvent(txHash)
 		if err != nil {

@@ -574,6 +574,24 @@ func SetFFactor(cfg *config.Config, account *goSdk.Account, genSdk *goSdk.Ontolo
 	}
 	return mutTx
 }
+func Set_token_decimals(cfg *config.Config, account *goSdk.Account, genSdk *goSdk.OntologySdk, tokenName string, decimals int) {
+	//	set_token_decimals(token_name: &str, decimal: u8)
+	WingGovAddr, _ := utils.AddressFromHexString(cfg.WingGov)
+	params := []interface{}{tokenName, decimals}
+	mutTx, err := genSdk.WasmVM.NewInvokeWasmVmTransaction(cfg.GasPrice, cfg.GasLimit, WingGovAddr, "set_token_decimals", params)
+	if err != nil {
+		fmt.Println("construct tx err", err)
+	}
+	if err := signTx(genSdk, mutTx, cfg.StartNonce, account); err != nil {
+		log.Error(err)
+	}
+	hash, err := genSdk.SendTransaction(mutTx)
+	if err != nil {
+		log.Errorf("send error:%s", err)
+	}
+	time.Sleep(time.Second * 3)
+	Utils.PrintSmartEventByHash_Ont(genSdk, hash.ToHexString())
+}
 
 //add_support_token
 func Add_support_token(cfg *config.Config, account *goSdk.Account, genSdk *goSdk.OntologySdk, oTokenName, oToken string) *types.MutableTransaction {

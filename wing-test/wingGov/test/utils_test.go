@@ -1,6 +1,7 @@
 package test
 
 import (
+	"github.com/mockyz/AutoTestGo/common/log"
 	config "github.com/mockyz/AutoTestGo/wing-test/config_ont"
 	DbHelp "github.com/mockyz/AutoTestGo/wing-test/dbHelper"
 	goSdk "github.com/ontio/ontology-go-sdk"
@@ -22,9 +23,19 @@ func GetTestConfig() (*config.Config, *goSdk.Account, *goSdk.OntologySdk) {
 func GetMainConfig() (*config.Config, *goSdk.Account, *goSdk.OntologySdk) {
 	var sdk = goSdk.NewOntologySdk()
 	configPath := "/Users/yaoyao/go/src/github.com/mockyz/AutoTestGo/wing-test/config_main.json"
-	cfg, _ := config.ParseConfig(configPath)
-	wallet, _ := sdk.OpenWallet("/Users/yaoyao/go/src/github.com/mockyz/AutoTestGo/wing-test/WING_OWNER.dat")
-	account, _ := wallet.GetDefaultAccount([]byte(cfg.Password))
+	cfg, err := config.ParseConfig(configPath)
+	if err != nil {
+		log.Errorf("ParseConfig error:%s", err)
+	}
+	wallet, _ := sdk.OpenWallet("/Users/yaoyao/go/src/github.com/mockyz/AutoTestGo/wing-test/WING_OTHER_OWNER.dat")
+	//wallet, err := sdk.OpenWallet("/Users/yaoyao/go/src/github.com/mockyz/AutoTestGo/wing-test/WING_OWNER.dat")
+	if err != nil {
+		log.Errorf("OpenWallet error:%s", err)
+	}
+	account, err := wallet.GetDefaultAccount([]byte(cfg.Password))
+	if err != nil {
+		log.Errorf("GetDefaultAccount error:%s", err)
+	}
 	rpcClient := client.NewRpcClient()
 	rpcClient.SetAddress(cfg.Rpc[2])
 	sdk.SetDefaultClient(rpcClient)

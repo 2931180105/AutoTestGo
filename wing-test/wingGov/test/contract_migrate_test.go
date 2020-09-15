@@ -58,7 +58,7 @@ func TestDev(t *testing.T) {
 //Deploy zero pool Todo : finish deploy
 func TestDeployZeroPool(t *testing.T) {
 	cfg, account, sdk := GetTestConfig()
-	wasmFile := "../../contract/testnet/zero_pool_new.wasm.str"
+	wasmFile := "../../contract/testnet/zero_pool.wasm.str"
 	zeroPoolAddr := WingGovMethod.DeployContractt(cfg, account, sdk, wasmFile)
 	//WingGovMethod.QueryPoolByAddress(cfg, account, sdk, zeroPoolAddr)
 	time.Sleep(time.Second * 3)
@@ -78,7 +78,7 @@ func TestDeployZeroPool(t *testing.T) {
 //TestDeployGov pool
 func TestDeployGov(t *testing.T) {
 	cfg, account, sdk := GetTestConfig()
-	wasmFile := "../../contract/testnet/wing_dao_contracts_new.wasm.str"
+	wasmFile := "../../contract/testnet/wing_dao_contracts_old.wasm.str"
 	WingGovAddr := WingGovMethod.DeployContractt(cfg, account, sdk, wasmFile)
 	log.Infof("wing gov:%s", WingGovAddr)
 	hash1, err := sdk.SendTransaction(WingGovMethod.WingGovInit(cfg, account, sdk, WingGovAddr))
@@ -98,7 +98,6 @@ func TestDeployGov(t *testing.T) {
 	reslut := WingGovMethod.GetGovAddress(cfg, sdk)
 	log.Infof("gov address:%s", reslut.Result)
 	//ADD Support Token
-
 	//	TODO:update config file
 }
 

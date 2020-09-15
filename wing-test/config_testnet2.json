@@ -5,14 +5,23 @@
   "WingStartTime": 20,
   "Oracle": "2927cb865be38d0fddce9cd42b38864074c82ad5",
   "GovToken": "ff31ec74d01f7b7d45ed2add930f5d2239f7de33",
-  "ZeroPool": "83ac36b8429e220075ddf81c14a5c87f8edec83b",
+
+
+  "ZeroPool": "53c8438410dce2288228ce628ce4c32bc1f6335d",
+
+
+  "WingGov": "3ff111a0204f5ef28d4c0ad1d05820f0dd785840",
+
+  "Comptroller" : "4b3a7c53e9562fbae2736cf42d403b004ebd164b",
+
+
   "OldZeroPool": "5bfa10a78cb3f9e14c01f0e38a96e7db5b405f9d",
-  "WingGov": "0883d5187283e5f84d7ccff8427e9ff7271258a7",
   "WingProfit": "5ea4b5522eab96ce26df290e122fec3b8fa4fee9",
   "GlobalParam": "a7e169ef9ab7930d573850c1152780d8d7530458",
   "Pool2": "09489abaedf02734d012d6617edcb6aa029f239b",
   "InterestRate" : "530caa967eba9365d90dd88897cf21b49dee58c2",
-  "Comptroller" : "a5a9e4131aa80531acdfed4e24962cb091cae3a7",
+
+
   "FBTC": "d6738a8513fe0c5d052e54f9fd14d6670ca28bfe",
   "FETH" : "064cede1eb3a91b80f82fe168fcb25bc1a0b3ac0",
   "FUSDT" : "657843c526db92c4ac42d50cd621dfa3842b1ba4",
