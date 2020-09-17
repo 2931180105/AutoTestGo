@@ -36,24 +36,24 @@ func TestIint(t *testing.T) {
 
 	hash1, err = sdk.SendTransaction(WingGovInit(cfg, account, sdk, cfg.WingGov))
 	if err != nil {
-		log.Errorf("send DAI tx failed, err: %s********", err)
+		log.Errorf("send WingGovInit tx failed, err: %s********", err)
 	}
 	time.Sleep(time.Second * 3)
 	Utils.PrintSmartEventByHash_Ont(sdk, hash1.ToHexString())
-	hash1, err = sdk.SendTransaction(RegisterPool(cfg, account, sdk, cfg.ZeroPool))
-	if err != nil {
-		log.Errorf("send  tx failed, err: %s********", err)
-		return
-	}
-	time.Sleep(time.Second * 3)
-	Utils.PrintSmartEventByHash_Ont(sdk, hash1.ToHexString())
-	QueryPoolByAddress(cfg, account, sdk, cfg.ZeroPool)
-	hash1, err = sdk.SendTransaction(WingProfitInit(cfg, account, sdk))
-	if err != nil {
-		log.Errorf("send DAI tx failed, err: %s********", err)
-	}
-	time.Sleep(time.Second * 3)
-	Utils.PrintSmartEventByHash_Ont(sdk, hash1.ToHexString())
+	//hash1, err = sdk.SendTransaction(RegisterPool(cfg, account, sdk, cfg.ZeroPool))
+	//if err != nil {
+	//	log.Errorf("send  tx failed, err: %s********", err)
+	//	return
+	//}
+	//time.Sleep(time.Second * 3)
+	//Utils.PrintSmartEventByHash_Ont(sdk, hash1.ToHexString())
+	//QueryPoolByAddress(cfg, account, sdk, cfg.ZeroPool)
+	//hash1, err = sdk.SendTransaction(WingProfitInit(cfg, account, sdk))
+	//if err != nil {
+	//	log.Errorf("send DAI tx failed, err: %s********", err)
+	//}
+	//time.Sleep(time.Second * 3)
+	//Utils.PrintSmartEventByHash_Ont(sdk, hash1.ToHexString())
 
 }
 
@@ -128,6 +128,7 @@ func TestUpdateAllSuuportToken(t *testing.T) {
 func TestSetOracleAddr(t *testing.T) {
 	cfg, account, sdk := GetTestConfig()
 	Set_oracle_address(cfg, account, sdk)
+	Get_oracle_address(cfg, account, sdk)
 
 }
 

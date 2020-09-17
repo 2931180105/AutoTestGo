@@ -130,6 +130,7 @@ func BatchUnStaking(cfg *config.Config, account *goSdk.Account, genSdk *goSdk.On
 	}
 }
 func AddAllSupportToken(cfg *config.Config, account *goSdk.Account, sdk *goSdk.OntologySdk) {
+
 	hash1, err := sdk.SendTransaction(Add_support_token(cfg, account, sdk, "ONTd", cfg.ONTD))
 	if err != nil {
 		log.Errorf("send DAI tx failed, err: %s********", err)

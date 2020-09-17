@@ -15,37 +15,47 @@ const (
 )
 
 type Config struct {
-	Wallet             string
-	WingGov            string
-	GovToken           string
-	ZeroPool           string
-	OldZeroPool        string
-	Password           string
-	SDRate             int // static and dyamic profit
-	ContractCodePath   string
-	Oracle             string
-	InterestRate       string
-	Comptroller        string
-	FToken             string
-	Token              string
-	FTokenInsurance    string
-	WingProfit         string // HexString
-	GlobalParam        string // HexString
-	AuthAddr           string
-	OUSDT              string
-	OUSDC              string
-	OWBTC              string
-	RENBTC             string
-	OETH               string
-	ONTD               string
-	ODAI               string
-	ONT                string
-	FBTC               string
-	FETH               string
-	FUSDT              string
-	IBTC               string
-	IETH               string
-	IUSDT              string
+	Wallet           string
+	WingGov          string
+	GovToken         string
+	ZeroPool         string
+	OldZeroPool      string
+	Password         string
+	SDRate           int // static and dyamic profit
+	ContractCodePath string
+	Oracle           string
+	InterestRate     string
+	Comptroller      string
+	FToken           string
+	Token            string
+	FTokenInsurance  string
+	WingProfit       string // HexString
+	GlobalParam      string // HexString
+	AuthAddr         string
+	OUSDT            string
+	OUSDC            string
+	OWBTC            string
+	RENBTC           string
+	OETH             string
+	OETH9            string
+	ONTD             string
+	ODAI             string
+	ONT              string
+	IBTC             string
+	IETH             string
+	IETH9            string
+	IRENBTC          string
+	IUSDC            string
+	IONT             string
+	IWING            string
+	FBTC             string
+	FETH             string
+	FETH9            string
+	FRENBTC          string
+	FUSDC            string
+	FONT             string
+	FWING            string
+
 	ExchangeRate       int
 	Amount             uint64
 	Weight             int

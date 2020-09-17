@@ -113,7 +113,7 @@ func TestAddSuuportToken(t *testing.T) {
 }
 func TestUpdateSuuportToken(t *testing.T) {
 	cfg, account, sdk := GetTestConfig()
-	hash1, err := sdk.SendTransaction(Update_support_token(cfg, account, sdk, "renBTC", cfg.RENBTC))
+	hash1, err := sdk.SendTransaction(Update_support_token(cfg, account, sdk, "ONTd", "869951e3397550e800d5faf579857cdb637a0051"))
 	log.Infof("hexstring: %s", cfg.RENBTC)
 	if err != nil {
 		log.Errorf("send Update_support_token tx failed, err: %s********", err)

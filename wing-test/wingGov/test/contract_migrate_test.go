@@ -102,17 +102,9 @@ func TestDeployGov(t *testing.T) {
 }
 
 //Deploy zero pool Todo : finish deploy
-func TestDeployProfit(t *testing.T) {
+func TestDeployGlobalParam(t *testing.T) {
 	cfg, account, sdk := GetTestConfig()
-	wasmFile := "../../contract/testnet/profit.wasm.str"
-	profitAddr := WingGovMethod.DeployContractt(cfg, account, sdk, wasmFile)
-	//WingGovMethod.QueryPoolByAddress(cfg, account, sdk, zeroPoolAddr)
-	hash1, err := sdk.SendTransaction(WingGovMethod.WingProfitInit2(cfg, account, sdk, profitAddr))
-	if err != nil {
-		log.Errorf("send  tx failed, err: %s********", err)
-		return
-	}
-	log.Infof("SendTransaction WingProfitInit2 hash : %s", hash1.ToHexString())
-	Utils.PrintSmartEventByHash_Ont(sdk, hash1.ToHexString())
-	//	TODO:update config file
+	wasmFile := "/Users/yaoyao/go/src/github.com/mockyz/AutoTestGo/wing-test/contract/testnet3/oracle.str"
+	globalAddr := WingGovMethod.DeployContractt(cfg, account, sdk, wasmFile)
+	log.Infof("oracle: %s", globalAddr)
 }

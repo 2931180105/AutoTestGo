@@ -25,3 +25,18 @@ func (token *Token) Serialize(sink *common.ZeroCopySink) {
 	sink.WriteByte(token.TokenType)
 	sink.WriteAddress(token.ContractAddress)
 }
+
+//func GetSupportToken(tokenR string){
+//
+//	result, err := tokenR.ToByteArray()
+//	if err != nil {
+//		return nil,fmt.Errorf("GetSupportToken: %s", err)
+//	}
+//	tokens := new(Tokens)
+//	source := common.NewZeroCopySource(result)
+//	err = tokens.Deserialization(source)
+//	if err != nil {
+//		return nil, fmt.Errorf("GetSupportToken: %s", err)
+//	}
+//	return tokens, nil
+//}

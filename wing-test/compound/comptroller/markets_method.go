@@ -6,6 +6,7 @@ import (
 	config "github.com/mockyz/AutoTestGo/wing-test/config_ont"
 	Utils "github.com/mockyz/AutoTestGo/wing-test/utils"
 	goSdk "github.com/ontio/ontology-go-sdk"
+	"github.com/ontio/ontology-go-sdk/utils"
 	OntCommon "github.com/ontio/ontology/common"
 	"github.com/ontio/ontology/common/log"
 	"math"
@@ -13,7 +14,7 @@ import (
 )
 
 // EnterMarkets  ftoken address
-func EnterMarkets(cfg *config.Config, account *goSdk.Account, sdk *goSdk.OntologySdk, comptroller OntCommon.Address, from OntCommon.Address, markets []OntCommon.Address) {
+func EnterMarkets(cfg *config.Config, account *goSdk.Account, sdk *goSdk.OntologySdk, comptroller OntCommon.Address, from OntCommon.Address, markets []interface{}) {
 	params := []interface{}{from, markets}
 	mutTx, err := sdk.WasmVM.NewInvokeWasmVmTransaction(cfg.GasPrice, cfg.GasLimit, comptroller, "enterMarkets", params)
 	if err != nil {
@@ -38,14 +39,33 @@ func ExitMarkets(cfg *config.Config, account *goSdk.Account, sdk *goSdk.Ontology
 
 // Mint  ftoken  (supply)
 func ApproveAndMint(cfg *config.Config, account *goSdk.Account, sdk *goSdk.OntologySdk, ftoken OntCommon.Address, otoken OntCommon.Address, from OntCommon.Address, amount uint64) {
-	Otoken.ApproveOToken(cfg, account, sdk, ftoken, otoken, big.NewInt(math.MaxInt64))
+	WingGovAddr, _ := utils.AddressFromHexString(cfg.WingGov)
+	Otoken.ApproveOToken(cfg, account, sdk, WingGovAddr, otoken, big.NewInt(math.MaxInt64))
+	//Otoken.ApproveOToken(cfg, account, sdk, ftoken, otoken, big.NewInt(100000000000000))
+
 	params := []interface{}{from, amount}
 	mutTx, err := sdk.WasmVM.NewInvokeWasmVmTransaction(cfg.GasPrice, cfg.GasLimit, ftoken, "mint", params)
 	if err != nil {
 		fmt.Println("construct tx err", err)
 	}
 	if err := Utils.SignTxAndSendTx(sdk, mutTx, cfg.StartNonce, account); err != nil {
-		log.Error(err)
+		log.Errorf("Mint Token err:%s, Ftoken address: %s", err, ftoken.ToHexString())
+	}
+}
+
+// Mint  ftoken  (supply)
+func ApproveAndMintWing(cfg *config.Config, account *goSdk.Account, sdk *goSdk.OntologySdk, ftoken OntCommon.Address, otoken OntCommon.Address, from OntCommon.Address, amount uint64) {
+	WingGovAddr, _ := utils.AddressFromHexString(cfg.WingGov)
+	//Otoken.ApproveOToken(cfg, account, sdk, WingGovAddr, otoken, big.NewInt(math.MaxInt64))
+	Otoken.ApproveOToken(cfg, account, sdk, WingGovAddr, otoken, big.NewInt(100000000000000))
+
+	params := []interface{}{from, amount}
+	mutTx, err := sdk.WasmVM.NewInvokeWasmVmTransaction(cfg.GasPrice, cfg.GasLimit, ftoken, "mint", params)
+	if err != nil {
+		fmt.Println("construct tx err", err)
+	}
+	if err := Utils.SignTxAndSendTx(sdk, mutTx, cfg.StartNonce, account); err != nil {
+		log.Errorf("Mint Token err:%s, Ftoken address: %s", err, ftoken.ToHexString())
 	}
 }
 

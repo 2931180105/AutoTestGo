@@ -32,11 +32,12 @@ func NewAccountByWif(Wif string) (*goSdk.Account, error) {
 }
 
 func PrintSmartEventByHash_Ont(sdk *goSdk.OntologySdk, txHash string) {
+	time.Sleep(time.Second * 3)
 	//wait hash
 	for j := 0; j < 50; j++ {
 		time.Sleep(time.Second * 3)
 		evts, err := sdk.GetSmartContractEvent(txHash)
-		if err != nil {
+		if err != nil || evts == nil {
 			continue
 		} else {
 			log.Infof("evts = %s\n", evts)
@@ -50,6 +51,24 @@ func PrintSmartEventByHash_Ont(sdk *goSdk.OntologySdk, txHash string) {
 		}
 	}
 
+}
+
+func SignTxAndSendTx(sdk *goSdk.OntologySdk, tx *types.MutableTransaction, nonce uint32, signer goSdk.Signer) error {
+	if nonce != 0 {
+		tx.Nonce = nonce
+	}
+	tx.Sigs = nil
+	err := sdk.SignToTransaction(tx, signer)
+	if err != nil {
+		return fmt.Errorf("sign tx failed, err: %s", err)
+	}
+	hash, err := sdk.SendTransaction(tx)
+	if err != nil {
+		log.Error(err)
+		return err
+	}
+	PrintSmartEventByHash_Ont(sdk, hash.ToHexString())
+	return nil
 }
 
 func SignTx(sdk *goSdk.OntologySdk, tx *types.MutableTransaction, nonce uint32, signer goSdk.Signer) error {
@@ -71,9 +90,52 @@ func getContractAddr(addr string) OntCommon.Address {
 
 func GetTestConfig() (*config.Config, *goSdk.Account, *goSdk.OntologySdk) {
 	var sdk = goSdk.NewOntologySdk()
-	configPath := "../config_testnet.json"
+	configPath := ""
+	cfg, err := config.ParseConfig(configPath)
+	if err != nil {
+		log.Error(err)
+	}
+	wallet, err := sdk.OpenWallet("")
+	if err != nil {
+		log.Error(err)
+	}
+	account, err := wallet.GetDefaultAccount([]byte(cfg.Password))
+	if err != nil {
+		log.Error(err)
+	}
+	rpcClient := client.NewRpcClient()
+	rpcClient.SetAddress(cfg.Rpc[2])
+	sdk.SetDefaultClient(rpcClient)
+	return cfg, account, sdk
+}
+
+func GetMainConfig() (*config.Config, *goSdk.Account, *goSdk.OntologySdk) {
+	var sdk = goSdk.NewOntologySdk()
+	configPath := ""
+	cfg, err := config.ParseConfig(configPath)
+	if err != nil {
+		log.Errorf("ParseConfig error:%s", err)
+	}
+	wallet, _ := sdk.OpenWallet("/Users[表情]yao/go[表情]c/github.com/mockyz/AutoTestGo/wing-test/WING_OTHER_OWNER.dat")
+	//wallet, err := sdk.OpenWallet("/Users[表情]yao/go[表情]c/github.com/mockyz/AutoTestGo/wing-test/WING_OWNER.dat")
+	if err != nil {
+		log.Errorf("OpenWallet error:%s", err)
+	}
+	account, err := wallet.GetDefaultAccount([]byte(cfg.Password))
+	if err != nil {
+		log.Errorf("GetDefaultAccount error:%s", err)
+	}
+	rpcClient := client.NewRpcClient()
+	rpcClient.SetAddress(cfg.Rpc[2])
+	sdk.SetDefaultClient(rpcClient)
+	return cfg, account, sdk
+}
+
+func GetPrvConfig() (*config.Config, *goSdk.Account, *goSdk.OntologySdk) {
+	var sdk = goSdk.NewOntologySdk()
+	configPath := "/Users/yaoyao/go/src/github.com/mockyz/AutoTestGo/wing-test/config_testnet_02.json"
 	cfg, _ := config.ParseConfig(configPath)
-	wallet, _ := sdk.OpenWallet("../wallet.dat")
+	wallet, _ := sdk.OpenWallet("/Users/yaoyao/go/src/github.com/mockyz/AutoTestGo/wing-test/wallet.dat")
 	account, _ := wallet.GetDefaultAccount([]byte(cfg.Password))
 	rpcClient := client.NewRpcClient()
 	rpcClient.SetAddress(cfg.Rpc[2])
@@ -98,6 +160,7 @@ func GenerateAccounts(cfg *config.Config, admin *goSdk.Account, goSdk *goSdk.Ont
 		if err != nil {
 			log.Errorf("send ONG tx failed, err: %s********", err)
 		}
+		//otoken.TransferAllTestToken(cfg, admin, goSdk, acct.Address.ToBase58())
 	}
 	time.Sleep(time.Second * 6)
 	after_amount_ont, _ := goSdk.Native.Ont.BalanceOf(admin.Address)

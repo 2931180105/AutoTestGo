@@ -561,19 +561,6 @@ func Freeze_pool(cfg *config.Config, account *goSdk.Account, genSdk *goSdk.Ontol
 	return mutTx
 }
 
-//freeze_pool
-func SetFFactor(cfg *config.Config, account *goSdk.Account, genSdk *goSdk.OntologySdk) *types.MutableTransaction {
-	WingGovAddr, _ := utils.AddressFromHexString(cfg.WingGov)
-	params := []interface{}{cfg.SDRate}
-	mutTx, err := genSdk.WasmVM.NewInvokeWasmVmTransaction(cfg.GasPrice, cfg.GasLimit, WingGovAddr, "set_f_factor", params)
-	if err != nil {
-		fmt.Println("construct tx err", err)
-	}
-	if err := signTx(genSdk, mutTx, cfg.StartNonce, account); err != nil {
-		log.Error(err)
-	}
-	return mutTx
-}
 func Set_token_decimals(cfg *config.Config, account *goSdk.Account, genSdk *goSdk.OntologySdk, tokenName string, decimals int) {
 	//	set_token_decimals(token_name: &str, decimal: u8)
 	WingGovAddr, _ := utils.AddressFromHexString(cfg.WingGov)
@@ -625,6 +612,36 @@ func Add_support_token(cfg *config.Config, account *goSdk.Account, genSdk *goSdk
 }
 
 //add_support_token
+func AddSupportTokenAndSend(cfg *config.Config, account *goSdk.Account, genSdk *goSdk.OntologySdk, oTokenName, oToken string) {
+	WingGovAddr, _ := utils.AddressFromHexString(cfg.WingGov)
+	oToeknAddr, _ := utils.AddressFromHexString(oToken)
+	token := Utils.NewToken(oTokenName, 2, oToeknAddr)
+	sink := OntCommon.NewZeroCopySink(nil)
+	sink.WriteString("add_support_token")
+	token.Serialize(sink)
+	sink.WriteI128(OntCommon.I128FromUint64(20))
+	contract := &states.WasmContractParam{}
+	contract.Address = WingGovAddr
+	argbytes := sink.Bytes()
+	contract.Args = argbytes
+	invokePayload := &payload.InvokeCode{
+		Code: OntCommon.SerializeToBytes(contract),
+	}
+	tx := &types.MutableTransaction{
+		Payer:    account.Address,
+		GasPrice: 2500,
+		GasLimit: 300000,
+		TxType:   types.InvokeWasm,
+		Nonce:    uint32(time.Now().Unix()),
+		Payload:  invokePayload,
+		Sigs:     nil,
+	}
+	if err := Utils.SignTxAndSendTx(genSdk, tx, cfg.StartNonce, account); err != nil {
+		log.Error(err)
+	}
+}
+
+//add_support_token
 func Update_support_token(cfg *config.Config, account *goSdk.Account, genSdk *goSdk.OntologySdk, oTokenName, oToken string) *types.MutableTransaction {
 	WingGovAddr, _ := utils.AddressFromHexString(cfg.WingGov)
 	oToeknAddr, _ := utils.AddressFromHexString(oToken)
@@ -664,7 +681,7 @@ func Get_support_token(cfg *config.Config, account *goSdk.Account, genSdk *goSdk
 	return resut
 }
 
-//get_support_token
+//Get_f_fatcor
 func Get_f_fatcor(cfg *config.Config, account *goSdk.Account, genSdk *goSdk.OntologySdk) *common.PreExecResult {
 	WingGovAddr, _ := utils.AddressFromHexString(cfg.WingGov)
 	params := []interface{}{}
@@ -735,7 +752,7 @@ func Get_exchange_rate(cfg *config.Config, account *goSdk.Account, genSdk *goSdk
 	log.Infof("result: %s", resut.Result)
 }
 
-//set_exchange_rates batch TODO: invoke failed
+//set_exchange_rates batch
 func Set_exchange_rates(cfg *config.Config, account *goSdk.Account, genSdk *goSdk.OntologySdk) *types.MutableTransaction {
 	WingGovAddr, _ := utils.AddressFromHexString(cfg.WingGov)
 	params := []interface{}{}

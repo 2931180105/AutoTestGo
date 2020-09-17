@@ -5,7 +5,6 @@ import (
 	Utils "github.com/mockyz/AutoTestGo/wing-test/utils"
 	WingGovMethod "github.com/mockyz/AutoTestGo/wing-test/wingGov"
 	"testing"
-	"time"
 )
 
 //TODO： init/wing token set gov address
@@ -46,15 +45,31 @@ func TestStep_AddSupportToken(t *testing.T) {
 	//todo：add support token
 	cfg, account, sdk := GetTestConfig()
 	WingGovMethod.AddAllSupportToken(cfg, account, sdk)
+	WingGovMethod.AddSupportTokenAndSend(cfg, account, sdk, "WING", cfg.GovToken)
+	//WingGovMethod.AddSupportTokenAndSend(cfg, account, sdk,"ETH9",cfg.OETH9)
+	//WingGovMethod.AddSupportTokenAndSend(cfg, account, sdk,"DAI",cfg.ODAI)\
+
 }
 
 //set decimals
 func TestSet_token_decimals(t *testing.T) {
 	cfg, account, sdk := GetTestConfig()
+	WingGovMethod.Set_token_decimals(cfg, account, sdk, "ONT", 0)
 	WingGovMethod.Set_token_decimals(cfg, account, sdk, "ONTd", 9)
 	WingGovMethod.Set_token_decimals(cfg, account, sdk, "WBTC", 8)
 	WingGovMethod.Set_token_decimals(cfg, account, sdk, "renBTC", 8)
 	WingGovMethod.Set_token_decimals(cfg, account, sdk, "USDC", 6)
+	WingGovMethod.Set_token_decimals(cfg, account, sdk, "ETH", 18)
+	WingGovMethod.Set_token_decimals(cfg, account, sdk, "ETH9", 9)
+	WingGovMethod.Set_token_decimals(cfg, account, sdk, "DAI", 18)
+	WingGovMethod.Set_token_decimals(cfg, account, sdk, "WING", 9)
+}
+
+//set decimals
+func TestGet_token_decimals(t *testing.T) {
+	cfg, account, sdk := GetTestConfig()
+	//WingGovMethod.Set_token_decimals(cfg, account, sdk, "ONTd", 9)        b"get_token_decimals" => {
+	WingGovMethod.Get_support_token(cfg, account, sdk)
 }
 
 //step6： 调整两个池子权重： 现设1再设0
@@ -100,23 +115,21 @@ func TestAddAllSuuportToken(t *testing.T) {
 //d034792f80deeacd983dc257d29784ea71a1d5ec efd78c612b66c690a59721b7bdd1c0e090c52ec4
 //8c729377e714ff5013d74e309dad25fbdf1bf889
 func TestRegsiterComptroller(t *testing.T) {
-	cfg, account, sdk := GetTestConfig()
-	//hash1, err := sdk.SendTransaction(WingGovMethod.RegisterPool(cfg, account, sdk, cfg.Comptroller))
-	hash1, err := sdk.SendTransaction(WingGovMethod.RegisterPool(cfg, account, sdk, "8c729377e714ff5013d74e309dad25fbdf1bf889"))
+	cfg, account, sdk := Utils.GetPrvConfig()
+	hash1, err := sdk.SendTransaction(WingGovMethod.RegisterPool(cfg, account, sdk, cfg.Comptroller))
+	//hash1, err := sdk.SendTransaction(WingGovMethod.RegisterPool(cfg, account, sdk, "8c729377e714ff5013d74e309dad25fbdf1bf889"))
 	if err != nil {
 		log.Errorf("send  tx failed, err: %s********", err)
 		return
 	}
-	time.Sleep(time.Second * 3)
 	Utils.PrintSmartEventByHash_Ont(sdk, hash1.ToHexString())
-	WingGovMethod.QueryPoolByAddress(cfg, account, sdk, "8c729377e714ff5013d74e309dad25fbdf1bf889")
+	WingGovMethod.QueryPoolByAddress(cfg, account, sdk, cfg.Comptroller)
 
 }
 func TestTmp(t *testing.T) {
 	cfg, account, sdk := GetTestConfig()
-
-	//设置comptroller权重值为0
-	hash1, err := sdk.SendTransaction(WingGovMethod.UpdatePoolWeight(cfg, account, sdk, cfg.Comptroller, 0))
+	//设置comptroller权重值为1
+	hash1, err := sdk.SendTransaction(WingGovMethod.UpdatePoolWeight(cfg, account, sdk, cfg.Comptroller, 1))
 	if err != nil {
 		log.Errorf("send  tx failed, err: %s********", err)
 		return

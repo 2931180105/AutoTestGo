@@ -12,7 +12,7 @@ import (
 
 func GetTestConfig() (*config.Config, *goSdk.Account, *goSdk.OntologySdk) {
 	var sdk = goSdk.NewOntologySdk()
-	configPath := "../config_testnet2.json"
+	configPath := "../config_testnet_02.json"
 	cfg, _ := config.ParseConfig(configPath)
 	wallet, _ := sdk.OpenWallet("../wallet.dat")
 	account, _ := wallet.GetDefaultAccount([]byte(cfg.Password))
@@ -42,16 +42,16 @@ func TestInitWingToken(t *testing.T) {
 	cfg, account, sdk := GetTestConfig()
 	hash1, err := sdk.SendTransaction(GovTokenInit(cfg, account, sdk))
 	if err != nil {
-		log.Errorf("send DAI tx failed, err: %s********", err)
+		log.Errorf("send GovTokenInit tx failed, err: %s********", err)
 	}
 	time.Sleep(time.Second * 3)
 	Utils.PrintSmartEventByHash_Ont(sdk, hash1.ToHexString())
-	hash1, err = sdk.SendTransaction(SetGovTokenAddres(cfg, account, sdk))
-	if err != nil {
-		log.Errorf("send  tx failed, err: %s********", err)
-		return
-	}
-	time.Sleep(time.Second * 3)
-	Utils.PrintSmartEventByHash_Ont(sdk, hash1.ToHexString())
+	//hash1, err = sdk.SendTransaction(SetGovTokenAddres(cfg, account, sdk))
+	//if err != nil {
+	//	log.Errorf("send  tx failed, err: %s********", err)
+	//	return
+	//}
+	//time.Sleep(time.Second * 3)
+	//Utils.PrintSmartEventByHash_Ont(sdk, hash1.ToHexString())
 
 }
