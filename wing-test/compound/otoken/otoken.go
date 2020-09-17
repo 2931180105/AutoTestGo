@@ -7,7 +7,9 @@ import (
 	WingUtils "github.com/mockyz/AutoTestGo/wing-test/utils"
 	goSdk "github.com/ontio/ontology-go-sdk"
 	"github.com/ontio/ontology-go-sdk/utils"
+	OntCommon "github.com/ontio/ontology/common"
 	"github.com/ontio/ontology/core/types"
+	"math/big"
 	"time"
 )
 
@@ -50,28 +52,6 @@ func OTokenTransfer(cfg *config.Config, account *goSdk.Account, sdk *goSdk.Ontol
 	time.Sleep(time.Second * 3)
 	WingUtils.PrintSmartEventByHash_Ont(sdk, hash1.ToHexString())
 }
-
-//
-//func OWBTCTokenTransfer(cfg *config.Config, account *goSdk.Account, sdk *goSdk.OntologySdk, toAddrees string, oToken string) {
-//	OTokenAddr, _ := utils.AddressFromHexString(oToken)
-//	toAddress, _ := utils.AddressFromBase58(toAddrees)
-//	params := []interface{}{"transfer", []interface{}{account.Address, toAddress, 1000000000}}
-//	mutTx, err := sdk.NeoVM.NewNeoVMInvokeTransaction(cfg.GasPrice, cfg.GasLimit, OTokenAddr, params)
-//	if err != nil {
-//		fmt.Println("construct tx err", err)
-//	}
-//	if err := WingUtils.SignTx(sdk, mutTx, cfg.StartNonce, account); err != nil {
-//		log.Error(err)
-//	}
-//	hash1, err := sdk.SendTransaction(mutTx)
-//	if err != nil {
-//		log.Errorf("send  tx failed, err: %s********", err)
-//		return
-//	} else {
-//		log.Infof("txhash: %s", hash1.ToHexString())
-//	}
-//
-//}
 
 func WingTokenTransfer(cfg *config.Config, account *goSdk.Account, genSdk *goSdk.OntologySdk, toAddrees string) {
 	OTokenAddr, _ := utils.AddressFromHexString(cfg.GovToken)
@@ -133,23 +113,16 @@ func OTokenDelegateToProxy(cfg *config.Config, account *goSdk.Account, genSdk *g
 //	}
 //}
 
-func ApproveOToken(cfg *config.Config, account *goSdk.Account, genSdk *goSdk.OntologySdk, toAddrees string, oToken string) {
-	OTokenAddr, _ := utils.AddressFromHexString(oToken)
-	toAddress, _ := utils.AddressFromHexString(toAddrees)
-	params := []interface{}{"approve", []interface{}{account.Address, toAddress, 100000000000}}
-	mutTx, err := genSdk.NeoVM.NewNeoVMInvokeTransaction(cfg.GasPrice, cfg.GasLimit, OTokenAddr, params)
+func ApproveOToken(cfg *config.Config, account *goSdk.Account, genSdk *goSdk.OntologySdk, toAddrees OntCommon.Address, oToken OntCommon.Address, amount *big.Int) {
+	params := []interface{}{"approve", []interface{}{account.Address, toAddrees, amount}}
+	mutTx, err := genSdk.NeoVM.NewNeoVMInvokeTransaction(cfg.GasPrice, cfg.GasLimit, oToken, params)
 	if err != nil {
 		fmt.Println("construct tx err", err)
 	}
-	if err := WingUtils.SignTx(genSdk, mutTx, cfg.StartNonce, account); err != nil {
+	if err := WingUtils.SignTxAndSendTx(genSdk, mutTx, cfg.StartNonce, account); err != nil {
 		log.Error(err)
 	}
-	hash1, err := genSdk.SendTransaction(mutTx)
-	if err != nil {
-		log.Errorf("send  tx failed, err: %s********", err)
-	} else {
-		log.Infof("txhash: %s", hash1.ToHexString())
-	}
+
 }
 
 func AllowanceToken(cfg *config.Config, account *goSdk.Account, genSdk *goSdk.OntologySdk, owner, spender string, oToken string) {
@@ -178,10 +151,12 @@ func TransferAllTestToken(cfg *config.Config, account *goSdk.Account, sdk *goSdk
 	ToAddres, _ := utils.AddressFromBase58(toAddrees)
 	_, _ = sdk.Native.Ont.Transfer(cfg.GasPrice, cfg.GasLimit, account, account, ToAddres, 100)
 	_, _ = sdk.Native.Ong.Transfer(cfg.GasPrice, cfg.GasLimit, account, account, ToAddres, 100000000000)
-	OTokenTransfer(cfg, account, sdk, toAddrees, cfg.OUSDT, 6)
+	OTokenTransfer(cfg, account, sdk, toAddrees, cfg.ODAI, 18)
 	OTokenTransfer(cfg, account, sdk, toAddrees, cfg.OWBTC, 8)
-	//OTokenTransfer(cfg, account, sdk, toAddrees, cfg.OETH, 18)
-	OTokenTransfer(cfg, account, sdk, toAddrees, cfg.RENBTC, 18)
+	OTokenTransfer(cfg, account, sdk, toAddrees, cfg.OETH, 6)
+
+	OTokenTransfer(cfg, account, sdk, toAddrees, cfg.OETH, 18)
+	//OTokenTransfer(cfg, account, sdk, toAddrees, cfg.RENBTC, 18)
 	OTokenTransfer(cfg, account, sdk, toAddrees, cfg.ONTD, 9)
 }
 
