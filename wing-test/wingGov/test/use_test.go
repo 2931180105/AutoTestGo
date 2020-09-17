@@ -95,12 +95,12 @@ func TestStep006(t *testing.T) {
 //03d830df793d80137343731f799d5be40637a310
 
 //b9e563d29bb8647f745ae766247b03148dbd4e9d
-//b9e563d29bb8647f745ae766247b03148dbd4e9d
+//791d42c167d19f05a6b1936896d989f442f0ff58
 
 func TestUpdateComptroller(t *testing.T) {
-	cfg, account, sdk := GetMainConfig()
-	newAddr := "b9e563d29bb8647f745ae766247b03148dbd4e9d"
-	oldAddr := "efd78c612b66c690a59721b7bdd1c0e090c52ec4"
+	cfg, account, sdk := GetTestConfig()
+	newAddr := "791d42c167d19f05a6b1936896d989f442f0ff58"
+	oldAddr := "bd528c732ce50bab2c9ca3bafdc7ff8615d37fef"
 	WingGovMethod.MigrateComptroller(cfg, account, sdk, oldAddr, newAddr)
 	WingGovMethod.QueryPoolByAddress(cfg, account, sdk, newAddr)
 }
