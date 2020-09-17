@@ -27,7 +27,7 @@ func GetMainConfig() (*config.Config, *goSdk.Account, *goSdk.OntologySdk) {
 	if err != nil {
 		log.Errorf("ParseConfig error:%s", err)
 	}
-	wallet, _ := sdk.OpenWallet("/Users/yaoyao/go/src/github.com/mockyz/AutoTestGo/wing-test/WING_OTHER_OWNER.dat")
+	wallet, _ := sdk.OpenWallet("/Volumes/MM/WING_OTHER_OWNER.dat")
 	//wallet, err := sdk.OpenWallet("/Users/yaoyao/go/src/github.com/mockyz/AutoTestGo/wing-test/WING_OWNER.dat")
 	if err != nil {
 		log.Errorf("OpenWallet error:%s", err)
