@@ -34,7 +34,7 @@ func OTokenInit(cfg *config.Config, account *goSdk.Account, genSdk *goSdk.Ontolo
 func OTokenTransfer(cfg *config.Config, account *goSdk.Account, sdk *goSdk.OntologySdk, toAddres, oToken string, precise uint64) {
 	OTokenAddr, _ := utils.AddressFromHexString(oToken)
 	toAddress, _ := utils.AddressFromBase58(toAddres)
-	amount := WingUtils.ToIntByPrecise("10", precise)
+	amount := WingUtils.ToIntByPrecise("1", precise)
 	params := []interface{}{"transfer", []interface{}{account.Address, toAddress, amount}}
 	mutTx, err := sdk.NeoVM.NewNeoVMInvokeTransaction(cfg.GasPrice, cfg.GasLimit, OTokenAddr, params)
 	if err != nil {
@@ -130,7 +130,7 @@ func BalanceOfOToken(cfg *config.Config, account *goSdk.Account, genSdk *goSdk.O
 func TransferAllTestToken(cfg *config.Config, account *goSdk.Account, sdk *goSdk.OntologySdk, toAddrees string) {
 	WingTokenTransfer(cfg, account, sdk, toAddrees)
 	ToAddres, _ := utils.AddressFromBase58(toAddrees)
-	_, _ = sdk.Native.Ont.Transfer(cfg.GasPrice, cfg.GasLimit, account, account, ToAddres, 100)
+	_, _ = sdk.Native.Ont.Transfer(cfg.GasPrice, cfg.GasLimit, account, account, ToAddres, 10)
 	_, _ = sdk.Native.Ong.Transfer(cfg.GasPrice, cfg.GasLimit, account, account, ToAddres, 1000000000)
 	OTokenTransfer(cfg, account, sdk, toAddrees, cfg.ODAI, 18)
 	OTokenTransfer(cfg, account, sdk, toAddrees, cfg.OWBTC, 8)

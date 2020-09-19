@@ -69,7 +69,7 @@ func TestSet_token_decimals(t *testing.T) {
 func TestGet_token_decimals(t *testing.T) {
 	cfg, account, sdk := GetTestConfig()
 	//WingGovMethod.Set_token_decimals(cfg, account, sdk, "ONTd", 9)        b"get_token_decimals" => {
-	WingGovMethod.Get_support_token(cfg, account, sdk)
+	WingGovMethod.Get_token_decimals(cfg, account, sdk)
 }
 
 //step6： 调整两个池子权重： 现设1再设0
@@ -85,22 +85,11 @@ func TestStep006(t *testing.T) {
 	Utils.PrintSmartEventByHash_Ont(sdk, hash2.ToHexString())
 }
 
-//
-//
-//00000000000000000000000000000001544e4f03
-//b223623bc78faac1580264544e4f040100000000
-//a2fb3302434453550433ae7eae016193ba0fe238
-//425704061a07cd393aac289b8ecfda2c3784b637
-//7161401417d3571b92b86846d34309129a024354
-//03d830df793d80137343731f799d5be40637a310
-
-//b9e563d29bb8647f745ae766247b03148dbd4e9d
-//791d42c167d19f05a6b1936896d989f442f0ff58
-
+//5e5b3f559da9b20f0061d6c7b7ea4e68fd7f9586
 func TestUpdateComptroller(t *testing.T) {
 	cfg, account, sdk := GetTestConfig()
-	newAddr := "791d42c167d19f05a6b1936896d989f442f0ff58"
-	oldAddr := "bd528c732ce50bab2c9ca3bafdc7ff8615d37fef"
+	newAddr := "5e5b3f559da9b20f0061d6c7b7ea4e68fd7f9586"
+	oldAddr := "adc523baeb1a0bd6c0c1301e7ce479647236688e"
 	WingGovMethod.MigrateComptroller(cfg, account, sdk, oldAddr, newAddr)
 	WingGovMethod.QueryPoolByAddress(cfg, account, sdk, newAddr)
 }
@@ -112,8 +101,6 @@ func TestAddAllSuuportToken(t *testing.T) {
 	WingGovMethod.Get_support_token(cfg, account, sdk)
 }
 
-//d034792f80deeacd983dc257d29784ea71a1d5ec efd78c612b66c690a59721b7bdd1c0e090c52ec4
-//8c729377e714ff5013d74e309dad25fbdf1bf889
 func TestRegsiterComptroller(t *testing.T) {
 	cfg, account, sdk := Utils.GetPrvConfig()
 	hash1, err := sdk.SendTransaction(WingGovMethod.RegisterPool(cfg, account, sdk, cfg.Comptroller))
@@ -137,8 +124,8 @@ func TestTmp(t *testing.T) {
 	Utils.PrintSmartEventByHash_Ont(sdk, hash1.ToHexString())
 }
 func TestUpdatePoolWeight(t *testing.T) {
-	cfg, account, sdk := GetTestConfig()
-	hash1, err := sdk.SendTransaction(WingGovMethod.UpdatePoolWeight(cfg, account, sdk, "b9e563d29bb8647f745ae766247b03148dbd4e9d", 1))
+	cfg, account, sdk := Utils.GetPrvConfig()
+	hash1, err := sdk.SendTransaction(WingGovMethod.UpdatePoolWeight(cfg, account, sdk, cfg.ZeroPool, 0))
 	if err != nil {
 		log.Errorf("send  tx failed, err: %s********", err)
 		return

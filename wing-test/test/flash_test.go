@@ -37,7 +37,10 @@ func TestStep00_GovContractUpgrade(t *testing.T) {
 func TestStep01_AddSupportToken(t *testing.T) {
 	//todo：add support token
 	cfg, account, sdk := GetMainConfig()
-	WingGovMethod.AddAllSupportToken(cfg, account, sdk)
+	WingGovMethod.AddSupportTokenAndSend(cfg, account, sdk, "WING", cfg.GovToken)
+	WingGovMethod.Set_token_decimals(cfg, account, sdk, "WING", 9)
+
+	//WingGovMethod.AddAllSupportToken(cfg, account, sdk)
 }
 
 //set decimals

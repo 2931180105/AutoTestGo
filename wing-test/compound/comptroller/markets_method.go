@@ -56,8 +56,7 @@ func ApproveAndMint(cfg *config.Config, account *goSdk.Account, sdk *goSdk.Ontol
 // Mint  ftoken  (supply)
 func ApproveAndMintWing(cfg *config.Config, account *goSdk.Account, sdk *goSdk.OntologySdk, ftoken OntCommon.Address, otoken OntCommon.Address, from OntCommon.Address, amount uint64) {
 	WingGovAddr, _ := utils.AddressFromHexString(cfg.WingGov)
-	//Otoken.ApproveOToken(cfg, account, sdk, WingGovAddr, otoken, big.NewInt(math.MaxInt64))
-	Otoken.ApproveOToken(cfg, account, sdk, WingGovAddr, otoken, big.NewInt(100000000000000))
+	Otoken.ApproveOToken(cfg, account, sdk, WingGovAddr, otoken, big.NewInt(10000))
 
 	params := []interface{}{from, amount}
 	mutTx, err := sdk.WasmVM.NewInvokeWasmVmTransaction(cfg.GasPrice, cfg.GasLimit, ftoken, "mint", params)

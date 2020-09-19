@@ -561,6 +561,15 @@ func Freeze_pool(cfg *config.Config, account *goSdk.Account, genSdk *goSdk.Ontol
 	return mutTx
 }
 
+//get_lock_asset
+func Get_token_decimals(cfg *config.Config, account *goSdk.Account, genSdk *goSdk.OntologySdk) *common.PreExecResult {
+	WingGovAddr, _ := utils.AddressFromHexString(cfg.WingGov)
+	params := []interface{}{}
+	resut, _ := genSdk.WasmVM.PreExecInvokeWasmVMContract(WingGovAddr, "get_token_decimals", params)
+	log.Infof("Get_lock_asset: %s", resut.Result)
+	return resut
+}
+
 func Set_token_decimals(cfg *config.Config, account *goSdk.Account, genSdk *goSdk.OntologySdk, tokenName string, decimals int) {
 	//	set_token_decimals(token_name: &str, decimal: u8)
 	WingGovAddr, _ := utils.AddressFromHexString(cfg.WingGov)

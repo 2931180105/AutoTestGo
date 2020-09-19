@@ -16,13 +16,12 @@ var cfg *config.Config
 var SleepTime = time.Duration(1)
 
 func TestWingGovUnboundTokenAndToPool(t *testing.T) {
-	cfg, account, sdk := GetTestConfig()
+	cfg, account, sdk := Utils.GetPrvConfig()
 	hash1, err := sdk.SendTransaction(WingGovMethod.UnboundToken(cfg, account, sdk))
 	if err != nil {
 		log.Errorf("send  tx failed, err: %s********", err)
 		return
 	}
-	time.Sleep(time.Second * 3)
 	Utils.PrintSmartEventByHash_Ont(sdk, hash1.ToHexString())
 	hash1, err = sdk.SendTransaction(WingGovMethod.UnboundToPool(cfg, account, sdk))
 	if err != nil {

@@ -78,7 +78,7 @@ func TestDeployZeroPool(t *testing.T) {
 //TestDeployGov pool
 func TestDeployGov(t *testing.T) {
 	cfg, account, sdk := GetTestConfig()
-	wasmFile := "../../contract/testnet/wing_dao_contracts_old.wasm.str"
+	wasmFile := ""
 	WingGovAddr := WingGovMethod.DeployContractt(cfg, account, sdk, wasmFile)
 	log.Infof("wing gov:%s", WingGovAddr)
 	hash1, err := sdk.SendTransaction(WingGovMethod.WingGovInit(cfg, account, sdk, WingGovAddr))
