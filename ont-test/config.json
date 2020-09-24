@@ -10,12 +10,12 @@
   "FromAssetHash": "0000000000000000000000000000000000000001",
   "ToChainId": 2,
   "To": "APHNPLz2u1JUXyD8rhryLaoQrW46J3P6y2",
-  "Amount": 100,
+  "Amount": 200,
   "GasPrice": 500,
   "GasLimit": 20000,
   "Rpc": [
-    "http://172.168.3.224:20336",
-    "http://172.168.3.225:20336",
+    "http://172.168.3.205:20336",
+    "http://172.168.3.205:20336",
     "http://172.168.3.226:20336",
     "http://172.168.3.227:20336",
     "http://172.168.3.228:20336",
@@ -36,11 +36,11 @@
       "123456"
     ]
   ],
-  "TxNum": 1,
-  "TxFactor": 1,
+  "TxNum": 100,
+  "TxFactor": 1000,
   "RoutineNum": 1,
   "TPS": 1,
-  "StartNonce": 1,
+  "StartNonce": 200,
   "SaveTx": false,
   "SendTx": true
 }

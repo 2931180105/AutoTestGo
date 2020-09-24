@@ -15,7 +15,6 @@ func TestWingTokenSetGov(t *testing.T) {
 		log.Errorf("send  tx failed, err: %s********", err)
 		return
 	}
-	time.Sleep(time.Second * 3)
 	Utils.PrintSmartEventByHash_Ont(sdk, hash1.ToHexString())
 }
 func TestDep(t *testing.T) {

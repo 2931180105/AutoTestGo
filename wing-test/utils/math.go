@@ -1,6 +1,8 @@
 package utils
 
 import (
+	"github.com/mockyz/AutoTestGo/common/log"
+	"github.com/ontio/ontology/common"
 	"math/big"
 	"strings"
 )
@@ -74,4 +76,11 @@ func ToIntByPrecise(str string, precise uint64) *big.Int {
 	}
 
 	return result
+}
+func Uint256FromhexString(hex string) common.Uint256 {
+	uin256, err := common.Uint256FromHexString(hex)
+	if err != nil {
+		log.Errorf("Uint256FromhexString error: %s", err)
+	}
+	return uin256
 }

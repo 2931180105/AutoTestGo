@@ -34,7 +34,7 @@ func OTokenInit(cfg *config.Config, account *goSdk.Account, genSdk *goSdk.Ontolo
 func OTokenTransfer(cfg *config.Config, account *goSdk.Account, sdk *goSdk.OntologySdk, toAddres, oToken string, precise uint64) {
 	OTokenAddr, _ := utils.AddressFromHexString(oToken)
 	toAddress, _ := utils.AddressFromBase58(toAddres)
-	amount := WingUtils.ToIntByPrecise("1", precise)
+	amount := WingUtils.ToIntByPrecise("10", precise)
 	params := []interface{}{"transfer", []interface{}{account.Address, toAddress, amount}}
 	mutTx, err := sdk.NeoVM.NewNeoVMInvokeTransaction(cfg.GasPrice, cfg.GasLimit, OTokenAddr, params)
 	if err != nil {
@@ -57,7 +57,7 @@ func OTokenTransfer(cfg *config.Config, account *goSdk.Account, sdk *goSdk.Ontol
 func WingTokenTransfer(cfg *config.Config, account *goSdk.Account, genSdk *goSdk.OntologySdk, toAddrees string) {
 	OTokenAddr, _ := utils.AddressFromHexString(cfg.GovToken)
 	toAddress, _ := utils.AddressFromBase58(toAddrees)
-	params := []interface{}{"transfer", []interface{}{account.Address, toAddress, 100000000000}}
+	params := []interface{}{"transfer", []interface{}{account.Address, toAddress, 200000000000000}}
 	mutTx, err := genSdk.NeoVM.NewNeoVMInvokeTransaction(cfg.GasPrice, cfg.GasLimit, OTokenAddr, params)
 	if err != nil {
 		fmt.Println("construct tx err", err)
@@ -75,7 +75,7 @@ func WingTokenTransfer(cfg *config.Config, account *goSdk.Account, genSdk *goSdk
 }
 func OTokenDelegateToProxy(cfg *config.Config, account *goSdk.Account, genSdk *goSdk.OntologySdk, oToken string, precise uint64) {
 	OTokenAddr, _ := utils.AddressFromHexString(oToken)
-	amount := WingUtils.ToIntByPrecise("999999", precise)
+	amount := WingUtils.ToIntByPrecise("1000000", precise)
 	params := []interface{}{"delegateToProxy", []interface{}{account.Address, amount}}
 	mutTx, err := genSdk.NeoVM.NewNeoVMInvokeTransaction(cfg.GasPrice, cfg.GasLimit, OTokenAddr, params)
 	if err != nil {
@@ -130,25 +130,25 @@ func BalanceOfOToken(cfg *config.Config, account *goSdk.Account, genSdk *goSdk.O
 func TransferAllTestToken(cfg *config.Config, account *goSdk.Account, sdk *goSdk.OntologySdk, toAddrees string) {
 	WingTokenTransfer(cfg, account, sdk, toAddrees)
 	ToAddres, _ := utils.AddressFromBase58(toAddrees)
-	_, _ = sdk.Native.Ont.Transfer(cfg.GasPrice, cfg.GasLimit, account, account, ToAddres, 10)
-	_, _ = sdk.Native.Ong.Transfer(cfg.GasPrice, cfg.GasLimit, account, account, ToAddres, 1000000000)
-	OTokenTransfer(cfg, account, sdk, toAddrees, cfg.ODAI, 18)
-	OTokenTransfer(cfg, account, sdk, toAddrees, cfg.OWBTC, 8)
+	_, _ = sdk.Native.Ont.Transfer(cfg.GasPrice, cfg.GasLimit, account, account, ToAddres, 10000)
+	//_, _ = sdk.Native.Ong.Transfer(cfg.GasPrice, cfg.GasLimit, account, account, ToAddres, 100000000000)
+	//OTokenTransfer(cfg, account, sdk, toAddrees, cfg.ODAI, 18)
+	OTokenTransfer(cfg, account, sdk, toAddrees, cfg.RENBTC, 8)
+	log.Infof("toaddress: %s", toAddrees)
 	OTokenTransfer(cfg, account, sdk, toAddrees, cfg.OETH, 18)
 	OTokenTransfer(cfg, account, sdk, toAddrees, cfg.GovToken, 9)
-	OTokenTransfer(cfg, account, sdk, toAddrees, cfg.OETH9, 9)
-	OTokenTransfer(cfg, account, sdk, toAddrees, cfg.RENBTC, 8)
-	//OTokenTransfer(cfg, account, sdk, toAddrees, cfg.ONTD, 9)
+	//OTokenTransfer(cfg, account, sdk, toAddrees, cfg.OETH9, 9)
+	OTokenTransfer(cfg, account, sdk, toAddrees, cfg.OWBTC, 8)
+	OTokenTransfer(cfg, account, sdk, toAddrees, cfg.ONTD, 9)
 	OTokenTransfer(cfg, account, sdk, toAddrees, cfg.OUSDC, 6)
 
 }
 
 func DelegateToProxyAllTestToken(cfg *config.Config, account *goSdk.Account, sdk *goSdk.OntologySdk) {
-	OTokenDelegateToProxy(cfg, account, sdk, cfg.ODAI, 18)
+	//OTokenDelegateToProxy(cfg, account, sdk, cfg.ODAI, 18)
 	OTokenDelegateToProxy(cfg, account, sdk, cfg.OWBTC, 8)
-	OTokenDelegateToProxy(cfg, account, sdk, cfg.OETH, 6)
-	OTokenDelegateToProxy(cfg, account, sdk, cfg.GovToken, 9)
-	OTokenDelegateToProxy(cfg, account, sdk, cfg.OETH9, 9)
+	OTokenDelegateToProxy(cfg, account, sdk, cfg.OETH, 18)
+	//OTokenDelegateToProxy(cfg, account, sdk, cfg.OETH9, 9)
 	OTokenDelegateToProxy(cfg, account, sdk, cfg.RENBTC, 8)
 	//OTokenDelegateToProxy(cfg, account, sdk, cfg.ONTD, 9)
 	OTokenDelegateToProxy(cfg, account, sdk, cfg.OUSDC, 6)

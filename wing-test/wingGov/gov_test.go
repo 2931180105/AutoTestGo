@@ -15,7 +15,7 @@ var account *goSdk.Account
 var cfg *config.Config
 
 func TestWingGovUnboundToken(t *testing.T) {
-	cfg, account, sdk := GetTestConfig()
+	cfg, account, sdk := Utils.GetTestConfig()
 	hash1, err := sdk.SendTransaction(UnboundToken(cfg, account, sdk))
 	if err != nil {
 		log.Errorf("send  tx failed, err: %s********", err)
@@ -26,7 +26,7 @@ func TestWingGovUnboundToken(t *testing.T) {
 }
 
 func TestWingGovUnboundTokenToPool(t *testing.T) {
-	cfg, account, sdk := GetTestConfig()
+	cfg, account, sdk := Utils.GetTestConfig()
 	hash1, err := sdk.SendTransaction(UnboundToPool(cfg, account, sdk))
 	if err != nil {
 		log.Errorf("send  tx failed, err: %s********", err)
@@ -42,7 +42,7 @@ func TestWingGovUnboundTokenToPool(t *testing.T) {
 //"386bc44661fef273e6627261736ebc2944273c62",
 
 func TestWingGovUpdatePoolWeight(t *testing.T) {
-	cfg, account, sdk := GetTestConfig()
+	cfg, account, sdk := Utils.GetTestConfig()
 	hash1, err := sdk.SendTransaction(UpdatePoolWeight(cfg, account, sdk, "1f99f0a0bae1c3df3ce6cc1adf975767bdd2dfa7", 0))
 	if err != nil {
 		log.Errorf("send  tx failed, err: %s********", err)
@@ -72,7 +72,7 @@ func TestWingGovUpdatePoolWeight(t *testing.T) {
 }
 
 func TestWingGovRegisterPool(t *testing.T) {
-	cfg, account, sdk := GetTestConfig()
+	cfg, account, sdk := Utils.GetTestConfig()
 	hash1, err := sdk.SendTransaction(RegisterPool(cfg, account, sdk, "cfg.Comptroller"))
 	if err != nil {
 		log.Errorf("send  tx failed, err: %s********", err)
@@ -84,7 +84,7 @@ func TestWingGovRegisterPool(t *testing.T) {
 }
 
 func TestWingGovRegisterPoolToAddress(t *testing.T) {
-	cfg, account, sdk := GetTestConfig()
+	cfg, account, sdk := Utils.GetTestConfig()
 	acct := Utils.GetAccounts(cfg)
 	hash1, err := sdk.SendTransaction(RegisterPoolToAddress(cfg, account, sdk, acct[0].Address))
 	if err != nil {
@@ -96,13 +96,13 @@ func TestWingGovRegisterPoolToAddress(t *testing.T) {
 	QueryPoolByAddress(cfg, account, sdk, acct[0].Address.ToHexString())
 }
 func TestStakingMore(t *testing.T) {
-	cfg, account, sdk := GetTestConfig()
+	cfg, account, sdk := Utils.GetTestConfig()
 	accounts := DbHelp.QueryAccountFromDb(0, cfg.AccountNum)
 	BatchStaking(cfg, account, sdk, accounts)
 
 }
 func TestAddSuuportToken(t *testing.T) {
-	cfg, account, sdk := GetTestConfig()
+	cfg, account, sdk := Utils.GetTestConfig()
 	hash1, err := sdk.SendTransaction(Add_support_token(cfg, account, sdk, "WBTC", cfg.OWBTC))
 	log.Infof("hexstring: %s", cfg.OWBTC)
 	if err != nil {
@@ -112,7 +112,7 @@ func TestAddSuuportToken(t *testing.T) {
 	Utils.PrintSmartEventByHash_Ont(sdk, hash1.ToHexString())
 }
 func TestUpdateSuuportToken(t *testing.T) {
-	cfg, account, sdk := GetTestConfig()
+	cfg, account, sdk := Utils.GetTestConfig()
 	hash1, err := sdk.SendTransaction(Update_support_token(cfg, account, sdk, "ONTd", "869951e3397550e800d5faf579857cdb637a0051"))
 	log.Infof("hexstring: %s", cfg.RENBTC)
 	if err != nil {
@@ -122,7 +122,7 @@ func TestUpdateSuuportToken(t *testing.T) {
 	Utils.PrintSmartEventByHash_Ont(sdk, hash1.ToHexString())
 }
 func TestOracle(t *testing.T) {
-	cfg, account, sdk := GetTestConfig()
+	cfg, account, sdk := Utils.GetTestConfig()
 	OraclePutUnderlyingPrice(cfg, account, sdk)
 	OracleGetUnderlyingPrice(cfg, account, sdk, "ONT")
 }
@@ -130,6 +130,8 @@ func TestOracle(t *testing.T) {
 //GetProductPools
 
 func TestGetProductPools(t *testing.T) {
-	cfg, account, sdk := GetTestConfig()
+	//cfg, account, sdk := Utils.GetTestConfig()
+	cfg, account, sdk := Utils.GetPrvConfig()
+
 	GetProductPools(cfg, account, sdk)
 }

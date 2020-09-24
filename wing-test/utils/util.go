@@ -90,12 +90,12 @@ func getContractAddr(addr string) OntCommon.Address {
 
 func GetTestConfig() (*config.Config, *goSdk.Account, *goSdk.OntologySdk) {
 	var sdk = goSdk.NewOntologySdk()
-	configPath := ""
+	configPath := "../config_testnet2.json"
 	cfg, err := config.ParseConfig(configPath)
 	if err != nil {
 		log.Error(err)
 	}
-	wallet, err := sdk.OpenWallet("")
+	wallet, err := sdk.OpenWallet("../wallet.dat")
 	if err != nil {
 		log.Error(err)
 	}
@@ -105,19 +105,21 @@ func GetTestConfig() (*config.Config, *goSdk.Account, *goSdk.OntologySdk) {
 	}
 	rpcClient := client.NewRpcClient()
 	rpcClient.SetAddress(cfg.Rpc[2])
+	//rpcClient.SetAddress("http://172.168.3.229:20336")
+
 	sdk.SetDefaultClient(rpcClient)
 	return cfg, account, sdk
 }
 
 func GetMainConfig() (*config.Config, *goSdk.Account, *goSdk.OntologySdk) {
 	var sdk = goSdk.NewOntologySdk()
-	configPath := ""
+	configPath := "/Users/yaoyao/go/src/github.com/mockyz/AutoTestGo/wing-test/config_main.json"
 	cfg, err := config.ParseConfig(configPath)
 	if err != nil {
 		log.Errorf("ParseConfig error:%s", err)
 	}
-	wallet, _ := sdk.OpenWallet("")
-	//wallet, err := sdk.OpenWallet("/Users[表情]yao/go[表情]c/github.com/mockyz/AutoTestGo/wing-test/WING_OWNER.dat")
+	wallet, _ := sdk.OpenWallet("/Volumes/MM/WING_OTHER_OWNER.dat")
+	//wallet, err := sdk.OpenWallet("/Users/yaoyao/go/src/github.com/mockyz/AutoTestGo/wing-test/WING_OWNER.dat")
 	if err != nil {
 		log.Errorf("OpenWallet error:%s", err)
 	}
@@ -131,14 +133,36 @@ func GetMainConfig() (*config.Config, *goSdk.Account, *goSdk.OntologySdk) {
 	return cfg, account, sdk
 }
 
-func GetPrvConfig() (*config.Config, *goSdk.Account, *goSdk.OntologySdk) {
+func GetTestConfigAddAccts() (*config.Config, *goSdk.Account, *goSdk.OntologySdk, []*goSdk.Account) {
 	var sdk = goSdk.NewOntologySdk()
-	configPath := "/Users/yaoyao/go/src/github.com/mockyz/AutoTestGo/wing-test/config_testnet_02.json"
+	configPath := "../../config_testnet.json"
 	cfg, _ := config.ParseConfig(configPath)
-	wallet, _ := sdk.OpenWallet("/Users/yaoyao/go/src/github.com/mockyz/AutoTestGo/wing-test/wallet.dat")
+	wallet, _ := sdk.OpenWallet("../../wallet.dat")
 	account, _ := wallet.GetDefaultAccount([]byte(cfg.Password))
 	rpcClient := client.NewRpcClient()
 	rpcClient.SetAddress(cfg.Rpc[2])
+	sdk.SetDefaultClient(rpcClient)
+	accts := DbHelp.QueryAccountFromDb(0, cfg.AccountNum)
+	return cfg, account, sdk, accts
+}
+
+func GetPrvConfig() (*config.Config, *goSdk.Account, *goSdk.OntologySdk) {
+	var sdk = goSdk.NewOntologySdk()
+	configPath := "/Users/yaoyao/go/src/github.com/mockyz/AutoTestGo/wing-test/config_prv3.json"
+	cfg, err := config.ParseConfig(configPath)
+	if err != nil {
+		log.Errorf("ParseConfig error:%s", err)
+	}
+	wallet, err := sdk.OpenWallet(cfg.Wallet)
+	if err != nil {
+		log.Errorf("OpenWallet error:%s", err)
+	}
+	account, err := wallet.GetDefaultAccount([]byte(cfg.Password))
+	if err != nil {
+		log.Errorf("GetDefaultAccount error:%s", err)
+	}
+	rpcClient := client.NewRpcClient()
+	rpcClient.SetAddress(cfg.Rpc[0])
 	sdk.SetDefaultClient(rpcClient)
 	return cfg, account, sdk
 }

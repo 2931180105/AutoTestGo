@@ -114,9 +114,10 @@ func FtokenLiquidateBorrow(cfg *config.Config, account *goSdk.Account, genSdk *g
 }
 
 //get accountSnapshoto
-func AccountSnapshot(cfg *config.Config, account *goSdk.Account, genSdk *goSdk.OntologySdk, fToken string) *common.PreExecResult {
+func AccountSnapshot(address string, genSdk *goSdk.OntologySdk, fToken string) *common.PreExecResult {
 	FTokenAddr, _ := go_sdk_utils.AddressFromHexString(fToken)
-	params := []interface{}{account.Address}
+	accountAddr, _ := go_sdk_utils.AddressFromBase58(address)
+	params := []interface{}{accountAddr}
 	resut, err := genSdk.WasmVM.PreExecInvokeWasmVMContract(FTokenAddr, "accountSnapshot", params)
 	if err != nil {
 		log.Infof("accountSnapshot: %s", err)
@@ -130,9 +131,10 @@ func AccountSnapshot(cfg *config.Config, account *goSdk.Account, genSdk *goSdk.O
 }
 
 //get balanceOfUnderlying
-func BalanceOfUnderlying(cfg *config.Config, account *goSdk.Account, genSdk *goSdk.OntologySdk, fToken string) *common.PreExecResult {
+func BalanceOfUnderlying(cfg *config.Config, address string, genSdk *goSdk.OntologySdk, fToken string) *common.PreExecResult {
 	FTokenAddr, _ := go_sdk_utils.AddressFromHexString(fToken)
-	params := []interface{}{account.Address}
+	accountAddr, _ := go_sdk_utils.AddressFromBase58(address)
+	params := []interface{}{accountAddr}
 	resut, err := genSdk.WasmVM.PreExecInvokeWasmVMContract(FTokenAddr, "balanceOfUnderlying", params)
 	if err != nil {
 		log.Infof("balanceOfUnderlying: %s", err)

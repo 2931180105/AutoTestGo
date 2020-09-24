@@ -46,7 +46,10 @@ func TestTransfer(cfg *config.Config, account *goSdk.Account) {
 		go func(nonce uint32, routineIndex uint) {
 			sendTxSdk := goSdk.NewOntologySdk()
 			rpcClient := client.NewRpcClient()
-			rpcClient.SetAddress(cfg.Rpc[nonce%14])
+			//rpcClient.SetAddress(cfg.Rpc[nonce%14])
+
+			rpcClient.SetAddress(cfg.Rpc[0])
+
 			sendTxSdk.SetDefaultClient(rpcClient)
 			startTime := time.Now().UnixNano() / 1e6 // ms
 			sentNum := int64(0)

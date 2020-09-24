@@ -1,5 +1,5 @@
 {
-  "Wallet": "wing-test/wallet.dat",
+  "Wallet": "/Users/yaoyao/go/src/github.com/mockyz/AutoTestGo/wing-test/wallet.dat",
   "Password": "123456",
   "SDRate": 0,
   "WingStartTime": 20,
@@ -37,16 +37,8 @@
   "FUSDC": "2f15c08e062b05185f57a22923ca6c3e3f1f11b2",
   "FONT": "056b514db5f2b8c04b6ef22febbbae3e85ca1b01",
   "FWING": "2ae6e628c18b6ba8ea977ba3b489ae97cedefbb9",
-
-  "Weight": 1,
-  "Amount": 100,
-  "Eta": 1,
-  "Gama": 0,
-  "ExchangeRate": 2,
-  "GasPrice": 2500,
-  "GasLimit": 32000000000,
   "Rpc": [
-    "http://172.168.3.151:20336"
+    "http://172.168.3.205:20336"
   ],
   "TotalStaticProfit": 100,
   "LendAmount": [
@@ -67,5 +59,12 @@
   "StakeOnt": 10,
   "StartNonce": 0,
   "SaveTx": false,
-  "SendTx": true
+  "SendTx": true,
+  "Weight": 1,
+  "Amount": 100,
+  "Eta": 1,
+  "Gama": 0,
+  "ExchangeRate": 2,
+  "GasPrice": 2500,
+  "GasLimit": 32000000000
 }

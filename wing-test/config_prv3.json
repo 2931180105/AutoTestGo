@@ -1,0 +1,73 @@
+{
+  "Wallet": "/Users/yaoyao/go/src/github.com/mockyz/AutoTestGo/wing-test/wallet.dat",
+  "Password": "123456",
+  "SDRate": 0,
+  "WingStartTime": 20,
+  "ZeroPool": "53c8438410dce2288228ce628ce4c32bc1f6335d",
+  "WingProfit": "",
+  "Oracle": "6e34a1f45886d8613dbd86a7d32633aaebd66321",
+  "GlobalParam": "56e86522d86b3445a0e6926abaf275f9bea34c8e",
+  "OUSDC": "37a675de9c7baeb1106f3ffdedaa8419dabeeedb",
+  "OWBTC": "6db11394d192014a3e9fa1adaf232530d3cc9337",
+  "RENBTC": "74ddf4ba77a7e0bc7f01987e17b17fff1c42f198",
+  "ODAI": "58b2d961dbdd40b53ff15408b6be6f387a07aaed",
+  "ONTD": "304454f9166d78901137e203116f9d759d075ece",
+  "OETH":"b747499a368ac61f8c7599d432c197c4193212d0",
+  "OUSDT":"ff7dac79671190af3c7c4508178a6f795c8bade5",
+  "OETH9":"3e866074dbba81ee2b08c50361872bde3f8568ad",
+
+  "GovToken": "ff31ec74d01f7b7d45ed2add930f5d2239f7de33",
+  "WingGov": "3ff111a0204f5ef28d4c0ad1d05820f0dd785840",
+  "Comptroller" : "fb320bbd7cc747eb57e1bbee64a7600d26dd0667",
+  "InterestRate" : "4be78cf10980d3fdcf08962c71c00e65217cb965",
+
+
+  "IBTC": "25774c8c445370943fe44c32961d14c08dce2f97",
+  "IETH" : "b93fe53f46b1457c761f3954d17fadba66e709c6",
+  "IETH9" : "1a7a6a4ff8569f211972af3136765f3a0ba6c273",
+  "IRENBTC": "7587c903cb41374d09342bc0e678504d30f9a55c",
+  "IUSDC": "85cb21a243c277f19a9bd6cebca91237e649b0fe",
+  "IONT": "e8119e1d7f12582d993564d5b4783eedeb2313b7",
+  "IWING": "9c7b9a13e2372506c1cf280754b405982c19b366",
+
+  "FBTC":"20a77a0ff8ea2ddb311cdc928368ae89bebe5106",
+  "FONT":"f0c6e7266aa2692cc7737d64bdfca4506338ac51",
+  "FRENBTC":"7d8d4f7d4868cb1e24b727872e49b55813a5e6c4",
+  "FUSDC":"ec44ebb185bcbca100c42d54313ffad98cf32955",
+  "FWING":"4a01556c960947be9df76fb27ae5e971ee340dd4",
+  "FETH":"d646a9e2756130211f02d5ba93f83c47e0a28536",
+
+
+  "Rpc": [
+    "http://172.168.3.229:20336",
+    "http://172.168.3.226:20336"
+
+  ],
+  "TotalStaticProfit": 100,
+  "LendAmount": [
+    10,20,30,40
+  ],
+  "TotalDynamicProfit": 100,
+  "Wallets": [
+    "wallet01.dat"
+  ],
+  "Wifs": [
+    "L1nfGvz19cWXHDLeEMMC6vozhSLANCy9E2gNxh3YwHJMXReLddNw"
+  ],
+  "TxNum": 30,
+  "TxFactor": 100,
+  "RoutineNum": 3,
+  "TPS": 3,
+  "AccountNum": 30,
+  "StakeOnt": 10,
+  "StartNonce": 0,
+  "SaveTx": false,
+  "SendTx": true,
+  "Weight": 1,
+  "Amount": 100,
+  "Eta": 1,
+  "Gama": 0,
+  "ExchangeRate": 2,
+  "GasPrice": 0,
+  "GasLimit": 32000000000
+}

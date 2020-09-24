@@ -14,7 +14,9 @@ var sdk = goSdk.NewOntologySdk()
 
 func main() {
 	log.InitLog(log.InfoLog, log.PATH, log.Stdout)
+	//configPath := "wing-test/config_prv3.json"
 	configPath := "wing-test/config_testnet2.json"
+
 	cfg, err := config.ParseConfig(configPath)
 	if err != nil {
 		log.Errorf("error: %s", err)
@@ -30,7 +32,6 @@ func main() {
 	//WingGov.BatchStaking(cfg, account, sdk,Utils.GetAccounts(cfg))
 	//time.Sleep(time.Second*10)
 	//WingGov.BatchUnStaking(cfg, account, sdk,Utils.GetAccounts(cfg))
-	//
 	//WingGov.WingGovMigrate(cfg, account, sdk)
 	//WingGov.Get_admin_address(cfg, account, sdk)
 	//WingGov.DeployContractWingGov(cfg, account, sdk)
@@ -38,11 +39,13 @@ func main() {
 
 	//AT9sH4s84NGJYVqNHQWN6vkgb7jQ12eR7p
 	//AJkQo3Fo7JKxtrKZPqYJQuh9cXH38w7rVt
-	//OToken.OTokenDelegateToProxy(cfg, account, sdk, cfg.ODAI)
+	//OToken.DelegateToProxyAllTestToken(cfg, account, sdk)
 	//OToken.OTokenTransfer(cfg, account, sdk, "ANxSSzWmFnAtqWBtq2KthP73oX4bHf9FyZ", cfg.ODAI)
 	//OToken.GenerateAccountsToken(cfg, account, sdk)
 	//AT9sH4s84NGJYVqNHQWN6vkgb7jQ12eR7p
-	OToken.TransferAllTestToken(cfg, account, sdk, "ANxSSzWmFnAtqWBtq2KthP73oX4bHf9FyZ")
+	//OToken.WingTokenTransfer(cfg, account, sdk, "ANxSSzWmFnAtqWBtq2KthP73oX4bHf9FyZ")
+
+	OToken.TransferAllTestToken(cfg, account, sdk, "AbhqQjSw9QHNoZyvnUhzKSXyzQEUTkTtNp")
 }
 
 //func deployContract(cfg *config.Config, account *goSdk.Account, genSdk *goSdk.OntologySdk) {

@@ -74,6 +74,8 @@ func DeleteTable(db *sql.DB) {
 
 var QUERY_DATA = `SELECT * FROM account_info limit ?,?;`
 
+var QUERY_Addr = `SELECT * FROM account_info WHERE base58=?;`
+
 // 查询数据
 func Query(db *sql.DB, start, end int) *sql.Rows {
 	rows, err := db.Query(QUERY_DATA, start, end)
@@ -81,7 +83,15 @@ func Query(db *sql.DB, start, end int) *sql.Rows {
 		fmt.Println(err)
 	}
 	return rows
+}
 
+// 查询数据
+func QueryByAddr(db *sql.DB, addr string) *sql.Rows {
+	rows, err := db.Query(QUERY_Addr, addr)
+	if err != nil {
+		fmt.Println(err)
+	}
+	return rows
 }
 
 func QueryAccountFromDb(start, end int) []*goSdk.Account {
@@ -107,8 +117,41 @@ func QueryAccountFromDb(start, end int) []*goSdk.Account {
 			Address:    types.AddressFromPubKey(pri.Public()),
 			SigScheme:  signature.SHA256withECDSA,
 		}
-		log.Infof("%s", acct.SigScheme.Name())
-		log.Infof("base58 :%s, tobase58:%s", base58, acct.Address.ToBase58())
+		//log.Infof("%s", acct.SigScheme.Name())
+		//log.Infof("base58 :%s, tobase58:%s", base58, acct.Address.ToBase58())
+		accounts = append(accounts, &acct)
+
+	}
+	db.Close()
+
+	return accounts
+}
+
+func QueryAccountFromDbByBase58(address string) []*goSdk.Account {
+	db := SetupConnect()
+	rows := QueryByAddr(db, address)
+	accounts := make([]*goSdk.Account, 0)
+	for rows.Next() {
+		var id int
+		var base58 string
+		var wif string
+		var balance_ont int
+		var balance_wing int
+		var stakeing_amount int
+		var stakeing_time int
+		if err := rows.Scan(&id, &base58, &wif, &balance_ont, &balance_wing, &stakeing_amount, &stakeing_time); err != nil {
+			log.Infof("error ", err)
+		}
+		pkey, _ := hex.DecodeString(wif)
+		pri, _ := keypair.DeserializePrivateKey(pkey)
+		acct := goSdk.Account{
+			PrivateKey: pri,
+			PublicKey:  pri.Public(),
+			Address:    types.AddressFromPubKey(pri.Public()),
+			SigScheme:  signature.SHA256withECDSA,
+		}
+		//log.Infof("%s", acct.SigScheme.Name())
+		//log.Infof("base58 :%s, tobase58:%s", base58, acct.Address.ToBase58())
 		accounts = append(accounts, &acct)
 
 	}

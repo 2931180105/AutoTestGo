@@ -11,7 +11,7 @@ import (
 
 //Migrate gov
 func TestMigrateGov(t *testing.T) {
-	cfg, account, sdk := GetMainConfig()
+	cfg, account, sdk := Utils.GetTestConfig()
 	contractPath := ""
 	newGovString := WingGovMethod.WingGovMigrate(cfg, account, sdk, contractPath)
 	hash1, err := sdk.SendTransaction(WingGovMethod.WingTokenSetGov(cfg, account, sdk, newGovString))
@@ -28,7 +28,7 @@ func TestMigrateGov(t *testing.T) {
 
 //Migrate Zero pool
 func TestMigrateZeroPool(t *testing.T) {
-	cfg, account, sdk := GetTestConfig()
+	cfg, account, sdk := Utils.GetTestConfig()
 	//TODO: change path
 	zeroPoolPath := ""
 	newContractString := WingGovMethod.ContractMigrate(cfg, account, sdk, cfg.ZeroPool, zeroPoolPath)
@@ -49,7 +49,7 @@ func TestMigrateZeroPool(t *testing.T) {
 
 //Migrate Zero pool
 func TestDev(t *testing.T) {
-	cfg, account, sdk := GetMainConfig()
+	cfg, account, sdk := Utils.GetTestConfig()
 	WingGovMethod.QueryPoolByAddress(cfg, account, sdk, cfg.ZeroPool)
 
 	//	TODO:update config file
@@ -57,13 +57,11 @@ func TestDev(t *testing.T) {
 
 //Deploy zero pool Todo : finish deploy
 func TestDeployZeroPool(t *testing.T) {
-	cfg, account, sdk := GetTestConfig()
-	wasmFile := "../../contract/testnet/zero_pool.wasm.str"
+	cfg, account, sdk := Utils.GetPrvConfig()
+	wasmFile := "/Users/yaoyao/go/src/github.com/mockyz/AutoTestGo/wing-test/contract/testnet2/zero_pool.wasm.str"
 	zeroPoolAddr := WingGovMethod.DeployContractt(cfg, account, sdk, wasmFile)
 	//WingGovMethod.QueryPoolByAddress(cfg, account, sdk, zeroPoolAddr)
-	time.Sleep(time.Second * 3)
 	WingGovMethod.ZeroPoolInit(cfg, account, sdk, zeroPoolAddr)
-	time.Sleep(time.Second * 3)
 	hash1, err := sdk.SendTransaction(WingGovMethod.RegisterPool(cfg, account, sdk, zeroPoolAddr))
 	if err != nil {
 		log.Errorf("send  tx failed, err: %s********", err)
@@ -72,13 +70,20 @@ func TestDeployZeroPool(t *testing.T) {
 	log.Infof("SendTransaction RegisterPool hash : %s", hash1.ToHexString())
 	Utils.PrintSmartEventByHash_Ont(sdk, hash1.ToHexString())
 	WingGovMethod.QueryPoolByAddress(cfg, account, sdk, zeroPoolAddr)
+	////设置comptroller权重值为1
+	//hash1, err := sdk.SendTransaction(WingGovMethod.UpdatePoolWeight(cfg, account, sdk, zeroPoolAddr, 0))
+	//if err != nil {
+	//	log.Errorf("send  tx failed, err: %s********", err)
+	//	return
+	//}
+	//Utils.PrintSmartEventByHash_Ont(sdk, hash1.ToHexString())
 	//	TODO:update config file
 }
 
 //TestDeployGov pool
 func TestDeployGov(t *testing.T) {
-	cfg, account, sdk := GetTestConfig()
-	wasmFile := ""
+	cfg, account, sdk := Utils.GetPrvConfig()
+	wasmFile := "/Users/yaoyao/go/src/github.com/mockyz/AutoTestGo/wing-test/contract/testnet/wing_dao_contracts_new2.wasm.str"
 	WingGovAddr := WingGovMethod.DeployContractt(cfg, account, sdk, wasmFile)
 	log.Infof("wing gov:%s", WingGovAddr)
 	hash1, err := sdk.SendTransaction(WingGovMethod.WingGovInit(cfg, account, sdk, WingGovAddr))
@@ -103,7 +108,7 @@ func TestDeployGov(t *testing.T) {
 
 //Deploy zero pool Todo : finish deploy
 func TestDeployGlobalParam(t *testing.T) {
-	cfg, account, sdk := GetTestConfig()
+	cfg, account, sdk := Utils.GetTestConfig()
 	wasmFile := "/Users/yaoyao/go/src/github.com/mockyz/AutoTestGo/wing-test/contract/testnet3/oracle.str"
 	globalAddr := WingGovMethod.DeployContractt(cfg, account, sdk, wasmFile)
 	log.Infof("oracle: %s", globalAddr)

@@ -607,7 +607,7 @@ func Add_support_token(cfg *config.Config, account *goSdk.Account, genSdk *goSdk
 	}
 	tx := &types.MutableTransaction{
 		Payer:    account.Address,
-		GasPrice: 2500,
+		GasPrice: cfg.GasPrice,
 		GasLimit: 300000,
 		TxType:   types.InvokeWasm,
 		Nonce:    uint32(time.Now().Unix()),
@@ -615,6 +615,37 @@ func Add_support_token(cfg *config.Config, account *goSdk.Account, genSdk *goSdk
 		Sigs:     nil,
 	}
 	if err := signTx(genSdk, tx, cfg.StartNonce, account); err != nil {
+		log.Error(err)
+	}
+	return tx
+}
+
+//big int 256
+func BigUInt128(cfg *config.Config, account *goSdk.Account, genSdk *goSdk.OntologySdk, oTokenName, oToken string) *types.MutableTransaction {
+	WingGovAddr, _ := utils.AddressFromHexString(cfg.WingGov)
+	oToeknAddr, _ := utils.AddressFromHexString(oToken)
+	token := Utils.NewToken(oTokenName, 2, oToeknAddr)
+	sink := OntCommon.NewZeroCopySink(nil)
+	sink.WriteString("add_support_token")
+	token.Serialize(sink)
+	sink.WriteI128(OntCommon.I128FromUint64(20))
+	contract := &states.WasmContractParam{}
+	contract.Address = WingGovAddr
+	argbytes := sink.Bytes()
+	contract.Args = argbytes
+	invokePayload := &payload.InvokeCode{
+		Code: OntCommon.SerializeToBytes(contract),
+	}
+	tx := &types.MutableTransaction{
+		Payer:    account.Address,
+		GasPrice: 2500,
+		GasLimit: 300000,
+		TxType:   types.InvokeWasm,
+		Nonce:    uint32(time.Now().Unix()),
+		Payload:  invokePayload,
+		Sigs:     nil,
+	}
+	if err := Utils.SignTxAndSendTx(genSdk, tx, cfg.StartNonce, account); err != nil {
 		log.Error(err)
 	}
 	return tx
@@ -638,8 +669,8 @@ func AddSupportTokenAndSend(cfg *config.Config, account *goSdk.Account, genSdk *
 	}
 	tx := &types.MutableTransaction{
 		Payer:    account.Address,
-		GasPrice: 2500,
-		GasLimit: 300000,
+		GasPrice: cfg.GasPrice,
+		GasLimit: cfg.GasLimit,
 		TxType:   types.InvokeWasm,
 		Nonce:    uint32(time.Now().Unix()),
 		Payload:  invokePayload,
@@ -668,8 +699,8 @@ func Update_support_token(cfg *config.Config, account *goSdk.Account, genSdk *go
 	}
 	tx := &types.MutableTransaction{
 		Payer:    account.Address,
-		GasPrice: 2500,
-		GasLimit: 300000,
+		GasPrice: cfg.GasPrice,
+		GasLimit: cfg.GasLimit,
 		TxType:   types.InvokeWasm,
 		Nonce:    uint32(time.Now().Unix()),
 		Payload:  invokePayload,

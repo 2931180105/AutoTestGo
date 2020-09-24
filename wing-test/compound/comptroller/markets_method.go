@@ -9,8 +9,12 @@ import (
 	"github.com/ontio/ontology-go-sdk/utils"
 	OntCommon "github.com/ontio/ontology/common"
 	"github.com/ontio/ontology/common/log"
+	"github.com/ontio/ontology/core/payload"
+	"github.com/ontio/ontology/core/types"
+	"github.com/ontio/ontology/smartcontract/states"
 	"math"
 	"math/big"
+	"time"
 )
 
 // EnterMarkets  ftoken address
@@ -38,11 +42,11 @@ func ExitMarkets(cfg *config.Config, account *goSdk.Account, sdk *goSdk.Ontology
 }
 
 // Mint  ftoken  (supply)
-func ApproveAndMint(cfg *config.Config, account *goSdk.Account, sdk *goSdk.OntologySdk, ftoken OntCommon.Address, otoken OntCommon.Address, from OntCommon.Address, amount uint64) {
+func ApproveAndMint(cfg *config.Config, account *goSdk.Account, sdk *goSdk.OntologySdk, ftoken OntCommon.Address, otoken OntCommon.Address, from OntCommon.Address, amount *big.Int) {
 	WingGovAddr, _ := utils.AddressFromHexString(cfg.WingGov)
 	Otoken.ApproveOToken(cfg, account, sdk, WingGovAddr, otoken, big.NewInt(math.MaxInt64))
 	//Otoken.ApproveOToken(cfg, account, sdk, ftoken, otoken, big.NewInt(100000000000000))
-
+	log.Infof("ftoken：%s", ftoken.ToHexString())
 	params := []interface{}{from, amount}
 	mutTx, err := sdk.WasmVM.NewInvokeWasmVmTransaction(cfg.GasPrice, cfg.GasLimit, ftoken, "mint", params)
 	if err != nil {
@@ -54,9 +58,48 @@ func ApproveAndMint(cfg *config.Config, account *goSdk.Account, sdk *goSdk.Ontol
 }
 
 // Mint  ftoken  (supply)
-func ApproveAndMintWing(cfg *config.Config, account *goSdk.Account, sdk *goSdk.OntologySdk, ftoken OntCommon.Address, otoken OntCommon.Address, from OntCommon.Address, amount uint64) {
+func Mint(cfg *config.Config, account *goSdk.Account, sdk *goSdk.OntologySdk, ftoken OntCommon.Address, from OntCommon.Address, amount uint64) {
+	params := []interface{}{from, amount}
+	mutTx, err := sdk.WasmVM.NewInvokeWasmVmTransaction(cfg.GasPrice, cfg.GasLimit, ftoken, "mint", params)
+	if err != nil {
+		fmt.Println("construct tx err", err)
+	}
+	if err := Utils.SignTxAndSendTx(sdk, mutTx, cfg.StartNonce, account); err != nil {
+		log.Errorf("Mint Token err:%s, Ftoken address: %s", err, ftoken.ToHexString())
+	}
+}
+
+// Mint  ftoken  (supply)
+func Mint2(cfg *config.Config, account *goSdk.Account, sdk *goSdk.OntologySdk, ftoken, from OntCommon.Address, amount string) {
+	sink := OntCommon.NewZeroCopySink(nil)
+	sink.WriteString("mint")
+	sink.WriteAddress(from)
+	sink.WriteHash(Utils.Uint256FromhexString(amount))
+	contract := &states.WasmContractParam{}
+	contract.Address = ftoken
+	argbytes := sink.Bytes()
+	contract.Args = argbytes
+	invokePayload := &payload.InvokeCode{
+		Code: OntCommon.SerializeToBytes(contract),
+	}
+	tx := &types.MutableTransaction{
+		Payer:    account.Address,
+		GasPrice: 2500,
+		GasLimit: 300000,
+		TxType:   types.InvokeWasm,
+		Nonce:    uint32(time.Now().Unix()),
+		Payload:  invokePayload,
+		Sigs:     nil,
+	}
+	if err := Utils.SignTxAndSendTx(sdk, tx, cfg.StartNonce, account); err != nil {
+		log.Error(err)
+	}
+}
+
+// Mint  ftoken  (supply)
+func ApproveAndMintWing(cfg *config.Config, account *goSdk.Account, sdk *goSdk.OntologySdk, ftoken OntCommon.Address, otoken OntCommon.Address, from OntCommon.Address, amount *big.Int) {
 	WingGovAddr, _ := utils.AddressFromHexString(cfg.WingGov)
-	Otoken.ApproveOToken(cfg, account, sdk, WingGovAddr, otoken, big.NewInt(10000))
+	Otoken.ApproveOToken(cfg, account, sdk, WingGovAddr, otoken, big.NewInt(1000000))
 
 	params := []interface{}{from, amount}
 	mutTx, err := sdk.WasmVM.NewInvokeWasmVmTransaction(cfg.GasPrice, cfg.GasLimit, ftoken, "mint", params)
@@ -81,7 +124,19 @@ func MintFtoken(cfg *config.Config, account *goSdk.Account, sdk *goSdk.OntologyS
 }
 
 // RedeemToken   ftoken
-func RedeemToken(cfg *config.Config, account *goSdk.Account, sdk *goSdk.OntologySdk, ftoken OntCommon.Address, from OntCommon.Address, amount uint64) {
+func RedeemToken(cfg *config.Config, account *goSdk.Account, sdk *goSdk.OntologySdk, ftoken OntCommon.Address, from OntCommon.Address, amount *big.Int) {
+	params := []interface{}{from, amount}
+	mutTx, err := sdk.WasmVM.NewInvokeWasmVmTransaction(cfg.GasPrice, cfg.GasLimit, ftoken, "redeem", params)
+	if err != nil {
+		fmt.Println("construct tx err", err)
+	}
+	if err := Utils.SignTxAndSendTx(sdk, mutTx, cfg.StartNonce, account); err != nil {
+		log.Error(err)
+	}
+}
+
+// RedeemToken   ftoken
+func RedeemToken2(cfg *config.Config, account *goSdk.Account, sdk *goSdk.OntologySdk, ftoken OntCommon.Address, from OntCommon.Address, amount uint64) {
 	params := []interface{}{from, amount}
 	mutTx, err := sdk.WasmVM.NewInvokeWasmVmTransaction(cfg.GasPrice, cfg.GasLimit, ftoken, "redeem", params)
 	if err != nil {
@@ -110,7 +165,7 @@ func Borrow(cfg *config.Config, account *goSdk.Account, sdk *goSdk.OntologySdk, 
 		fmt.Println("construct tx err", err)
 	}
 	if err := Utils.SignTxAndSendTx(sdk, mutTx, cfg.StartNonce, account); err != nil {
-		log.Error(err)
+		log.Errorf("borrow : %s", err)
 	}
 }
 func RepayBorrow(cfg *config.Config, account *goSdk.Account, sdk *goSdk.OntologySdk, ftoken OntCommon.Address, borrower OntCommon.Address, repayAmount *big.Int) {
@@ -164,4 +219,42 @@ func AddInsurance(cfg *config.Config, account *goSdk.Account, sdk *goSdk.Ontolog
 	if err := Utils.SignTxAndSendTx(sdk, mutTx, cfg.StartNonce, account); err != nil {
 		log.Error(err)
 	}
+}
+
+func TotalBorrowCurrent(sdk *goSdk.OntologySdk, ftoken OntCommon.Address) {
+	params := []interface{}{}
+	result, err := sdk.WasmVM.PreExecInvokeWasmVMContract(ftoken, "totalBorrowCurrent", params)
+	if err != nil {
+		fmt.Println("construct tx err", err)
+	}
+	log.Infof("totalBorrowCurrent:%s", result.Result)
+}
+
+func BorrowBalanceCurrent(sdk *goSdk.OntologySdk, ftoken, account OntCommon.Address) {
+	params := []interface{}{account}
+	result, err := sdk.WasmVM.PreExecInvokeWasmVMContract(ftoken, "borrowBalanceCurrent", params)
+	if err != nil {
+		fmt.Println("construct tx err", err)
+	}
+	log.Infof("totalBorrowCurrent:%s", result.Result)
+}
+
+func ExchangeRateCurrent(sdk *goSdk.OntologySdk, ftoken OntCommon.Address) {
+	params := []interface{}{}
+	result, err := sdk.WasmVM.PreExecInvokeWasmVMContract(ftoken, "totalBorrowCurrent", params)
+	if err != nil {
+		fmt.Println("construct tx err", err)
+	}
+	log.Infof("totalBorrowCurrent:%s", result.Result)
+}
+
+//allMarkets
+
+func AllMarkets(sdk *goSdk.OntologySdk, comptrooller OntCommon.Address) {
+	params := []interface{}{}
+	result, err := sdk.WasmVM.PreExecInvokeWasmVMContract(comptrooller, "allMarkets", params)
+	if err != nil {
+		fmt.Println("construct tx err", err)
+	}
+	log.Infof("totalBorrowCurrent:%s", result.Result)
 }
