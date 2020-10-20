@@ -1,5 +1,5 @@
 {
-  "Wallet": "ont-test/wallet.dat",
+  "Wallet": "wallet.dat",
   "Password": "123456",
   "ContractCodePath": "myt.avm",
   "Contract": "024e222c791d83d82bbb55bfb8f26b6aa6356a85",
@@ -10,7 +10,7 @@
   "FromAssetHash": "0000000000000000000000000000000000000002",
   "ToChainId": 2,
   "To": "AG4pZwKa9cr8ca7PED7FqzUfcwnrQ2N26w",
-  "Amount": 200,
+  "Amount": 2000,
   "GasPrice": 2500,
   "GasLimit": 1000000,
   "Rpc": [
@@ -24,7 +24,7 @@
       "123456"
     ]
   ],
-  "TxNum": 100,
+  "TxNum": 1000,
   "TxFactor": 1,
   "RoutineNum": 1,
   "TPS": 1,

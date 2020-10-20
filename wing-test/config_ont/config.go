@@ -6,77 +6,62 @@ import (
 	"io/ioutil"
 )
 
-type Token uint8
-
-const (
-	ONT Token = iota
-	ONG
-	OEP4
-)
-
 type Config struct {
-	Wallet           string
-	WingGov          string
-	GovToken         string
-	ZeroPool         string
-	OldZeroPool      string
-	Password         string
-	SDRate           int // static and dyamic profit
-	ContractCodePath string
-	Oracle           string
-	InterestRate     string
-	Comptroller      string
-	FToken           string
-	Token            string
-	FTokenInsurance  string
-	WingProfit       string // HexString
-	GlobalParam      string // HexString
-	AuthAddr         string
-	OUSDT            string
-	OUSDC            string
-	OWBTC            string
-	RENBTC           string
-	OETH             string
-	OETH9            string
-	ONTD             string
-	ODAI             string
-	ONT              string
-	IBTC             string
-	IETH             string
-	IETH9            string
-	IRENBTC          string
-	IUSDC            string
-	IONT             string
-	IWING            string
-	FBTC             string
-	FETH             string
-	FETH9            string
-	FRENBTC          string
-	FUSDC            string
-	FONT             string
-	FWING            string
-
-	ExchangeRate       int
-	Amount             uint64
-	Weight             int
-	Eta                int
-	Gama               int
-	TotalStaticProfit  int
-	TotalDynamicProfit int
-	LendAmount         []int
-	Rpc                []string
-	TxNum              uint // whole tx num is *TxFactor
-	TxFactor           uint
-	RoutineNum         uint // whole tx save to RoutineNum files, and one go-routine per file
-	TPS                uint
-	StartNonce         uint32
-	GasPrice           uint64
-	GasLimit           uint64
-	SaveTx             bool
-	SendTx             bool
-	Owner              string
-	AccountNum         int
-	StakeOnt           int
+	Wallet             string   `json:"Wallet"`
+	Password           string   `json:"Password"`
+	SDRate             uint64   `json:"SDRate"`
+	WingStartTime      uint64   `json:"WingStartTime"`
+	Oracle             string   `json:"Oracle"`
+	GovToken           string   `json:"GovToken"`
+	ZeroPool           string   `json:"ZeroPool"`
+	WingGov            string   `json:"WingGov"`
+	Comptroller        string   `json:"Comptroller"`
+	OldZeroPool        string   `json:"OldZeroPool"`
+	WingProfit         string   `json:"WingProfit"`
+	GlobalParam        string   `json:"GlobalParam"`
+	Pool2              string   `json:"Pool2"`
+	uint64erestRate    string   `json:"uint64erestRate"`
+	FBTC               string   `json:"FBTC"`
+	FETH               string   `json:"FETH"`
+	FUSDT              string   `json:"FUSDT"`
+	IBTC               string   `json:"IBTC"`
+	IETH               string   `json:"IETH"`
+	IUSDT              string   `json:"IUSDT"`
+	AuthAddr           string   `json:"AuthAddr"`
+	WBTC               string   `json:"WBTC"`
+	ONTd               string   `json:"ONTd"`
+	RenBTC             string   `json:"RenBTC"`
+	USDC               string   `json:"USDC"`
+	WING               string   `json:"WING"`
+	ETH                string   `json:"ETH"`
+	DAI                string   `json:"DAI"`
+	USDT               string   `json:"USDT"`
+	SUSD               string   `json:"SUSD"`
+	NEO                string   `json:"NEO"`
+	OKB                string   `json:"OKB"`
+	UNI                string   `json:"UNI"`
+	Weight             uint64   `json:"Weight"`
+	Amount             uint64   `json:"Amount"`
+	Eta                uint64   `json:"Eta"`
+	Gama               uint64   `json:"Gama"`
+	ExchangeRate       uint64   `json:"ExchangeRate"`
+	GasPrice           uint64   `json:"GasPrice"`
+	GasLimit           uint64   `json:"GasLimit"`
+	RPC                []string `json:"Rpc"`
+	TotalStaticProfit  uint64   `json:"TotalStaticProfit"`
+	LendAmount         []uint64 `json:"LendAmount"`
+	TotalDynamicProfit uint64   `json:"TotalDynamicProfit"`
+	Wallets            []string `json:"Wallets"`
+	Wifs               []string `json:"Wifs"`
+	TxNum              uint64   `json:"TxNum"`
+	TxFactor           uint64   `json:"TxFactor"`
+	RoutineNum         uint64   `json:"RoutineNum"`
+	TPS                uint64   `json:"TPS"`
+	AccountNum         uint64   `json:"AccountNum"`
+	StakeOnt           uint64   `json:"StakeOnt"`
+	StartNonce         uint64   `json:"StartNonce"`
+	SaveTx             bool     `json:"SaveTx"`
+	SendTx             bool     `json:"SendTx"`
 }
 
 func ParseConfig(path string) (*Config, error) {
