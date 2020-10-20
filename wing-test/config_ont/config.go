@@ -20,7 +20,7 @@ type Config struct {
 	WingProfit         string   `json:"WingProfit"`
 	GlobalParam        string   `json:"GlobalParam"`
 	Pool2              string   `json:"Pool2"`
-	uint64erestRate    string   `json:"uint64erestRate"`
+	InterestRate       string   `json:"uint64erestRate"`
 	FBTC               string   `json:"FBTC"`
 	FETH               string   `json:"FETH"`
 	FUSDT              string   `json:"FUSDT"`
@@ -30,7 +30,7 @@ type Config struct {
 	AuthAddr           string   `json:"AuthAddr"`
 	WBTC               string   `json:"WBTC"`
 	ONTd               string   `json:"ONTd"`
-	RenBTC             string   `json:"RenBTC"`
+	RENBTC             string   `json:"RenBTC"`
 	USDC               string   `json:"USDC"`
 	WING               string   `json:"WING"`
 	ETH                string   `json:"ETH"`
@@ -47,19 +47,19 @@ type Config struct {
 	ExchangeRate       uint64   `json:"ExchangeRate"`
 	GasPrice           uint64   `json:"GasPrice"`
 	GasLimit           uint64   `json:"GasLimit"`
-	RPC                []string `json:"Rpc"`
+	Rpc                []string `json:"Rpc"`
 	TotalStaticProfit  uint64   `json:"TotalStaticProfit"`
 	LendAmount         []uint64 `json:"LendAmount"`
 	TotalDynamicProfit uint64   `json:"TotalDynamicProfit"`
 	Wallets            []string `json:"Wallets"`
 	Wifs               []string `json:"Wifs"`
-	TxNum              uint64   `json:"TxNum"`
-	TxFactor           uint64   `json:"TxFactor"`
-	RoutineNum         uint64   `json:"RoutineNum"`
-	TPS                uint64   `json:"TPS"`
-	AccountNum         uint64   `json:"AccountNum"`
-	StakeOnt           uint64   `json:"StakeOnt"`
-	StartNonce         uint64   `json:"StartNonce"`
+	TxNum              uint     `json:"TxNum"`
+	TxFactor           uint     `json:"TxFactor"`
+	RoutineNum         uint     `json:"RoutineNum"`
+	TPS                uint     `json:"TPS"`
+	AccountNum         int      `json:"AccountNum"`
+	StakeOnt           uint     `json:"StakeOnt"`
+	StartNonce         uint32   `json:"StartNonce"`
 	SaveTx             bool     `json:"SaveTx"`
 	SendTx             bool     `json:"SendTx"`
 }

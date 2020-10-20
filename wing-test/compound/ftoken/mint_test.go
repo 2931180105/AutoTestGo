@@ -14,7 +14,7 @@ import (
 func TestApproveAndMintETHandBTCS(t *testing.T) {
 	cfg, account, sdk := Utils.GetPrvConfig()
 	FAddr, _ := utils.AddressFromHexString(cfg.FBTC)
-	OAddr3, _ := utils.AddressFromHexString(cfg.OWBTC)
+	OAddr3, _ := utils.AddressFromHexString(cfg.WBTC)
 
 	comptroller.ApproveAndMint(cfg, account, sdk, FAddr, OAddr3, account.Address, Utils.ToIntByPrecise("100", 8))
 
@@ -28,10 +28,10 @@ func TestBatchMint(t *testing.T) {
 	FAddr3, _ := utils.AddressFromHexString(cfg.FBTC)
 	FAddr4, _ := utils.AddressFromHexString(cfg.FUSDC)
 	FAddr5, _ := utils.AddressFromHexString(cfg.FWING)
-	OAddr, _ := utils.AddressFromHexString(cfg.OETH)
+	OAddr, _ := utils.AddressFromHexString(cfg.ETH)
 	OAddr2, _ := utils.AddressFromHexString(cfg.RENBTC)
-	OAddr3, _ := utils.AddressFromHexString(cfg.OWBTC)
-	OAddr4, _ := utils.AddressFromHexString(cfg.OUSDC)
+	OAddr3, _ := utils.AddressFromHexString(cfg.WBTC)
+	OAddr4, _ := utils.AddressFromHexString(cfg.USDC)
 	OAddr5, _ := utils.AddressFromHexString(cfg.GovToken)
 	//comptroller.Mint(cfg, account, sdk, FAddr, account.Address, 1000000)
 	for i := 0; i < len(accounts); i++ {
@@ -50,7 +50,7 @@ func TestBatchBorrow(t *testing.T) {
 	comptrollerAddr, _ := utils.AddressFromHexString(cfg.Comptroller)
 	accounts := dbHelper.QueryAccountFromDb(530, 10)
 	FAddr4, _ := utils.AddressFromHexString(cfg.FUSDC)
-	OAddr4, _ := utils.AddressFromHexString(cfg.OUSDC)
+	OAddr4, _ := utils.AddressFromHexString(cfg.USDC)
 	//FAddr2, _ := utils.AddressFromHexString(cfg.FRENBTC)
 	FAddr3, _ := utils.AddressFromHexString(cfg.FBTC)
 	//comptroller.Mint(cfg, account, sdk, FAddr2, account.Address, 100000000000)
@@ -62,7 +62,7 @@ func TestBatchBorrow(t *testing.T) {
 		log.Infof("run****************:%d", i)
 		//otoken.TransferAllTestToken(cfg,account,sdk,accounts[i].Address.ToBase58())
 		//_, _ = sdk.Native.Ong.Transfer(cfg.GasPrice, cfg.GasLimit, account, account, accounts[i].Address, 100000000000)
-		otoken.OTokenTransfer(cfg, account, sdk, accounts[i].Address.ToBase58(), cfg.OUSDC, 8)
+		otoken.OTokenTransfer(cfg, account, sdk, accounts[i].Address.ToBase58(), cfg.USDC, 8)
 		comptroller.ApproveAndMint(cfg, accounts[i], sdk, FAddr4, OAddr4, accounts[i].Address, Utils.ToIntByPrecise("10000", 6))
 		comptroller.EnterMarkets(cfg, accounts[i], sdk, comptrollerAddr, accounts[i].Address, []interface{}{FAddr3, FAddr4})
 		//comptroller.Borrow(cfg, accounts[i], sdk, FAddr2, accounts[i].Address,  Utils.ToIntByPrecise("1",8))
@@ -81,7 +81,7 @@ func TestBatchBorrow2(t *testing.T) {
 	}
 }
 
-func TestBorrowBTC(t *testing.T) {
+func TestBorrWBTC(t *testing.T) {
 	cfg, account, sdk := Utils.GetPrvConfig()
 	comptrollerAddr, _ := utils.AddressFromHexString(cfg.Comptroller)
 	accounts := dbHelper.QueryAccountFromDb(60, 10)
@@ -111,7 +111,7 @@ func TestStakeETHBorrow(t *testing.T) {
 	comptrollerAddr, _ := utils.AddressFromHexString(cfg.Comptroller)
 	accounts := dbHelper.QueryAccountFromDb(0, 10)
 	FAddr4, _ := utils.AddressFromHexString(cfg.FETH)
-	OAddr4, _ := utils.AddressFromHexString(cfg.OETH)
+	OAddr4, _ := utils.AddressFromHexString(cfg.ETH)
 	//FAddr2, _ := utils.AddressFromHexString(cfg.FRENBTC)
 	FAddr3, _ := utils.AddressFromHexString(cfg.FRENBTC)
 	//comptroller.Mint(cfg, account, sdk, FAddr2, account.Address, 100000000000)
@@ -122,7 +122,7 @@ func TestStakeETHBorrow(t *testing.T) {
 	for i := 0; i < len(accounts); i++ {
 		log.Infof("run****************:%d", i)
 		//otoken.TransferAllTestToken(cfg,account,sdk,accounts[i].Address.ToBase58())
-		otoken.OTokenTransfer(cfg, account, sdk, accounts[i].Address.ToBase58(), cfg.OETH, 18)
+		otoken.OTokenTransfer(cfg, account, sdk, accounts[i].Address.ToBase58(), cfg.ETH, 18)
 
 		comptroller.ApproveAndMint(cfg, accounts[i], sdk, FAddr4, OAddr4, accounts[i].Address, Utils.ToIntByPrecise("1", 18))
 		comptroller.EnterMarkets(cfg, accounts[i], sdk, comptrollerAddr, accounts[i].Address, []interface{}{FAddr3, FAddr4})
@@ -135,7 +135,7 @@ func TestStakeETHBorrow2(t *testing.T) {
 
 	////accounts := dbHelper.QueryAccountFromDb(0, 1)
 	//FAddr, _ := utils.AddressFromHexString(cfg.FETH)
-	//OToken, _ := utils.AddressFromHexString(cfg.OETH)
+	//OToken, _ := utils.AddressFromHexString(cfg.ETH)
 	////Utils.ToIntByPrecise("1", precise)
 	//comptroller.ApproveAndMint(cfg, account, sdk, FAddr, OToken, account.Address, Utils.ToIntByPrecise("10000",8))
 	////comptroller.ApproveAndMintWing(cfg, accounts[0], sdk, FAddr, OToken, accounts[0].Address, Utils.ToIntByPrecise("1",100000))
@@ -147,10 +147,10 @@ func TestStakeBTCBorrow(t *testing.T) {
 	comptrollerAddr, _ := utils.AddressFromHexString(cfg.Comptroller)
 	accounts := dbHelper.QueryAccountFromDb(520, 10)
 	FAddr4, _ := utils.AddressFromHexString(cfg.FBTC)
-	OAddr4, _ := utils.AddressFromHexString(cfg.OWBTC)
+	OAddr4, _ := utils.AddressFromHexString(cfg.WBTC)
 	//FAddr2, _ := utils.AddressFromHexString(cfg.FRENBTC)
 	FAddr3, _ := utils.AddressFromHexString(cfg.FETH)
-	//OAddr3, _ := utils.AddressFromHexString(cfg.OETH)
+	//OAddr3, _ := utils.AddressFromHexString(cfg.ETH)
 
 	//comptroller.Mint(cfg, account, sdk, FAddr2, account.Address, 100000000000)
 	//comptroller.Mint(cfg, account, sdk, FAddr3, account.Address, 100000000000)
@@ -160,7 +160,7 @@ func TestStakeBTCBorrow(t *testing.T) {
 	for i := 0; i < len(accounts); i++ {
 		log.Infof("run****************:%d", i)
 		//otoken.TransferAllTestToken(cfg,account,sdk,accounts[i].Address.ToBase58())
-		otoken.OTokenTransfer(cfg, account, sdk, accounts[i].Address.ToBase58(), cfg.OWBTC, 8)
+		otoken.OTokenTransfer(cfg, account, sdk, accounts[i].Address.ToBase58(), cfg.WBTC, 8)
 
 		comptroller.ApproveAndMint(cfg, accounts[i], sdk, FAddr4, OAddr4, accounts[i].Address, Utils.ToIntByPrecise("1", 8))
 		comptroller.EnterMarkets(cfg, accounts[i], sdk, comptrollerAddr, accounts[i].Address, []interface{}{FAddr3, FAddr4})

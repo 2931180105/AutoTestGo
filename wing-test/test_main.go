@@ -44,8 +44,8 @@ func main() {
 	//OToken.GenerateAccountsToken(cfg, account, sdk)
 	//AT9sH4s84NGJYVqNHQWN6vkgb7jQ12eR7p
 	//OToken.WingTokenTransfer(cfg, account, sdk, "ANxSSzWmFnAtqWBtq2KthP73oX4bHf9FyZ")
-
-	OToken.TransferAllTestToken(cfg, account, sdk, "AWsu8qvRAYvzzkJJdNU57vmU2MrAmQ15PH")
+	OToken.BalanceOfAllToken(cfg, sdk, account.Address.ToBase58())
+	//OToken.TransferAllTestToken(cfg, account, sdk, "AWsu8qvRAYvzzkJJdNU57vmU2MrAmQ15PH")
 }
 
 //func deployContract(cfg *config.Config, account *goSdk.Account, genSdk *goSdk.OntologySdk) {

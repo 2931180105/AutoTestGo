@@ -136,13 +136,13 @@ func AddAllSupportToken(cfg *config.Config, account *goSdk.Account, sdk *goSdk.O
 		log.Errorf("send ONTd tx failed, err: %s********", err)
 	}
 	Utils.PrintSmartEventByHash_Ont(sdk, hash1.ToHexString())
-	hash1, err = sdk.SendTransaction(Add_support_token(cfg, account, sdk, "USDC", cfg.OUSDC))
+	hash1, err = sdk.SendTransaction(Add_support_token(cfg, account, sdk, "USDC", cfg.USDC))
 	if err != nil {
 		log.Errorf("send USDC tx failed, err: %s********", err)
 		return
 	}
 	Utils.PrintSmartEventByHash_Ont(sdk, hash1.ToHexString())
-	hash1, err = sdk.SendTransaction(Add_support_token(cfg, account, sdk, "WBTC", cfg.OWBTC))
+	hash1, err = sdk.SendTransaction(Add_support_token(cfg, account, sdk, "WBTC", cfg.WBTC))
 	if err != nil {
 		log.Errorf("send  WBTC failed, err: %s********", err)
 		return
@@ -166,7 +166,7 @@ func AddAllSupportToken(cfg *config.Config, account *goSdk.Account, sdk *goSdk.O
 	Utils.PrintSmartEventByHash_Ont(sdk, hash1.ToHexString())
 
 	Utils.PrintSmartEventByHash_Ont(sdk, hash1.ToHexString())
-	hash1, err = sdk.SendTransaction(Add_support_token(cfg, account, sdk, "ETH", cfg.OETH))
+	hash1, err = sdk.SendTransaction(Add_support_token(cfg, account, sdk, "ETH", cfg.ETH))
 	if err != nil {
 		log.Errorf("send  ETH failed, err: %s********", err)
 		return
@@ -182,13 +182,13 @@ func UpdateAllSuuportToken(cfg *config.Config, account *goSdk.Account, sdk *goSd
 	}
 	time.Sleep(time.Second * 3)
 	Utils.PrintSmartEventByHash_Ont(sdk, hash1.ToHexString())
-	hash1, err = sdk.SendTransaction(Update_support_token(cfg, account, sdk, "ETH", cfg.OETH))
+	hash1, err = sdk.SendTransaction(Update_support_token(cfg, account, sdk, "ETH", cfg.ETH))
 	if err != nil {
 		log.Errorf("send  tx failed, err: %s********", err)
 		return
 	}
 	Utils.PrintSmartEventByHash_Ont(sdk, hash1.ToHexString())
-	hash1, err = sdk.SendTransaction(Update_support_token(cfg, account, sdk, "BTC", cfg.OWBTC))
+	hash1, err = sdk.SendTransaction(Update_support_token(cfg, account, sdk, "BTC", cfg.WBTC))
 	if err != nil {
 		log.Errorf("send  tx failed, err: %s********", err)
 		return

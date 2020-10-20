@@ -22,7 +22,7 @@ func GetTestConfig() (*config.Config, *goSdk.Account, *goSdk.OntologySdk) {
 	return cfg, account, sdk
 }
 
-func TestDeployContractOETHToken(t *testing.T) {
+func TestDeployContractETHToken(t *testing.T) {
 	cfg, account, sdk := GetTestConfig()
 	//fmt.Println(cfg, account, sdk)
 	QueryPoolByAddress(cfg, account, sdk, cfg.Comptroller)

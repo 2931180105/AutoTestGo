@@ -764,8 +764,8 @@ func Set_exchange_rate(cfg *config.Config, account *goSdk.Account, genSdk *goSdk
 //get_exchange_rate
 func Get_exchange_rate(cfg *config.Config, account *goSdk.Account, genSdk *goSdk.OntologySdk) {
 	WingGovAddr, _ := utils.AddressFromHexString(cfg.WingGov)
-	OETHAddr, _ := utils.AddressFromBase58(cfg.ONT)
-	token := Utils.NewToken("ONT", 1, OETHAddr)
+	ETHAddr, _ := utils.AddressFromBase58(cfg.ONT)
+	token := Utils.NewToken("ONT", 1, ETHAddr)
 	sink := OntCommon.NewZeroCopySink(nil)
 	sink.WriteString("get_exchange_rate")
 	token.Serialize(sink)

@@ -26,7 +26,7 @@ func TestApproveAndMint(t *testing.T) {
 	cfg, account, sdk := Utils.GetPrvConfig()
 	//accounts := dbHelper.QueryAccountFromDb(0, 1)
 	FAddr, _ := utils.AddressFromHexString(cfg.FETH)
-	OToken, _ := utils.AddressFromHexString(cfg.OETH)
+	OToken, _ := utils.AddressFromHexString(cfg.ETH)
 	//Utils.ToIntByPrecise("1", precise)
 	comptroller.ApproveAndMint(cfg, account, sdk, FAddr, OToken, account.Address, Utils.ToIntByPrecise("10000", 8))
 	//comptroller.ApproveAndMintWing(cfg, accounts[0], sdk, FAddr, OToken, accounts[0].Address, Utils.ToIntByPrecise("1",100000))
@@ -52,7 +52,7 @@ func TestApproveAndMintETH(t *testing.T) {
 func TestApproveAndMintUSDC(t *testing.T) {
 	cfg, account, sdk := Utils.GetPrvConfig()
 	FAddr, _ := utils.AddressFromHexString(cfg.FUSDC)
-	OToken, _ := utils.AddressFromHexString(cfg.OUSDC)
+	OToken, _ := utils.AddressFromHexString(cfg.USDC)
 	comptroller.ApproveAndMintWing(cfg, account, sdk, FAddr, OToken, account.Address, Utils.ToIntByPrecise("1", 1000))
 	//u128,_:=common.Uint256FromHexString("ffffffffffffffffffffffffffffffff00")
 	comptroller.ApproveAndMint(cfg, account, sdk, FAddr, OToken, account.Address, Utils.ToIntByPrecise("1", 1000))

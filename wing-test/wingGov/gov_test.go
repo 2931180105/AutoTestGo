@@ -103,8 +103,8 @@ func TestStakingMore(t *testing.T) {
 }
 func TestAddSuuportToken(t *testing.T) {
 	cfg, account, sdk := Utils.GetTestConfig()
-	hash1, err := sdk.SendTransaction(Add_support_token(cfg, account, sdk, "WBTC", cfg.OWBTC))
-	log.Infof("hexstring: %s", cfg.OWBTC)
+	hash1, err := sdk.SendTransaction(Add_support_token(cfg, account, sdk, "WBTC", cfg.WBTC))
+	log.Infof("hexstring: %s", cfg.WBTC)
 	if err != nil {
 		log.Errorf("send Add_support_token tx failed, err: %s********", err)
 	}

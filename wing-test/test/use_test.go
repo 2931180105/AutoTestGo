@@ -45,14 +45,14 @@ func TestStep_AddSupportToken(t *testing.T) {
 	//todo：add support token
 	cfg, account, sdk := Utils.GetPrvConfig()
 
-	hash1, err := sdk.SendTransaction(WingGovMethod.Update_support_token(cfg, account, sdk, "ETH", cfg.OETH))
+	hash1, err := sdk.SendTransaction(WingGovMethod.Update_support_token(cfg, account, sdk, "ETH", cfg.ETH))
 	if err != nil {
 		log.Errorf("send  tx failed, err: %s********", err)
 		return
 	}
 	Utils.PrintSmartEventByHash_Ont(sdk, hash1.ToHexString())
 	//WingGovMethod.AddSupportTokenAndSend(cfg, account, sdk, "WING", cfg.GovToken)
-	//WingGovMethod.AddSupportTokenAndSend(cfg, account, sdk,"ETH",cfg.OETH)
+	//WingGovMethod.AddSupportTokenAndSend(cfg, account, sdk,"ETH",cfg.ETH)
 	//WingGovMethod.AddSupportTokenAndSend(cfg, account, sdk,"DAI",cfg.ODAI)\
 
 }
