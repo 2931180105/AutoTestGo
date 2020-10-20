@@ -7,28 +7,16 @@
   "BtcX": "235d7d9551b67887388bfb15b70363f6ce428541",
   "LockProxy": "50db55b5b8bdff4219a94c9c3bf22cf699ebdced",
   "ToAddress": "826Fff572D2Ca512D4E393a63e46Ca28Fa17994f",
-  "FromAssetHash": "0000000000000000000000000000000000000001",
+  "FromAssetHash": "0000000000000000000000000000000000000002",
   "ToChainId": 2,
-  "To": "APHNPLz2u1JUXyD8rhryLaoQrW46J3P6y2",
+  "To": "AG4pZwKa9cr8ca7PED7FqzUfcwnrQ2N26w",
   "Amount": 200,
-  "GasPrice": 500,
-  "GasLimit": 20000,
+  "GasPrice": 2500,
+  "GasLimit": 1000000,
   "Rpc": [
-    "http://172.168.3.205:20336",
-    "http://172.168.3.205:20336",
-    "http://172.168.3.226:20336",
-    "http://172.168.3.227:20336",
-    "http://172.168.3.228:20336",
-    "http://172.168.3.229:20336",
-    "http://172.168.3.230:20336",
-    "http://172.168.3.231:20336",
-    "http://172.168.3.232:20336",
-    "http://172.168.3.233:20336",
-    "http://172.168.3.234:20336",
-    "http://172.168.3.235:20336",
-    "http://172.168.3.236:20336",
-    "http://172.168.3.237:20336",
-    "http://172.168.3.238:20336"
+    "http://polaris3.ont.io:20336",
+    "http://polaris4.ont.io:20336"
+
   ],
   "ConsensusPeerPath": [
     [
@@ -37,7 +25,7 @@
     ]
   ],
   "TxNum": 100,
-  "TxFactor": 1000,
+  "TxFactor": 1,
   "RoutineNum": 1,
   "TPS": 1,
   "StartNonce": 200,

@@ -51,7 +51,7 @@ func OTokenTransfer(cfg *config.Config, account *goSdk.Account, sdk *goSdk.Ontol
 		log.Infof("txhash: %s", hash1.ToHexString())
 	}
 	time.Sleep(time.Second * 3)
-	//WingUtils.PrintSmartEventByHash_Ont(sdk, hash1.ToHexString())
+	WingUtils.PrintSmartEventByHash_Ont(sdk, hash1.ToHexString())
 }
 
 func WingTokenTransfer(cfg *config.Config, account *goSdk.Account, genSdk *goSdk.OntologySdk, toAddrees string) {
