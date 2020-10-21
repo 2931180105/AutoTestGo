@@ -148,7 +148,7 @@ func GetTestConfigAddAccts() (*config.Config, *goSdk.Account, *goSdk.OntologySdk
 
 func GetPrvConfig() (*config.Config, *goSdk.Account, *goSdk.OntologySdk) {
 	var sdk = goSdk.NewOntologySdk()
-	configPath := "/Users/yaoyao/go/src/github.com/mockyz/AutoTestGo/wing-test/config_prv3.json"
+	configPath := "/home/ubuntu/go/src/github.com/mockyz/AutoTestGo/wing-test/config_prv.json"
 	cfg, err := config.ParseConfig(configPath)
 	if err != nil {
 		log.Errorf("ParseConfig error:%s", err)

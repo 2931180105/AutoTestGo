@@ -454,11 +454,11 @@ func Query_unbound_to_pool_count(cfg *config.Config, genSdk *goSdk.OntologySdk) 
 func Deposit(cfg *config.Config, account *goSdk.Account, genSdk *goSdk.OntologySdk) *types.MutableTransaction {
 	WingGovAddr, _ := utils.AddressFromHexString(cfg.WingGov)
 	ZeroPoolAddr, _ := utils.AddressFromHexString(cfg.ZeroPool)
-	OUSDTAddr, _ := utils.AddressFromHexString(cfg.OUSDT)
+	USDTAddr, _ := utils.AddressFromHexString(cfg.USDT)
 	falge := true
 	FromAddr := account.Address
 
-	params := []interface{}{FromAddr, ZeroPoolAddr, OUSDTAddr, cfg.Amount, falge}
+	params := []interface{}{FromAddr, ZeroPoolAddr, USDTAddr, cfg.Amount, falge}
 	mutTx, err := genSdk.WasmVM.NewInvokeWasmVmTransaction(cfg.GasPrice, cfg.GasLimit, WingGovAddr, "unbound_to_pool", params)
 	if err != nil {
 		fmt.Println("construct tx err", err)
@@ -473,10 +473,10 @@ func Deposit(cfg *config.Config, account *goSdk.Account, genSdk *goSdk.OntologyS
 func Withdraw(cfg *config.Config, account *goSdk.Account, genSdk *goSdk.OntologySdk) *types.MutableTransaction {
 	WingGovAddr, _ := utils.AddressFromHexString(cfg.WingGov)
 	ZeroPoolAddr, _ := utils.AddressFromHexString(cfg.ZeroPool)
-	OUSDTAddr, _ := utils.AddressFromHexString(cfg.OUSDT)
+	USDTAddr, _ := utils.AddressFromHexString(cfg.USDT)
 	falge := true
 	ToAddr := account.Address
-	params := []interface{}{ToAddr, ZeroPoolAddr, OUSDTAddr, cfg.Amount, falge}
+	params := []interface{}{ToAddr, ZeroPoolAddr, USDTAddr, cfg.Amount, falge}
 	mutTx, err := genSdk.WasmVM.NewInvokeWasmVmTransaction(cfg.GasPrice, cfg.GasLimit, WingGovAddr, "withdraw", params)
 	if err != nil {
 		fmt.Println("construct tx err", err)
@@ -491,8 +491,8 @@ func Withdraw(cfg *config.Config, account *goSdk.Account, genSdk *goSdk.Ontology
 func Get_lock_asset(cfg *config.Config, account *goSdk.Account, genSdk *goSdk.OntologySdk) *common.PreExecResult {
 	WingGovAddr, _ := utils.AddressFromHexString(cfg.WingGov)
 	ZeroPoolAddr, _ := utils.AddressFromHexString(cfg.ZeroPool)
-	OUSDTAddr, _ := utils.AddressFromHexString(cfg.OUSDT)
-	params := []interface{}{ZeroPoolAddr, OUSDTAddr}
+	USDTAddr, _ := utils.AddressFromHexString(cfg.USDT)
+	params := []interface{}{ZeroPoolAddr, USDTAddr}
 	resut, _ := genSdk.WasmVM.PreExecInvokeWasmVMContract(WingGovAddr, "get_lock_asset", params)
 	log.Infof("Get_lock_asset: %s", resut.Result)
 	return resut
@@ -502,10 +502,10 @@ func Get_lock_asset(cfg *config.Config, account *goSdk.Account, genSdk *goSdk.On
 func Black_pool(cfg *config.Config, account *goSdk.Account, genSdk *goSdk.OntologySdk) *types.MutableTransaction {
 	WingGovAddr, _ := utils.AddressFromHexString(cfg.WingGov)
 	ZeroPoolAddr, _ := utils.AddressFromHexString(cfg.ZeroPool)
-	OUSDTAddr, _ := utils.AddressFromHexString(cfg.OUSDT)
+	USDTAddr, _ := utils.AddressFromHexString(cfg.USDT)
 	falge := true
 	ToAddr := account.Address
-	params := []interface{}{ToAddr, ZeroPoolAddr, OUSDTAddr, cfg.Amount, falge}
+	params := []interface{}{ToAddr, ZeroPoolAddr, USDTAddr, cfg.Amount, falge}
 	mutTx, err := genSdk.WasmVM.NewInvokeWasmVmTransaction(cfg.GasPrice, cfg.GasLimit, WingGovAddr, "black_pool", params)
 	if err != nil {
 		fmt.Println("construct tx err", err)

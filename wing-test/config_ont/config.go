@@ -24,6 +24,9 @@ type Config struct {
 	FBTC               string   `json:"FBTC"`
 	FETH               string   `json:"FETH"`
 	FUSDT              string   `json:"FUSDT"`
+	FWING              string   `json:"FWING"`
+	FUSDC              string   `json:"FUSDC"`
+	FRENBTC            string   `json:"FRENBTC"`
 	IBTC               string   `json:"IBTC"`
 	IETH               string   `json:"IETH"`
 	IUSDT              string   `json:"IUSDT"`

@@ -16,17 +16,17 @@ import (
 func TestEnterMarkets(t *testing.T) {
 	cfg, account, sdk := Utils.GetPrvConfig()
 	comptrollerAddr, _ := utils.AddressFromHexString(cfg.Comptroller)
-	FETH, _ := utils.AddressFromHexString(cfg.FETH)
+	FBTC, _ := utils.AddressFromHexString(cfg.IBTC)
 
-	ftokenS := []interface{}{FETH}
+	ftokenS := []interface{}{FBTC}
 	comptroller.EnterMarkets(cfg, account, sdk, comptrollerAddr, account.Address, ftokenS)
 }
 
 func TestApproveAndMint(t *testing.T) {
 	cfg, account, sdk := Utils.GetPrvConfig()
 	//accounts := dbHelper.QueryAccountFromDb(0, 1)
-	FAddr, _ := utils.AddressFromHexString(cfg.FETH)
-	OToken, _ := utils.AddressFromHexString(cfg.ETH)
+	FAddr, _ := utils.AddressFromHexString(cfg.IBTC)
+	OToken, _ := utils.AddressFromHexString(cfg.WBTC)
 	//Utils.ToIntByPrecise("1", precise)
 	comptroller.ApproveAndMint(cfg, account, sdk, FAddr, OToken, account.Address, Utils.ToIntByPrecise("10000", 8))
 	//comptroller.ApproveAndMintWing(cfg, accounts[0], sdk, FAddr, OToken, accounts[0].Address, Utils.ToIntByPrecise("1",100000))
@@ -36,7 +36,7 @@ func TestApproveAndMint(t *testing.T) {
 func TestApproveAndMintWing2(t *testing.T) {
 	cfg, _, sdk := Utils.GetPrvConfig()
 	accounts := dbHelper.QueryAccountFromDb(0, 3)
-	FAddr, _ := utils.AddressFromHexString(cfg.FWING)
+	FAddr, _ := utils.AddressFromHexString(cfg.FBTC)
 	OToken, _ := utils.AddressFromHexString(cfg.GovToken)
 	comptroller.ApproveAndMintWing(cfg, accounts[2], sdk, FAddr, OToken, accounts[2].Address, Utils.ToIntByPrecise("1", 1000))
 	comptroller.ApproveAndMintWing(cfg, accounts[2], sdk, FAddr, OToken, accounts[2].Address, Utils.ToIntByPrecise("1", 100))
@@ -61,7 +61,7 @@ func TestApproveAndMintUSDC(t *testing.T) {
 func TestAReedemWing(t *testing.T) {
 	cfg, account, sdk := Utils.GetPrvConfig()
 	accounts := dbHelper.QueryAccountFromDb(0, 1)
-	FAddr, _ := utils.AddressFromHexString(cfg.FWING)
+	FAddr, _ := utils.AddressFromHexString(cfg.FBTC)
 	comptroller.RedeemToken(cfg, account, sdk, FAddr, account.Address, Utils.ToIntByPrecise("1", 1))
 	comptroller.RedeemToken(cfg, accounts[0], sdk, FAddr, accounts[0].Address, Utils.ToIntByPrecise("1", 1))
 }
@@ -69,7 +69,7 @@ func TestAReedemWing(t *testing.T) {
 func TestAReedem(t *testing.T) {
 	cfg, _, sdk := Utils.GetPrvConfig()
 	accounts := dbHelper.QueryAccountFromDbByBase58("AHrrpe6zXduNZNvH1XkJPK9VXdC51b6oqv")
-	FAddr, _ := utils.AddressFromHexString(cfg.FWING)
+	FAddr, _ := utils.AddressFromHexString(cfg.FBTC)
 	//pkey, _ := hex.DecodeString("")
 	//pri, _ := keypair.DeserializePrivateKey(pkey)
 	//accounts := goSdk.Account{

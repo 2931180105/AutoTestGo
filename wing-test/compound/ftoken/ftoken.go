@@ -101,7 +101,7 @@ func FtokenLiquidateBorrow(cfg *config.Config, account *goSdk.Account, genSdk *g
 	FTokenAddr, _ := go_sdk_utils.AddressFromHexString(fToken)
 	payer := account.Address
 	borrower, _ := go_sdk_utils.AddressFromBase58(cfg.AuthAddr)
-	ftokenCollateral, _ := go_sdk_utils.AddressFromHexString(cfg.OUSDT)
+	ftokenCollateral, _ := go_sdk_utils.AddressFromHexString(cfg.USDT)
 	params := []interface{}{payer, borrower, cfg.Amount, ftokenCollateral}
 	mutTx, err := genSdk.WasmVM.NewInvokeWasmVmTransaction(cfg.GasPrice, cfg.GasLimit, FTokenAddr, "liquidateBorrow", params)
 	if err != nil {

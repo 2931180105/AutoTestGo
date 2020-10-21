@@ -193,7 +193,7 @@ func UpdateAllSuuportToken(cfg *config.Config, account *goSdk.Account, sdk *goSd
 		log.Errorf("send  tx failed, err: %s********", err)
 		return
 	}
-	hash1, err = sdk.SendTransaction(Update_support_token(cfg, account, sdk, "USDT", cfg.OUSDT))
+	hash1, err = sdk.SendTransaction(Update_support_token(cfg, account, sdk, "USDT", cfg.USDT))
 	if err != nil {
 		log.Errorf("send  tx failed, err: %s********", err)
 		return

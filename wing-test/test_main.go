@@ -14,8 +14,8 @@ var sdk = goSdk.NewOntologySdk()
 
 func main() {
 	log.InitLog(log.InfoLog, log.PATH, log.Stdout)
-	//configPath := "wing-test/config_prv3.json"
-	configPath := "wing-test/config_testnet2.json"
+	//configPath := "wing-test/config_prv.json"
+	configPath := "wing-test/config_testnet.json"
 
 	cfg, err := config.ParseConfig(configPath)
 	if err != nil {
@@ -44,8 +44,8 @@ func main() {
 	//OToken.GenerateAccountsToken(cfg, account, sdk)
 	//AT9sH4s84NGJYVqNHQWN6vkgb7jQ12eR7p
 	//OToken.WingTokenTransfer(cfg, account, sdk, "ANxSSzWmFnAtqWBtq2KthP73oX4bHf9FyZ")
-	OToken.BalanceOfAllToken(cfg, sdk, account.Address.ToBase58())
-	//OToken.TransferAllTestToken(cfg, account, sdk, "AWsu8qvRAYvzzkJJdNU57vmU2MrAmQ15PH")
+	//OToken.BalanceOfAllToken(cfg, sdk, account.Address.ToBase58())
+	OToken.TransferAllTestToken(cfg, account, sdk, "AG4pZwKa9cr8ca7PED7FqzUfcwnrQ2N26w")
 }
 
 //func deployContract(cfg *config.Config, account *goSdk.Account, genSdk *goSdk.OntologySdk) {

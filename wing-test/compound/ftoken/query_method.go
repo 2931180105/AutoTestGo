@@ -11,12 +11,11 @@ import (
 //TODO： init/wing token set gov address
 func GetAllBalanceOfUnderlying(address string) {
 	cfg, _, sdk := Utils.GetPrvConfig()
-	BalanceOfUnderlying(cfg, address, sdk, cfg.FWING)
-	BalanceOfUnderlying(cfg, address, sdk, cfg.FUSDC)
-	BalanceOfUnderlying(cfg, address, sdk, cfg.FRENBTC)
-	BalanceOfUnderlying(cfg, address, sdk, cfg.FONT)
+	//BalanceOfUnderlying(cfg, address, sdk, cfg.FBTC)
+	//BalanceOfUnderlying(cfg, address, sdk, cfg.FUSDC)
+	//BalanceOfUnderlying(cfg, address, sdk, cfg.FRENBTC)
+	//BalanceOfUnderlying(cfg, address, sdk, cfg.FONT)
 	BalanceOfUnderlying(cfg, address, sdk, cfg.FETH)
-	BalanceOfUnderlying(cfg, address, sdk, cfg.FETH9)
 }
 
 func AllMarkets(sdk *goSdk.OntologySdk, comptrooller OntCommon.Address) {

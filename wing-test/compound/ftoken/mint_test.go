@@ -27,7 +27,7 @@ func TestBatchMint(t *testing.T) {
 	FAddr2, _ := utils.AddressFromHexString(cfg.FRENBTC)
 	FAddr3, _ := utils.AddressFromHexString(cfg.FBTC)
 	FAddr4, _ := utils.AddressFromHexString(cfg.FUSDC)
-	FAddr5, _ := utils.AddressFromHexString(cfg.FWING)
+	FAddr5, _ := utils.AddressFromHexString(cfg.FBTC)
 	OAddr, _ := utils.AddressFromHexString(cfg.ETH)
 	OAddr2, _ := utils.AddressFromHexString(cfg.RENBTC)
 	OAddr3, _ := utils.AddressFromHexString(cfg.WBTC)
