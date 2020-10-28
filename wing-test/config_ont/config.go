@@ -12,7 +12,7 @@ type Config struct {
 	SDRate             uint64   `json:"SDRate"`
 	WingStartTime      uint64   `json:"WingStartTime"`
 	Oracle             string   `json:"Oracle"`
-	GovToken           string   `json:"GovToken"`
+	GovToken           string   `json:"WingGov"`
 	ZeroPool           string   `json:"ZeroPool"`
 	WingGov            string   `json:"WingGov"`
 	Comptroller        string   `json:"Comptroller"`

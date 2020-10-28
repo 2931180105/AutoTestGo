@@ -10,7 +10,7 @@
   "FromAssetHash": "0000000000000000000000000000000000000002",
   "ToChainId": 2,
   "To": "AG4pZwKa9cr8ca7PED7FqzUfcwnrQ2N26w",
-  "Amount": 10000,
+  "Amount": 100000,
   "GasPrice": 2500,
   "GasLimit": 1000000,
   "Rpc": [
