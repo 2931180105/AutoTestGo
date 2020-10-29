@@ -16,7 +16,6 @@
   "Rpc": [
     "http://polaris3.ont.io:20336",
     "http://polaris4.ont.io:20336"
-
   ],
   "ConsensusPeerPath": [
     [

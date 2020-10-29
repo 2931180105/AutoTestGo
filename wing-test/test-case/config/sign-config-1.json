@@ -1,0 +1,15 @@
+{
+  "m": 1,
+  "payer": {
+    "account_addr": "AJkQo3Fo7JKxtrKZPqYJQuh9cXH38w7rVt",
+    "wallet_file": "./wallet.json",
+    "pub_key": "03ba66e3f5a82bf670c0513438cd4f7939d4cae5f4d94f15bccbd6375a2e31bb63"
+  },
+  "signers": [
+    {
+      "account_addr": "AJkQo3Fo7JKxtrKZPqYJQuh9cXH38w7rVt",
+      "wallet_file": "./wallet.json",
+      "pub_key": "03ba66e3f5a82bf670c0513438cd4f7939d4cae5f4d94f15bccbd6375a2e31bb63"
+    }
+  ]
+}

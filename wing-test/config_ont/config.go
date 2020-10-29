@@ -12,7 +12,7 @@ type Config struct {
 	SDRate             uint64   `json:"SDRate"`
 	WingStartTime      uint64   `json:"WingStartTime"`
 	Oracle             string   `json:"Oracle"`
-	GovToken           string   `json:"WingGov"`
+	GovToken           string   `json:"GovToken"`
 	ZeroPool           string   `json:"ZeroPool"`
 	WingGov            string   `json:"WingGov"`
 	Comptroller        string   `json:"Comptroller"`
@@ -21,12 +21,18 @@ type Config struct {
 	GlobalParam        string   `json:"GlobalParam"`
 	Pool2              string   `json:"Pool2"`
 	InterestRate       string   `json:"uint64erestRate"`
-	FBTC               string   `json:"FBTC"`
-	FETH               string   `json:"FETH"`
-	FUSDT              string   `json:"FUSDT"`
-	FWING              string   `json:"FWING"`
-	FUSDC              string   `json:"FUSDC"`
-	FRENBTC            string   `json:"FRENBTC"`
+	FWBTC				 string `json:"FWBTC"`
+	FONT 			string `json:"FONT"`
+	FRENBTC			 string `json:"FrenBTC"`
+	FUSDC 				string `json:"FUSDC"`
+	FWING 				string `json:"FWING"`
+	FETH 				string `json:"FETH"`
+	FDAI 				string `json:"FDAI"`
+	FUSDT				 string `json:"FUSDT"`
+	FSUSD 				string `json:"FSUSD"`
+	FNEO 				string `json:"FNEO"`
+	FOKB 				string `json:"FOKB"`
+	FUNI 				string `json:"FUNI"`
 	IBTC               string   `json:"IBTC"`
 	IETH               string   `json:"IETH"`
 	IUSDT              string   `json:"IUSDT"`
@@ -66,6 +72,7 @@ type Config struct {
 	SaveTx             bool     `json:"SaveTx"`
 	SendTx             bool     `json:"SendTx"`
 }
+
 
 func ParseConfig(path string) (*Config, error) {
 	fileContent, err := ioutil.ReadFile(path)

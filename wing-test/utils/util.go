@@ -71,6 +71,21 @@ func SignTxAndSendTx(sdk *goSdk.OntologySdk, tx *types.MutableTransaction, nonce
 	return nil
 }
 
+func SignAndSendTx(sdk *goSdk.OntologySdk, tx *types.MutableTransaction,  signer goSdk.Signer) (string, error) {
+	tx.Sigs = nil
+	err := sdk.SignToTransaction(tx, signer)
+	if err != nil {
+		return "", fmt.Errorf("sign tx failed, err: %s", err)
+	}
+	hash, err := sdk.SendTransaction(tx)
+	if err != nil {
+		log.Error(err)
+		return "", err
+	}
+	PrintSmartEventByHash_Ont(sdk, hash.ToHexString())
+	return hash.ToHexString(),nil
+}
+
 func SignTx(sdk *goSdk.OntologySdk, tx *types.MutableTransaction, nonce uint32, signer goSdk.Signer) error {
 	if nonce != 0 {
 		tx.Nonce = nonce

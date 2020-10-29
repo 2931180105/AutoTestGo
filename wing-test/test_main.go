@@ -41,26 +41,15 @@ func main() {
 	//AJkQo3Fo7JKxtrKZPqYJQuh9cXH38w7rVt
 	//OToken.DelegateToProxyAllTestToken(cfg, account, sdk)
 	//OToken.OTokenTransfer(cfg, account, sdk, "ANxSSzWmFnAtqWBtq2KthP73oX4bHf9FyZ", cfg.ODAI)
-	//OToken.GenerateAccountsToken(cfg, account, sdk)
+	//OToken.BalanceOfAllToken(cfg, sdk, "AY8nbMpMFr4b7BscKmT9UrnSC7e4GkH5GZ")
+	//return
+	OToken.GenerateAccountsToken(cfg, account, sdk)
 	//AT9sH4s84NGJYVqNHQWN6vkgb7jQ12eR7p
 	//OToken.WingTokenTransfer(cfg, account, sdk, "ANxSSzWmFnAtqWBtq2KthP73oX4bHf9FyZ")
-	//OToken.BalanceOfAllToken(cfg, sdk, account.Address.ToBase58())
-	OToken.TransferAllTestToken(cfg, account, sdk, "APHNPLz2u1JUXyD8rhryLaoQrW46J3P6y2")
+	//distribute test token
+	//OToken.TransferAllTestToken(cfg, account, sdk, "APHNPLz2u1JUXyD8rhryLaoQrW46J3P6y2")
 }
 
-//func deployContract(cfg *config.Config, account *goSdk.Account, genSdk *goSdk.OntologySdk) {
-//	//reslut := Utils.DeployContractOracle(cfg, account, sdk)
-//	//log.Infof("hash",reslut.ToHexString())
-//	reslut1 := DeployContractWingToken(cfg, account, sdk)
-//	log.Infof("hash", reslut1.ToHexString())
-//	reslut2 := DeployContractWingGov(cfg, account, sdk)
-//	log.Infof("hash", reslut2.ToHexString())
-//	reslut3 := DeployContractProfit(cfg, account, sdk)
-//	log.Infof("hash", reslut3.ToHexString())
-//	reslut4 := DeployContractOracle(cfg, account, sdk)
-//	log.Infof("hash", reslut4.ToHexString())
-//	//Utils.DeployContractFlash(cfg, account, sdk)
-//}
 
 func bacthTest(cfg *config.Config, account *goSdk.Account, genSdk *goSdk.OntologySdk) {
 	exitChan := make(chan int)
