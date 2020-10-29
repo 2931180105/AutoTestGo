@@ -15,7 +15,7 @@ type TestRunner struct {
 	Market           *ftoken.FlashToken
 	OntSDk           *ontSDK.OntologySdk
 	Account 		 *ontSDK.Account
-	TestConfig 			 *config.Config
+	TestConfig 		 *config.Config
 }
 
 type ClaimWingAtMarket struct {
@@ -62,3 +62,19 @@ func NewTestRunner2(cfg *config.Config,account *ontSDK.Account,sdk *ontSDK.Ontol
 	market ,err := ftoken.NewFlashToken(sdk,makretAddr,account,cfg.GasPrice,cfg.GasLimit)
 	return &TestRunner{Comptroller:comp,Market:market,OntSDk:sdk,Account:account,TestConfig:cfg},nil
 }
+
+
+func NewMarkets(cfg *config.Config, account *ontSDK.Account, sdk *ontSDK.OntologySdk, makretAddr string) (*ftoken.FlashToken, error) {
+	comp,err := comptroller.NewComptroller(sdk,cfg.Comptroller,account,cfg.GasPrice,cfg.GasLimit)
+	if err !=nil {
+		log.Errorf("NewComptroller  err:%v",err)
+	}
+	market ,err := ftoken.NewFlashToken2(sdk,makretAddr,account,cfg,comp)
+	if err !=nil {
+		log.Errorf("NewFlashToken  err:%v",err)
+	}
+	market.TestConfig = cfg
+
+	return market, nil
+}
+

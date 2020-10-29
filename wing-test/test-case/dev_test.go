@@ -13,7 +13,7 @@ func TestTestRunner_WingSpeed4BorrowTest(t *testing.T) {
 	if err != nil {
 		log.Errorf("NewTestRunner err : %v", err)
 	}
-	testRunner.WingSpeed4BorrowTest("APcNMJBUVEnbdRKMuBuhUGjJZbhpRKgkwY")
+	testRunner.WingSpeed4BorrowTest("AT9sH4s84NGJYVqNHQWN6vkgb7jQ12eR7p")
 }
 func TestTestRunner_WingSpeed4SuppluyTestTest(t *testing.T) {
 	testRunner, err := NewTestRunner("config/config.json",)
@@ -99,3 +99,7 @@ func TestWingSpeeds2(t *testing.T) {
 //	}
 //	syn.Wait()
 //}
+func TestBorrowByBlock(t *testing.T)  {
+	//syn := new(sync.WaitGroup)
+	TestBorrowRateByBlock("FETH",syn)
+}

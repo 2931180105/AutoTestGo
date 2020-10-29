@@ -1,0 +1,61 @@
+{
+  "name": "MyWallet",
+  "defaultAccountAddress": "ANNWCXei7Zh3J2VjvmZFRokgZvfKSm4p7b",
+  "version": "1.1",
+  "scrypt": {
+    "p": 8,
+    "n": 16384,
+    "r": 8,
+    "dkLen": 64
+  },
+  "identities": [],
+  "accounts": [
+    {
+      "address": "AT9sH4s84NGJYVqNHQWN6vkgb7jQ12eR7p",
+      "label": "",
+      "lock": false,
+      "algorithm": "ECDSA",
+      "parameters": {
+        "curve": "P-256"
+      },
+      "key": "znSCHLfXXgmy7Q5VjTz6eNWhrlsWMaV9R4Zf3k0lk0uKJdFq2nMfuoE+EVSdRoYG",
+      "enc-alg": "aes-256-gcm",
+      "salt": "AlAogD1gCDDxrtnCPKsaCg==",
+      "isDefault": true,
+      "publicKey": "02eabc810ab7fc54f3b7c3041b6f6dd914cd863e111e03c68a2e88fa23ed56ffa0",
+      "signatureScheme": "SHA256withECDSA"
+    },
+    {
+      "address": "AJkQo3Fo7JKxtrKZPqYJQuh9cXH38w7rVt",
+      "label": "70c4a238-d836-4fd6-bed1-6954da792d07",
+      "lock": false,
+      "algorithm": "ECDSA",
+      "parameters": {
+        "curve": "P-256"
+      },
+      "key": "wBjbHmX6wNztLlNsQcwO4uhYOk87evTQQY20m8DPHnwSTo4gLNE/FlmqU8lpY5pk",
+      "enc-alg": "aes-256-gcm",
+      "hash": "sha256",
+      "salt": "ze1TJM06RDfgTtPZXQxkZA==",
+      "isDefault": false,
+      "publicKey": "03ba66e3f5a82bf670c0513438cd4f7939d4cae5f4d94f15bccbd6375a2e31bb63",
+      "signatureScheme": "SHA256withECDSA"
+    },
+    {
+      "address": "ANNWCXei7Zh3J2VjvmZFRokgZvfKSm4p7b",
+      "label": "43b32f1e-abe5-4220-8da2-01ea9cc9c2b1",
+      "lock": false,
+      "algorithm": "ECDSA",
+      "parameters": {
+        "curve": "P-256"
+      },
+      "key": "/k1HVZiNmftzjT46Qk7Q9fTfvNw+pqerhDYdHEpDtDTDP0Aqw4g6hEu5AhPCWJOa",
+      "enc-alg": "aes-256-gcm",
+      "hash": "sha256",
+      "salt": "5l4MgcwbI3fJJcZJmPLWrw==",
+      "isDefault": false,
+      "publicKey": "02175d2e2e216d34e22160f8cfb57febdef6fdf74985a92688a96fba56b0c0a834",
+      "signatureScheme": "SHA256withECDSA"
+    }
+  ]
+}

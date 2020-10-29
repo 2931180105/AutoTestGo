@@ -41,9 +41,9 @@ func main() {
 	//AJkQo3Fo7JKxtrKZPqYJQuh9cXH38w7rVt
 	//OToken.DelegateToProxyAllTestToken(cfg, account, sdk)
 	//OToken.OTokenTransfer(cfg, account, sdk, "ANxSSzWmFnAtqWBtq2KthP73oX4bHf9FyZ", cfg.ODAI)
-	//OToken.BalanceOfAllToken(cfg, sdk, "AY8nbMpMFr4b7BscKmT9UrnSC7e4GkH5GZ")
+	OToken.BalanceOfAllToken(cfg, sdk, "AY8nbMpMFr4b7BscKmT9UrnSC7e4GkH5GZ")
 	//return
-	OToken.GenerateAccountsToken(cfg, account, sdk)
+	//OToken.GenerateAccountsToken(cfg, account, sdk)
 	//AT9sH4s84NGJYVqNHQWN6vkgb7jQ12eR7p
 	//OToken.WingTokenTransfer(cfg, account, sdk, "ANxSSzWmFnAtqWBtq2KthP73oX4bHf9FyZ")
 	//distribute test token

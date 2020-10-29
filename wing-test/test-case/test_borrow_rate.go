@@ -70,9 +70,8 @@ func TestBorrowRateNew(marketName string, sy *sync.WaitGroup) {
 	log.Infof("marketName: %s,userUnderlying0:%v,expSupplyInterestAdd: %v,userUnderlyingAdd:%v,expUserUnderlyingAdd:%v,expUserUnderlyingAdd - userUnderlyingAdd: %v", marketName, userUnderlying0, expSupplyInterestAdd, userUnderlyingAdd, expUserUnderlyingAdd, big.NewInt(0).Sub(userUnderlyingAdd, expUserUnderlyingAdd))
 }
 
-func TestBorrowRateByBlock(marketName string, sy *sync.WaitGroup) {
-	defer sy.Done()
-	testRunner, err := NewTestRunner("../config.json")
+func TestBorrowRateByBlock(marketName string) {
+	testRunner, err := NewTestRunner("/home/ubuntu/go/src/github.com/mockyz/AutoTestGo/wing-test/config_prv.json")
 	if err != nil {
 		log.Errorf("NewTestRunner err : %v", err)
 	}
@@ -132,22 +131,3 @@ func TestBorrowRateByBlock(marketName string, sy *sync.WaitGroup) {
 	expUserUnderlyingAdd := big.NewInt(0).Mul(big.NewInt(0).Div(userSupply, totalSupply), expSupplyInterestAdd)
 	log.Infof("marketName: %s,userUnderlying0:%v,expSupplyInterestAdd: %v,userUnderlyingAdd:%v,expUserUnderlyingAdd:%v,expUserUnderlyingAdd - userUnderlyingAdd: %v", marketName, userUnderlying0, expSupplyInterestAdd, userUnderlyingAdd, expUserUnderlyingAdd, big.NewInt(0).Sub(userUnderlyingAdd, expUserUnderlyingAdd))
 }
-//
-//func InitTestAccount(marketName, cfgFile, signFile string) {
-//	tr, err := NewTestRunner(cfgFile)
-//	if err != nil {
-//		log.Errorf("NewTestRunner err : %v", err)
-//		return
-//	}
-//	markets := make([]common.Address, 0)
-//	for _, m := range tr.FlashPoolConfig.Markets {
-//		markets = append(markets, m.GetAddr())
-//	}
-//	res, hash, err := tr.Comptroller.EnterMarkets(tr.ParsedSignConfig.Signers[0].Address, markets, false)
-//	if err != nil {
-//		log.Errorf("EnterMarkets err : %v", err)
-//		return
-//	}
-//	log.Infof("enterMarkets res: %v, txHash: %s", res, hash)
-//
-//}

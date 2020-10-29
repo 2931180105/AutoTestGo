@@ -2,6 +2,8 @@ package ftoken
 
 import (
 	"fmt"
+	"github.com/mockyz/AutoTestGo/wing-test/compound/comptroller"
+	config "github.com/mockyz/AutoTestGo/wing-test/config_ont"
 	"github.com/mockyz/AutoTestGo/wing-test/utils"
 	ontSDK "github.com/ontio/ontology-go-sdk"
 	"github.com/ontio/ontology/common"
@@ -15,6 +17,8 @@ type FlashToken struct {
 	sdk    *ontSDK.OntologySdk
 	signer *ontSDK.Account
 	addr   common.Address
+	Comptroller *comptroller.Comptroller
+	TestConfig *config.Config
 	gasPrice uint64
 	gasLimit uint64
 }
@@ -43,6 +47,28 @@ func NewFlashToken(sdk *ontSDK.OntologySdk, contractAddr string, signer *ontSDK.
 		addr:     addr,
 		gasPrice: gasPrice,
 		gasLimit: gasLimit,
+	}, nil
+}
+func NewFlashToken2(sdk *ontSDK.OntologySdk, contractAddr string, signer *ontSDK.Account, cfg *config.Config,comptroller *comptroller.Comptroller) (*FlashToken, error) {
+	_, err := sdk.GetCurrentBlockHeight()
+	if err != nil {
+		return nil, fmt.Errorf("NewFlashToken: cannot access ontology network through addr %s", err)
+	}
+	addr, err := common.AddressFromHexString(contractAddr)
+	if err != nil {
+		addr, err = common.AddressFromBase58(contractAddr)
+		if err != nil {
+			return nil, fmt.Errorf("NewFlashToken: invalid contract addr %s", contractAddr)
+		}
+	}
+	return &FlashToken{
+		sdk:      sdk,
+		signer:   signer,
+		addr:     addr,
+		gasPrice: cfg.GasPrice,
+		gasLimit: cfg.GasLimit,
+		TestConfig:cfg,
+		Comptroller: comptroller,
 	}, nil
 }
 
@@ -552,7 +578,7 @@ func (this *FlashToken) PendingAdmin() (common.Address, error) {
 	return res, err
 }
 
-func (this *FlashToken) Comptroller() (common.Address, error) {
+func (this *FlashToken) GetComptroller() (common.Address, error) {
 	method := "comptroller"
 	params := []interface{}{}
 	res, err := utils.PreExecuteAddress(this.sdk, this.addr, method, params)

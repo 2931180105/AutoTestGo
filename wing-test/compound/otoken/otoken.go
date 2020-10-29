@@ -132,7 +132,7 @@ func BalanceOfOToken(goSdk *goSdk.OntologySdk, toAddrees, oToken string) {
 	}
 	log.Infof("result: %v", balance)
 }
-func BalanceOfOToken2(goSdk *goSdk.OntologySdk, toAddrees, oToken string) (*big.Int, error ){
+func BalanceOfOToken2(goSdk *goSdk.OntologySdk, oToken, toAddrees string) (*big.Int, error ){
 	BalanceAddr, _ := utils.AddressFromBase58(toAddrees)
 	TokenAddr, _ := utils.AddressFromHexString(oToken)
 	params := []interface{}{"balanceOf", []interface{}{BalanceAddr}}
