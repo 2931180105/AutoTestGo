@@ -134,7 +134,7 @@ func InitOep4(sdk *goSdk.OntologySdk, acc *goSdk.Account, avmPath string) {
 		log.Errorf("InitOep4: decode avm code failed, err: %s", err)
 	}
 	contractAddr := common.AddressFromVmCode(avmCode)
-	initHash, err := sdk.NeoVM.InvokeNeoVMContract(DEFAULT_GAS_PRICE, DEFAULT_GAS_LIMIT, acc, contractAddr,
+	initHash, err := sdk.NeoVM.InvokeNeoVMContract(DEFAULT_GAS_PRICE, DEFAULT_GAS_LIMIT, acc, acc, contractAddr,
 		[]interface{}{"init", []interface{}{}})
 	if err != nil {
 		log.Errorf("InitOep4: init contract failed, err: %s", err)
