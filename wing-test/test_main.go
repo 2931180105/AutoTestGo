@@ -1,16 +1,50 @@
 package main
 
 import (
+	"crypto/rand"
+	"github.com/mockyz/AutoTestGo/wing-test/compound/comptroller"
+	"github.com/mockyz/AutoTestGo/wing-test/compound/ftoken"
 	OToken "github.com/mockyz/AutoTestGo/wing-test/compound/otoken"
 	config "github.com/mockyz/AutoTestGo/wing-test/config_ont"
 	Utils "github.com/mockyz/AutoTestGo/wing-test/utils"
 	goSdk "github.com/ontio/ontology-go-sdk"
 	"github.com/ontio/ontology-go-sdk/client"
+	"github.com/ontio/ontology/common"
 	"github.com/ontio/ontology/common/log"
+	"math"
+	"math/big"
 	"time"
 )
 
 var sdk = goSdk.NewOntologySdk()
+var assetMap = map[string]string{
+	"162654622062ea6762647babab2462dffa712837": "f44504f293aef233f0978f08b50de78ac482b9ba",
+	"423dbe4f99c5958d01d4b2993318f28f1baedb02": "c1f7446cf1e20c90699520ff5fe43a92a17d9954",
+	"e37e6a5283682b383ecebb712e68cf1d36239d1b": "1a3d6116cf5ebd67f5be0f5216e43d037d509a09",
+	"5ae2c02bc24138820e336e18f4aa4eb13d25a84d": "0bbb55ae5bfb2e7a4c6021d1911f68175f785cc7",
+	"e5059eac5fb89ae1c8976ea3c3cba7e0786165a9": "86246c2d1cee5ddd71dea2b355a9596ff62fcbb9",
+	"789c0aa3277430c10d0dc5b1924ece0060bfa100": "dd9580a013f2c515a846d56ec71f8ae4edce98eb",
+	"37c99c10037e000149541d925f61c4e1fa77a60d": "ab6ea82ae231b9140ebbe7d7e61c77f64e5a3979",
+	"a1ad38537dd0d9240ff40e56be654434303e858a": "bdb2e7f64ddc5b5cf1d289cec60b5562b74d9410",
+	"cb09fdb1745510ee07dfc9d8e6dc69741578513a": "939c0747c3fdc57493df00dd9fabac6f79b491c0",
+	"d7edfcd57d784c4a19c991cdb9b391e6b6442fd5": "276bfedfbaae07569e3d77715880645b9434a4af",
+	"4eb4dc1179b8192243273017e8729162134c1af4": "9d64665c20363d3204482f95875d8ebbdd39fb56",
+	"d3ae6627969363d18517208ba59f540400d7dcaf": "3e8c1a687b7cb9c5d796f5d5e576f804e770dac9",
+}
+var decimalMap = map[string]uint64{
+	"f44504f293aef233f0978f08b50de78ac482b9ba": 8,
+	"c1f7446cf1e20c90699520ff5fe43a92a17d9954": 9,
+	"1a3d6116cf5ebd67f5be0f5216e43d037d509a09": 8,
+	"0bbb55ae5bfb2e7a4c6021d1911f68175f785cc7": 6,
+	"86246c2d1cee5ddd71dea2b355a9596ff62fcbb9": 9,
+	"dd9580a013f2c515a846d56ec71f8ae4edce98eb": 18,
+	"ab6ea82ae231b9140ebbe7d7e61c77f64e5a3979": 18,
+	"bdb2e7f64ddc5b5cf1d289cec60b5562b74d9410": 6,
+	"939c0747c3fdc57493df00dd9fabac6f79b491c0": 18,
+	"276bfedfbaae07569e3d77715880645b9434a4af": 8,
+	"9d64665c20363d3204482f95875d8ebbdd39fb56": 18,
+	"3e8c1a687b7cb9c5d796f5d5e576f804e770dac9": 18,
+}
 
 func main() {
 	log.InitLog(log.InfoLog, log.PATH, log.Stdout)
@@ -98,4 +132,55 @@ func bacthTest(cfg *config.Config, account *goSdk.Account, genSdk *goSdk.Ontolog
 	}
 	endTestTime := time.Now().UnixNano() / 1e6
 	log.Infof("send tps is %f", float64(txNum*1000)/float64(endTestTime-startTestTime))
+}
+
+func batchOperate(cfg *config.Config, genSdk *goSdk.OntologySdk) {
+	flashAddress, err := common.AddressFromHexString(cfg.Comptroller)
+	if err != nil {
+		log.Errorf("batchOperate, common.AddressFromHexString error: %s", err)
+	}
+	ftokenAddressList, err := comptroller.GetAllMarkets(genSdk, cfg.Comptroller)
+	if err != nil {
+		log.Errorf("batchOperate, comptroller.GetAllMarkets error: %s", err)
+	}
+	accounts := Utils.GetAccounts(cfg)
+	for i := 0; i < 3000; i++ {
+		acc := accounts[i]
+		for _, ftokenAddress := range ftokenAddressList {
+			otokenAddress, err := common.AddressFromHexString(assetMap[ftokenAddress.ToHexString()])
+			if err != nil {
+				log.Errorf("batchOperate, common.AddressFromHexString error: %s", err)
+			}
+			amount, err := rand.Int(rand.Reader, big.NewInt(50))
+			if err != nil {
+				log.Errorf("batchOperate, common.AddressFromHexString error: %s", err)
+			}
+			comptroller.ApproveAndMint(cfg, acc, genSdk, ftokenAddress, otokenAddress, acc.Address,
+				new(big.Int).Mul(amount, new(big.Int).SetUint64(uint64(math.Pow10(int(decimalMap[otokenAddress.ToHexString()]))))))
+			itokenAddress, err := ftoken.GetITokenAddress(genSdk, ftokenAddress)
+			if err != nil {
+				log.Errorf("batchOperate, ftoken.GetITokenAddress error: %s", err)
+			}
+			comptroller.ApproveAndMint(cfg, acc, genSdk, itokenAddress, otokenAddress, acc.Address,
+				new(big.Int).Mul(amount, new(big.Int).SetUint64(uint64(math.Pow10(int(decimalMap[otokenAddress.ToHexString()]))))))
+		}
+	}
+	for i := 3000; i < 4000; i++ {
+		acc := accounts[i]
+		for _, ftokenAddress := range ftokenAddressList {
+			otokenAddress, err := common.AddressFromHexString(assetMap[ftokenAddress.ToHexString()])
+			if err != nil {
+				log.Errorf("batchOperate, common.AddressFromHexString error: %s", err)
+			}
+			comptroller.ApproveAndMint(cfg, acc, genSdk, ftokenAddress, otokenAddress, acc.Address,
+				new(big.Int).Mul(big.NewInt(100), new(big.Int).SetUint64(uint64(math.Pow10(int(decimalMap[otokenAddress.ToHexString()]))))))
+			comptroller.EnterMarkets(cfg, acc, genSdk, flashAddress, acc.Address, []interface{}{ftokenAddress})
+			amount, err := rand.Int(rand.Reader, big.NewInt(50))
+			if err != nil {
+				log.Errorf("batchOperate, common.AddressFromHexString error: %s", err)
+			}
+			comptroller.Borrow(cfg, acc, genSdk, ftokenAddress, acc.Address,
+				new(big.Int).Mul(amount, new(big.Int).SetUint64(uint64(math.Pow10(int(decimalMap[otokenAddress.ToHexString()]))))))
+		}
+	}
 }

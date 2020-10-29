@@ -250,11 +250,32 @@ func ExchangeRateCurrent(sdk *goSdk.OntologySdk, ftoken OntCommon.Address) {
 
 //allMarkets
 
-func AllMarkets(sdk *goSdk.OntologySdk, comptrooller OntCommon.Address) {
-	params := []interface{}{}
-	result, err := sdk.WasmVM.PreExecInvokeWasmVMContract(comptrooller, "allMarkets", params)
+func GetAllMarkets(genSdk *goSdk.OntologySdk, flashAddress string) ([]OntCommon.Address, error) {
+	contractAddress, err := OntCommon.AddressFromHexString(flashAddress)
 	if err != nil {
-		fmt.Println("construct tx err", err)
+		return nil, fmt.Errorf("getAllMarkets, ocommon.AddressFromHexString error: %s", err)
 	}
-	log.Infof("totalBorrowCurrent:%s", result.Result)
+	preExecResult, err := genSdk.WasmVM.PreExecInvokeWasmVMContract(contractAddress,
+		"allMarkets", []interface{}{})
+	if err != nil {
+		return nil, fmt.Errorf("getAllMarkets, this.sdk.WasmVM.PreExecInvokeWasmVMContract error: %s", err)
+	}
+	r, err := preExecResult.Result.ToByteArray()
+	if err != nil {
+		return nil, fmt.Errorf("getAllMarkets, preExecResult.Result.ToByteArray error: %s", err)
+	}
+	source := OntCommon.NewZeroCopySource(r)
+	allMarkets := make([]OntCommon.Address, 0)
+	l, _, irregular, eof := source.NextVarUint()
+	if irregular || eof {
+		return nil, fmt.Errorf("getAllMarkets, source.NextVarUint error")
+	}
+	for i := 0; uint64(i) < l; i++ {
+		addr, eof := source.NextAddress()
+		if eof {
+			return nil, fmt.Errorf("getAllMarkets, source.NextAddress error")
+		}
+		allMarkets = append(allMarkets, addr)
+	}
+	return allMarkets, nil
 }

@@ -2,11 +2,14 @@ package ftoken
 
 import (
 	"fmt"
+	"math/big"
+
 	"github.com/mockyz/AutoTestGo/common/log"
 	config "github.com/mockyz/AutoTestGo/wing-test/config_ont"
 	goSdk "github.com/ontio/ontology-go-sdk"
 	"github.com/ontio/ontology-go-sdk/common"
 	go_sdk_utils "github.com/ontio/ontology-go-sdk/utils"
+	ocommon "github.com/ontio/ontology/common"
 	"github.com/ontio/ontology/core/types"
 )
 
@@ -541,4 +544,21 @@ func signTx(sdk *goSdk.OntologySdk, tx *types.MutableTransaction, nonce uint32, 
 		return fmt.Errorf("sign tx failed, err: %s", err)
 	}
 	return nil
+}
+
+func GetITokenAddress(genSdk *goSdk.OntologySdk, ftokenAddress ocommon.Address) (ocommon.Address, error) {
+	preExecResult, err := genSdk.WasmVM.PreExecInvokeWasmVMContract(ftokenAddress,
+		"insuranceAddr", []interface{}{})
+	if err != nil {
+		return ocommon.ADDRESS_EMPTY, fmt.Errorf("GetITokenAddress, this.sdk.WasmVM.PreExecInvokeWasmVMContract error: %s", err)
+	}
+	r, err := preExecResult.Result.ToByteArray()
+	if err != nil {
+		return ocommon.ADDRESS_EMPTY, fmt.Errorf("GetITokenAddress, preExecResult.Result.ToByteArray error: %s", err)
+	}
+	insuranceAddress, err := ocommon.AddressParseFromBytes(r)
+	if err != nil {
+		return ocommon.ADDRESS_EMPTY, fmt.Errorf("GetITokenAddress, common.AddressParseFromBytes error: %s", err)
+	}
+	return insuranceAddress, nil
 }
