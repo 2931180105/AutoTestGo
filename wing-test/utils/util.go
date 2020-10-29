@@ -64,7 +64,6 @@ func SignTxAndSendTx(sdk *goSdk.OntologySdk, tx *types.MutableTransaction, nonce
 	}
 	hash, err := sdk.SendTransaction(tx)
 	if err != nil {
-		log.Error(err)
 		return err
 	}
 	PrintSmartEventByHash_Ont(sdk, hash.ToHexString())

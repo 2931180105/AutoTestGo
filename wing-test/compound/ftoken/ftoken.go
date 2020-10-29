@@ -2,8 +2,6 @@ package ftoken
 
 import (
 	"fmt"
-	"math/big"
-
 	"github.com/mockyz/AutoTestGo/common/log"
 	config "github.com/mockyz/AutoTestGo/wing-test/config_ont"
 	goSdk "github.com/ontio/ontology-go-sdk"

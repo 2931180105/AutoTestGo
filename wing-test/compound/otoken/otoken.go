@@ -95,10 +95,21 @@ func OTokenDelegateToProxy(cfg *config.Config, account *goSdk.Account, genSdk *g
 }
 
 func ApproveOToken(cfg *config.Config, account *goSdk.Account, genSdk *goSdk.OntologySdk, toAddrees OntCommon.Address, oToken OntCommon.Address, amount *big.Int) {
-	params := []interface{}{"approve", []interface{}{account.Address, toAddrees, amount}}
+	params1 := []interface{}{"balanceOf", []interface{}{account.Address}}
+	result, err := genSdk.NeoVM.PreExecInvokeNeoVMContract(oToken, params1)
+	if err != nil {
+		log.Error("genSdk.NeoVM.PreExecInvokeNeoVMContract", err)
+	}
+	b, err := result.Result.ToInteger()
+	if err != nil {
+		log.Error("result.Result.ToInteger", err)
+	}
+
+	params := []interface{}{"approve", []interface{}{account.Address, toAddrees, b}}
+
 	mutTx, err := genSdk.NeoVM.NewNeoVMInvokeTransaction(cfg.GasPrice, cfg.GasLimit, oToken, params)
 	if err != nil {
-		fmt.Println("construct tx err", err)
+		log.Error("construct tx err", err)
 	}
 	if err := WingUtils.SignTxAndSendTx(genSdk, mutTx, cfg.StartNonce, account); err != nil {
 		log.Error(err)

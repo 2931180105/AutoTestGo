@@ -4,7 +4,6 @@ import (
 	"crypto/rand"
 	"github.com/mockyz/AutoTestGo/wing-test/compound/comptroller"
 	"github.com/mockyz/AutoTestGo/wing-test/compound/ftoken"
-	OToken "github.com/mockyz/AutoTestGo/wing-test/compound/otoken"
 	config "github.com/mockyz/AutoTestGo/wing-test/config_ont"
 	Utils "github.com/mockyz/AutoTestGo/wing-test/utils"
 	goSdk "github.com/ontio/ontology-go-sdk"
@@ -48,18 +47,18 @@ var decimalMap = map[string]uint64{
 
 func main() {
 	log.InitLog(log.InfoLog, log.PATH, log.Stdout)
-	//configPath := "wing-test/config_prv.json"
-	configPath := "wing-test/config_testnet.json"
+	configPath := "wing-test/config_prv.json"
+	//configPath := "wing-test/config_testnet.json"
 
 	cfg, err := config.ParseConfig(configPath)
 	if err != nil {
 		log.Errorf("error: %s", err)
 	}
-	wallet, err := sdk.OpenWallet(cfg.Wallet)
-	if err != nil {
-		log.Errorf("error: %s", err)
-	}
-	account, _ := wallet.GetDefaultAccount([]byte(cfg.Password))
+	//wallet, err := sdk.OpenWallet(cfg.Wallet)
+	//if err != nil {
+	//	log.Errorf("error: %s", err)
+	//}
+	//account, _ := wallet.GetDefaultAccount([]byte(cfg.Password))
 	rpcClient := client.NewRpcClient()
 	rpcClient.SetAddress(cfg.Rpc[1])
 	sdk.SetDefaultClient(rpcClient)
@@ -79,7 +78,8 @@ func main() {
 	//AT9sH4s84NGJYVqNHQWN6vkgb7jQ12eR7p
 	//OToken.WingTokenTransfer(cfg, account, sdk, "ANxSSzWmFnAtqWBtq2KthP73oX4bHf9FyZ")
 	//OToken.BalanceOfAllToken(cfg, sdk, account.Address.ToBase58())
-	OToken.TransferAllTestToken(cfg, account, sdk, "AG4pZwKa9cr8ca7PED7FqzUfcwnrQ2N26w")
+	//OToken.TransferAllTestToken(cfg, account, sdk, "AG4pZwKa9cr8ca7PED7FqzUfcwnrQ2N26w")
+	batchOperate(cfg, sdk)
 }
 
 //func deployContract(cfg *config.Config, account *goSdk.Account, genSdk *goSdk.OntologySdk) {
@@ -144,43 +144,49 @@ func batchOperate(cfg *config.Config, genSdk *goSdk.OntologySdk) {
 		log.Errorf("batchOperate, comptroller.GetAllMarkets error: %s", err)
 	}
 	accounts := Utils.GetAccounts(cfg)
-	for i := 0; i < 3000; i++ {
-		acc := accounts[i]
-		for _, ftokenAddress := range ftokenAddressList {
-			otokenAddress, err := common.AddressFromHexString(assetMap[ftokenAddress.ToHexString()])
-			if err != nil {
-				log.Errorf("batchOperate, common.AddressFromHexString error: %s", err)
+	for i := 0; i < cfg.AccountNum-1000; i++ {
+		//go func() {
+			acc := accounts[i]
+			for _, ftokenAddress := range ftokenAddressList {
+				otokenAddress, err := common.AddressFromHexString(assetMap[ftokenAddress.ToHexString()])
+				if err != nil {
+					log.Errorf("batchOperate, common.AddressFromHexString error: %s", err)
+				}
+				amount, err := rand.Int(rand.Reader, big.NewInt(50))
+				if err != nil {
+					log.Errorf("batchOperate, common.AddressFromHexString error: %s", err)
+				}
+				comptroller.ApproveAndMint(cfg, acc, genSdk, ftokenAddress, otokenAddress, acc.Address,
+					new(big.Int).Mul(amount, new(big.Int).SetUint64(uint64(math.Pow10(int(decimalMap[otokenAddress.ToHexString()]))))))
+				itokenAddress, err := ftoken.GetITokenAddress(genSdk, ftokenAddress)
+				if err != nil {
+					log.Errorf("batchOperate, ftoken.GetITokenAddress error: %s", err)
+				}
+				comptroller.ApproveAndMint(cfg, acc, genSdk, itokenAddress, otokenAddress, acc.Address,
+					new(big.Int).Mul(amount, new(big.Int).SetUint64(uint64(math.Pow10(int(decimalMap[otokenAddress.ToHexString()]))))))
 			}
-			amount, err := rand.Int(rand.Reader, big.NewInt(50))
-			if err != nil {
-				log.Errorf("batchOperate, common.AddressFromHexString error: %s", err)
-			}
-			comptroller.ApproveAndMint(cfg, acc, genSdk, ftokenAddress, otokenAddress, acc.Address,
-				new(big.Int).Mul(amount, new(big.Int).SetUint64(uint64(math.Pow10(int(decimalMap[otokenAddress.ToHexString()]))))))
-			itokenAddress, err := ftoken.GetITokenAddress(genSdk, ftokenAddress)
-			if err != nil {
-				log.Errorf("batchOperate, ftoken.GetITokenAddress error: %s", err)
-			}
-			comptroller.ApproveAndMint(cfg, acc, genSdk, itokenAddress, otokenAddress, acc.Address,
-				new(big.Int).Mul(amount, new(big.Int).SetUint64(uint64(math.Pow10(int(decimalMap[otokenAddress.ToHexString()]))))))
-		}
+		//}()
+		time.Sleep(1000 * time.Millisecond)
 	}
-	for i := 3000; i < 4000; i++ {
-		acc := accounts[i]
-		for _, ftokenAddress := range ftokenAddressList {
-			otokenAddress, err := common.AddressFromHexString(assetMap[ftokenAddress.ToHexString()])
-			if err != nil {
-				log.Errorf("batchOperate, common.AddressFromHexString error: %s", err)
+	for i := cfg.AccountNum - 1000; i < cfg.AccountNum; i++ {
+		//go func() {
+			acc := accounts[i]
+			for _, ftokenAddress := range ftokenAddressList {
+				otokenAddress, err := common.AddressFromHexString(assetMap[ftokenAddress.ToHexString()])
+				if err != nil {
+					log.Errorf("batchOperate, common.AddressFromHexString error: %s", err)
+				}
+				comptroller.ApproveAndMint(cfg, acc, genSdk, ftokenAddress, otokenAddress, acc.Address,
+					new(big.Int).Mul(big.NewInt(100), new(big.Int).SetUint64(uint64(math.Pow10(int(decimalMap[otokenAddress.ToHexString()]))))))
+				comptroller.EnterMarkets(cfg, acc, genSdk, flashAddress, acc.Address, []interface{}{ftokenAddress})
+				amount, err := rand.Int(rand.Reader, big.NewInt(50))
+				if err != nil {
+					log.Errorf("batchOperate, common.AddressFromHexString error: %s", err)
+				}
+				comptroller.Borrow(cfg, acc, genSdk, ftokenAddress, acc.Address,
+					new(big.Int).Mul(amount, new(big.Int).SetUint64(uint64(math.Pow10(int(decimalMap[otokenAddress.ToHexString()]))))))
 			}
-			comptroller.ApproveAndMint(cfg, acc, genSdk, ftokenAddress, otokenAddress, acc.Address,
-				new(big.Int).Mul(big.NewInt(100), new(big.Int).SetUint64(uint64(math.Pow10(int(decimalMap[otokenAddress.ToHexString()]))))))
-			comptroller.EnterMarkets(cfg, acc, genSdk, flashAddress, acc.Address, []interface{}{ftokenAddress})
-			amount, err := rand.Int(rand.Reader, big.NewInt(50))
-			if err != nil {
-				log.Errorf("batchOperate, common.AddressFromHexString error: %s", err)
-			}
-			comptroller.Borrow(cfg, acc, genSdk, ftokenAddress, acc.Address,
-				new(big.Int).Mul(amount, new(big.Int).SetUint64(uint64(math.Pow10(int(decimalMap[otokenAddress.ToHexString()]))))))
-		}
+		//}()
+		time.Sleep(1000 * time.Millisecond)
 	}
 }
