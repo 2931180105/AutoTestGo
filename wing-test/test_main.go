@@ -145,7 +145,7 @@ func batchOperate(cfg *config.Config, genSdk *goSdk.OntologySdk) {
 	}
 	accounts := Utils.GetAccounts(cfg)
 	for i := 0; i < cfg.AccountNum-1000; i++ {
-		//go func() {
+		go func() {
 			acc := accounts[i]
 			for _, ftokenAddress := range ftokenAddressList {
 				otokenAddress, err := common.AddressFromHexString(assetMap[ftokenAddress.ToHexString()])
@@ -165,11 +165,11 @@ func batchOperate(cfg *config.Config, genSdk *goSdk.OntologySdk) {
 				comptroller.ApproveAndMint(cfg, acc, genSdk, itokenAddress, otokenAddress, acc.Address,
 					new(big.Int).Mul(amount, new(big.Int).SetUint64(uint64(math.Pow10(int(decimalMap[otokenAddress.ToHexString()]))))))
 			}
-		//}()
+		}()
 		time.Sleep(1000 * time.Millisecond)
 	}
 	for i := cfg.AccountNum - 1000; i < cfg.AccountNum; i++ {
-		//go func() {
+		go func() {
 			acc := accounts[i]
 			for _, ftokenAddress := range ftokenAddressList {
 				otokenAddress, err := common.AddressFromHexString(assetMap[ftokenAddress.ToHexString()])
@@ -186,7 +186,7 @@ func batchOperate(cfg *config.Config, genSdk *goSdk.OntologySdk) {
 				comptroller.Borrow(cfg, acc, genSdk, ftokenAddress, acc.Address,
 					new(big.Int).Mul(amount, new(big.Int).SetUint64(uint64(math.Pow10(int(decimalMap[otokenAddress.ToHexString()]))))))
 			}
-		//}()
+		}()
 		time.Sleep(1000 * time.Millisecond)
 	}
 }
