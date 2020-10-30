@@ -65,13 +65,13 @@
   "Wifs": [
     "L1nfGvz19cWXHDLeEMMC6vozhSLANCy9E2gNxh3YwHJMXReLddNw"
   ],
-  "TxNum": 30,
-  "TxFactor": 100,
-  "RoutineNum": 3,
-  "TPS": 3,
+  "TxNum": 5,
+  "TxFactor": 200,
+  "RoutineNum": 5,
+  "TPS": 5,
   "AccountNum": 4000,
   "StakeOnt": 10,
-  "StartNonce": 0,
+  "StartNonce": 3000,
   "SaveTx": false,
   "SendTx": true
 }

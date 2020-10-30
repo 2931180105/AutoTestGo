@@ -199,6 +199,10 @@ func GetAccounts(cfg *config.Config) []*goSdk.Account {
 	accounts := DbHelp.QueryAccountFromDb(0, cfg.AccountNum)
 	return accounts
 }
+func GetAccounts2(start, num int) []*goSdk.Account {
+	accounts := DbHelp.QueryAccountFromDb(start, num )
+	return accounts
+}
 func NewAccountToDb(wallet *goSdk.Wallet) {
 	db := DbHelp.SetupConnect()
 	pwd := []byte("123456")

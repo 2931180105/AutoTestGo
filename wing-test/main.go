@@ -1,17 +1,11 @@
 package main
 
 import (
-	"crypto/rand"
-	"github.com/mockyz/AutoTestGo/wing-test/compound/comptroller"
-	"github.com/mockyz/AutoTestGo/wing-test/compound/ftoken"
 	config "github.com/mockyz/AutoTestGo/wing-test/config_ont"
 	Utils "github.com/mockyz/AutoTestGo/wing-test/utils"
 	goSdk "github.com/ontio/ontology-go-sdk"
 	"github.com/ontio/ontology-go-sdk/client"
-	"github.com/ontio/ontology/common"
 	"github.com/ontio/ontology/common/log"
-	"math"
-	"math/big"
 	"time"
 )
 
@@ -79,30 +73,19 @@ func main() {
 	//OToken.WingTokenTransfer(cfg, account, sdk, "ANxSSzWmFnAtqWBtq2KthP73oX4bHf9FyZ")
 	//OToken.BalanceOfAllToken(cfg, sdk, account.Address.ToBase58())
 	//OToken.TransferAllTestToken(cfg, account, sdk, "AG4pZwKa9cr8ca7PED7FqzUfcwnrQ2N26w")
-	batchOperate(cfg, sdk)
+	bacthTest(cfg, sdk)
 }
 
-//func deployContract(cfg *config.Config, account *goSdk.Account, genSdk *goSdk.OntologySdk) {
-//	//reslut := Utils.DeployContractOracle(cfg, account, sdk)
-//	//log.Infof("hash",reslut.ToHexString())
-//	reslut1 := DeployContractWingToken(cfg, account, sdk)
-//	log.Infof("hash", reslut1.ToHexString())
-//	reslut2 := DeployContractWingGov(cfg, account, sdk)
-//	log.Infof("hash", reslut2.ToHexString())
-//	reslut3 := DeployContractProfit(cfg, account, sdk)
-//	log.Infof("hash", reslut3.ToHexString())
-//	reslut4 := DeployContractOracle(cfg, account, sdk)
-//	log.Infof("hash", reslut4.ToHexString())
-//	//Utils.DeployContractFlash(cfg, account, sdk)
-//}
 
-func bacthTest(cfg *config.Config, account *goSdk.Account, genSdk *goSdk.OntologySdk) {
+
+func bacthTest(cfg *config.Config, genSdk *goSdk.OntologySdk) {
 	exitChan := make(chan int)
-	wallet, _ := genSdk.CreateWallet("tmp.dat")
+	//wallet, _ := genSdk.CreateWallet("tmp.dat")
 	var txNum = cfg.TxNum * cfg.TxFactor
 	txNumPerRoutine := txNum / cfg.RoutineNum
 	tpsPerRoutine := int64(cfg.TPS / cfg.RoutineNum)
 	startTestTime := time.Now().UnixNano() / 1e6
+	accounts :=Utils.GetAccounts2(0,4000)
 	for i := uint(0); i < cfg.RoutineNum; i++ {
 		//rand.Int()%len(cfg.Rpc)随机获取一个接口
 		//client := NewRpcClient(cfg.Rpc[rand.Int()%len(cfg.Rpc)])
@@ -113,7 +96,9 @@ func bacthTest(cfg *config.Config, account *goSdk.Account, genSdk *goSdk.Ontolog
 				if cfg.SendTx {
 					sentNum++
 					//TODO : change to your batch func
-					Utils.NewAccountToDb(wallet)
+					//Utils.NewAccountToDb(wallet)
+					BatchBorrow(cfg,genSdk,accounts[nonce])
+					//BatchSupply(cfg,genSdk,accounts[nonce])
 					now := time.Now().UnixNano() / 1e6 // ms
 					diff := sentNum - (now-startTime)/1e3*tpsPerRoutine
 					if now > startTime && diff > 0 {
@@ -123,6 +108,7 @@ func bacthTest(cfg *config.Config, account *goSdk.Account, genSdk *goSdk.Ontolog
 					}
 				}
 				nonce++
+				log.Infof("run nonce :%d",nonce)
 			}
 			exitChan <- 1
 		}(uint32(txNumPerRoutine*i)+cfg.StartNonce, i)
@@ -132,61 +118,4 @@ func bacthTest(cfg *config.Config, account *goSdk.Account, genSdk *goSdk.Ontolog
 	}
 	endTestTime := time.Now().UnixNano() / 1e6
 	log.Infof("send tps is %f", float64(txNum*1000)/float64(endTestTime-startTestTime))
-}
-
-func batchOperate(cfg *config.Config, genSdk *goSdk.OntologySdk) {
-	flashAddress, err := common.AddressFromHexString(cfg.Comptroller)
-	if err != nil {
-		log.Errorf("batchOperate, common.AddressFromHexString error: %s", err)
-	}
-	ftokenAddressList, err := comptroller.GetAllMarkets(genSdk, cfg.Comptroller)
-	if err != nil {
-		log.Errorf("batchOperate, comptroller.GetAllMarkets error: %s", err)
-	}
-	accounts := Utils.GetAccounts(cfg)
-	for i := 0; i < cfg.AccountNum-1000; i++ {
-		go func() {
-			acc := accounts[i]
-			for _, ftokenAddress := range ftokenAddressList {
-				otokenAddress, err := common.AddressFromHexString(assetMap[ftokenAddress.ToHexString()])
-				if err != nil {
-					log.Errorf("batchOperate, common.AddressFromHexString error: %s", err)
-				}
-				amount, err := rand.Int(rand.Reader, big.NewInt(50))
-				if err != nil {
-					log.Errorf("batchOperate, common.AddressFromHexString error: %s", err)
-				}
-				comptroller.ApproveAndMint(cfg, acc, genSdk, ftokenAddress, otokenAddress, acc.Address,
-					new(big.Int).Mul(amount, new(big.Int).SetUint64(uint64(math.Pow10(int(decimalMap[otokenAddress.ToHexString()]))))))
-				itokenAddress, err := ftoken.GetITokenAddress(genSdk, ftokenAddress)
-				if err != nil {
-					log.Errorf("batchOperate, ftoken.GetITokenAddress error: %s", err)
-				}
-				comptroller.ApproveAndMint(cfg, acc, genSdk, itokenAddress, otokenAddress, acc.Address,
-					new(big.Int).Mul(amount, new(big.Int).SetUint64(uint64(math.Pow10(int(decimalMap[otokenAddress.ToHexString()]))))))
-			}
-		}()
-		time.Sleep(1000 * time.Millisecond)
-	}
-	for i := cfg.AccountNum - 1000; i < cfg.AccountNum; i++ {
-		go func() {
-			acc := accounts[i]
-			for _, ftokenAddress := range ftokenAddressList {
-				otokenAddress, err := common.AddressFromHexString(assetMap[ftokenAddress.ToHexString()])
-				if err != nil {
-					log.Errorf("batchOperate, common.AddressFromHexString error: %s", err)
-				}
-				comptroller.ApproveAndMint(cfg, acc, genSdk, ftokenAddress, otokenAddress, acc.Address,
-					new(big.Int).Mul(big.NewInt(100), new(big.Int).SetUint64(uint64(math.Pow10(int(decimalMap[otokenAddress.ToHexString()]))))))
-				comptroller.EnterMarkets(cfg, acc, genSdk, flashAddress, acc.Address, []interface{}{ftokenAddress})
-				amount, err := rand.Int(rand.Reader, big.NewInt(50))
-				if err != nil {
-					log.Errorf("batchOperate, common.AddressFromHexString error: %s", err)
-				}
-				comptroller.Borrow(cfg, acc, genSdk, ftokenAddress, acc.Address,
-					new(big.Int).Mul(amount, new(big.Int).SetUint64(uint64(math.Pow10(int(decimalMap[otokenAddress.ToHexString()]))))))
-			}
-		}()
-		time.Sleep(1000 * time.Millisecond)
-	}
 }
