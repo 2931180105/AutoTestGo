@@ -2,6 +2,7 @@ package main
 
 import (
 	config "github.com/mockyz/AutoTestGo/wing-test/config_ont"
+	test_case "github.com/mockyz/AutoTestGo/wing-test/test-case"
 	Utils "github.com/mockyz/AutoTestGo/wing-test/utils"
 	goSdk "github.com/ontio/ontology-go-sdk"
 	"github.com/ontio/ontology-go-sdk/client"
@@ -63,7 +64,9 @@ func main() {
 	//WingGov.Get_admin_address(cfg, account, sdk)
 	//WingGov.DeployContractWingGov(cfg, account, sdk)
 	//WingGov.WingTokenGetGovAddr(cfg, sdk)
-
+	accounts := Utils.GetAccounts2(0,1)
+	market,_ := test_case.NewMarkets(cfg,accounts[0],sdk,cfg.FNEO)
+	market.TestBorrowRateByBlock()
 	//AT9sH4s84NGJYVqNHQWN6vkgb7jQ12eR7p
 	//AJkQo3Fo7JKxtrKZPqYJQuh9cXH38w7rVt
 	//OToken.DelegateToProxyAllTestToken(cfg, account, sdk)

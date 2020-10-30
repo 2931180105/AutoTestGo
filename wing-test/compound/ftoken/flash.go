@@ -820,3 +820,21 @@ func (this *FlashToken) GetLastSettleTime() (*big.Int, error) {
 	}
 	return res, err
 }
+
+
+func GetITokenAddress(genSdk *ontSDK.OntologySdk, ftokenAddress common.Address) (common.Address, error) {
+	preExecResult, err := genSdk.WasmVM.PreExecInvokeWasmVMContract(ftokenAddress,
+		"insuranceAddr", []interface{}{})
+	if err != nil {
+		return common.ADDRESS_EMPTY, fmt.Errorf("GetITokenAddress, this.sdk.WasmVM.PreExecInvokeWasmVMContract error: %s", err)
+	}
+	r, err := preExecResult.Result.ToByteArray()
+	if err != nil {
+		return common.ADDRESS_EMPTY, fmt.Errorf("GetITokenAddress, preExecResult.Result.ToByteArray error: %s", err)
+	}
+	insuranceAddress, err := common.AddressParseFromBytes(r)
+	if err != nil {
+		return common.ADDRESS_EMPTY, fmt.Errorf("GetITokenAddress, common.AddressParseFromBytes error: %s", err)
+	}
+	return insuranceAddress, nil
+}
