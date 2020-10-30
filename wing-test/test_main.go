@@ -3,6 +3,7 @@ package main
 import (
 	OToken "github.com/mockyz/AutoTestGo/wing-test/compound/otoken"
 	config "github.com/mockyz/AutoTestGo/wing-test/config_ont"
+	test_case "github.com/mockyz/AutoTestGo/wing-test/test-case"
 	Utils "github.com/mockyz/AutoTestGo/wing-test/utils"
 	goSdk "github.com/ontio/ontology-go-sdk"
 	"github.com/ontio/ontology-go-sdk/client"
@@ -41,7 +42,16 @@ func main() {
 	//AJkQo3Fo7JKxtrKZPqYJQuh9cXH38w7rVt
 	//OToken.DelegateToProxyAllTestToken(cfg, account, sdk)
 	//OToken.OTokenTransfer(cfg, account, sdk, "ANxSSzWmFnAtqWBtq2KthP73oX4bHf9FyZ", cfg.ODAI)
+	acc :=Utils.GetAccounts(cfg)
+	market,err :=test_case.NewMarkets(cfg,acc[0],sdk,cfg.FWBTC)
+	if err != nil {
+		log.Errorf("NewMarkets: %s", err)
+	}
+	//market.TestBorrowRateByBlock()
+	market.WingSpeed4SuppluyTest("APHNPLz2u1JUXyD8rhryLaoQrW46J3P6y2")
+	return
 	OToken.BalanceOfAllToken(cfg, sdk, "AY8nbMpMFr4b7BscKmT9UrnSC7e4GkH5GZ")
+	log.Infof("tmp",account.Address.ToHexString())
 	//return
 	//OToken.GenerateAccountsToken(cfg, account, sdk)
 	//AT9sH4s84NGJYVqNHQWN6vkgb7jQ12eR7p

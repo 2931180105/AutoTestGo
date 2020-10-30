@@ -39,8 +39,7 @@ func TestReadFile(t *testing.T) {
 func TestGetTimeByTxhash(t *testing.T) {
 	hashTimes := make([]uint32, 0)
 	blockHeights := make([]uint32, 0)
-	hashs := []string{"95a73fc63eff77eef89fc7d440f168eeb72ae716a6881e816a0f3cfa81e2ad0d",
-		"25f9f32a744d3398e2faa238d6ba68a564db542de79130ef2c4bf58eb2c7e2c4",
+	hashs := []string{
 		"b865eb87967f111af94f84cfe6970a7b99c6b272360c3026b2bbe62afedc22e5",
 		"d9e50650f2498df36d20be3a37342f8178a598390fce26a56d48bd929d56ffce",
 		"eeeaad44565f35eaad098385354a630efed2763cf0c13f92d4683f528c71b4e1",
@@ -101,5 +100,7 @@ func TestWingSpeeds2(t *testing.T) {
 //}
 func TestBorrowByBlock(t *testing.T)  {
 	//syn := new(sync.WaitGroup)
-	TestBorrowRateByBlock("FETH",syn)
+
+
+
 }
