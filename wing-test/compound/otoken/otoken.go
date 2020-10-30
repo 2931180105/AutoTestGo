@@ -50,8 +50,8 @@ func OTokenTransfer(cfg *config.Config, account *goSdk.Account, sdk *goSdk.Ontol
 	} else {
 		log.Infof("txhash: %s", hash1.ToHexString())
 	}
-	time.Sleep(time.Second * 3)
-	WingUtils.PrintSmartEventByHash_Ont(sdk, hash1.ToHexString())
+	//time.Sleep(time.Second * 3)
+	//WingUtils.PrintSmartEventByHash_Ont(sdk, hash1.ToHexString())
 }
 
 func WingTokenTransfer(cfg *config.Config, account *goSdk.Account, genSdk *goSdk.OntologySdk, toAddrees string) {
@@ -142,25 +142,41 @@ func BalanceOfOToken(goSdk *goSdk.OntologySdk, toAddrees, oToken string) {
 		log.Errorf("BalanceOfOToken result.Result.ToInteger() :%v", err)
 	}
 	log.Infof("result: %v", balance)
-
+}
+func BalanceOfOToken2(goSdk *goSdk.OntologySdk, oToken, toAddrees string) (*big.Int, error ){
+	BalanceAddr, _ := utils.AddressFromBase58(toAddrees)
+	TokenAddr, _ := utils.AddressFromHexString(oToken)
+	params := []interface{}{"balanceOf", []interface{}{BalanceAddr}}
+	result, err := goSdk.NeoVM.PreExecInvokeNeoVMContract(TokenAddr, params)
+	if err != nil {
+		log.Errorf("BalanceOfOToken:%v", err)
+	}
+	balance, err := result.Result.ToInteger()
+	if err != nil {
+		log.Errorf("BalanceOfOToken result.Result.ToInteger() :%v", err)
+	}
+	log.Infof("result: %v", balance)
+	return balance,nil
 }
 
 func TransferAllTestToken(cfg *config.Config, account *goSdk.Account, sdk *goSdk.OntologySdk, toAddrees string) {
-	WingTokenTransfer(cfg, account, sdk, toAddrees)
+	//WingTokenTransfer(cfg, account, sdk, toAddrees)
 	//ToAddres, _ := utils.AddressFromBase58(toAddrees)
 	//_, _ = sdk.Native.Ont.Transfer(cfg.GasPrice, cfg.GasLimit, account, account, ToAddres, 1)
 	//_, _ = sdk.Native.Ong.Transfer(cfg.GasPrice, cfg.GasLimit, account, account, ToAddres, 100000000000)
-	//OTokenTransfer(cfg, account, sdk, toAddrees, cfg.ODAI, 18)
-	OTokenTransfer(cfg, account, sdk, toAddrees, cfg.RENBTC, 18)
+	OTokenTransfer(cfg, account, sdk, toAddrees, cfg.RENBTC, 8)
 	log.Infof("toaddress: %s", toAddrees)
 	OTokenTransfer(cfg, account, sdk, toAddrees, cfg.ETH, 18)
 	OTokenTransfer(cfg, account, sdk, toAddrees, cfg.DAI, 18)
+	OTokenTransfer(cfg, account, sdk, toAddrees, cfg.OKB, 18)
 	OTokenTransfer(cfg, account, sdk, toAddrees, cfg.UNI, 18)
 	OTokenTransfer(cfg, account, sdk, toAddrees, cfg.SUSD, 18)
 	OTokenTransfer(cfg, account, sdk, toAddrees, cfg.GovToken, 9)
-	OTokenTransfer(cfg, account, sdk, toAddrees, cfg.WBTC, 18)
+	OTokenTransfer(cfg, account, sdk, toAddrees, cfg.WBTC, 8)
 	OTokenTransfer(cfg, account, sdk, toAddrees, cfg.ONTd, 9)
 	OTokenTransfer(cfg, account, sdk, toAddrees, cfg.USDC, 6)
+	OTokenTransfer(cfg, account, sdk, toAddrees, cfg.NEO, 8)
+	OTokenTransfer(cfg, account, sdk, toAddrees, cfg.USDT, 6)
 
 }
 func BalanceOfAllToken(cfg *config.Config, goSdk *goSdk.OntologySdk, toAddrees string) {
@@ -190,8 +206,9 @@ func DelegateToProxyAllTestToken(cfg *config.Config, account *goSdk.Account, sdk
 }
 
 func GenerateAccountsToken(cfg *config.Config, admin *goSdk.Account, goSdk *goSdk.OntologySdk) {
-	accounts := DbHelp.QueryAccountFromDb(0, cfg.AccountNum)
+	accounts := DbHelp.QueryAccountFromDb(900, cfg.AccountNum)
 	for i := 0; i < cfg.AccountNum; i++ {
 		TransferAllTestToken(cfg, admin, goSdk, accounts[i].Address.ToBase58())
+		time.Sleep(time.Second/2)
 	}
 }

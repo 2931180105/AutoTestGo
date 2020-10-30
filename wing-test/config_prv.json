@@ -4,13 +4,11 @@
   "SDRate": 0,
   "WingStartTime": 20,
   "Oracle": "2927cb865be38d0fddce9cd42b38864074c82ad5",
-  "GovToken": "ff31ec74d01f7b7d45ed2add930f5d2239f7de33",
-
+  "GovToken": "86246c2d1cee5ddd71dea2b355a9596ff62fcbb9",
 
   "ZeroPool": "53c8438410dce2288228ce628ce4c32bc1f6335d",
 
-
-  "WingGov": "5ee65131da810373e053c05c23096c1985c93f41",
+  "WingGov": "78f61350d27826dd034c987bf5c1e866642c5810",
 
   "Comptroller" : "92ef5620a161977d58e16aaca2335a447d8308d9",
 
@@ -21,10 +19,18 @@
   "Pool2": "09489abaedf02734d012d6617edcb6aa029f239b",
   "InterestRate" : "530caa967eba9365d90dd88897cf21b49dee58c2",
 
-
-  "FBTC": "cb9dd8583e538b62024aa8764600ee9087896417",
-  "FETH" : "064cede1eb3a91b80f82fe168fcb25bc1a0b3ac0",
-  "FUSDT" : "657843c526db92c4ac42d50cd621dfa3842b1ba4",
+  "FWBTC":"162654622062ea6762647babab2462dffa712837",
+  "FONT":"423dbe4f99c5958d01d4b2993318f28f1baedb02",
+  "FrenBTC":"e37e6a5283682b383ecebb712e68cf1d36239d1b",
+  "FUSDC":"5ae2c02bc24138820e336e18f4aa4eb13d25a84d",
+  "FWING":"e5059eac5fb89ae1c8976ea3c3cba7e0786165a9",
+  "FETH":"789c0aa3277430c10d0dc5b1924ece0060bfa100",
+  "FDAI":"37c99c10037e000149541d925f61c4e1fa77a60d",
+  "FUSDT":"a1ad38537dd0d9240ff40e56be654434303e858a",
+  "FSUSD":"cb09fdb1745510ee07dfc9d8e6dc69741578513a",
+  "FNEO":"d7edfcd57d784c4a19c991cdb9b391e6b6442fd5",
+  "FOKB":"4eb4dc1179b8192243273017e8729162134c1af4",
+  "FUNI":"d3ae6627969363d18517208ba59f540400d7dcaf",
   "IBTC" : "5eba6fb341fbd9d33f7135cae26400277c30d0b9",
   "IETH" : "82755abf5f5269cd87b4bbb96ad73611a201e7ba",
   "IUSDT" : "a70fef6a078530ed2ce013b7320aaebeab9ba49c",
@@ -65,13 +71,13 @@
   "Wifs": [
     "L1nfGvz19cWXHDLeEMMC6vozhSLANCy9E2gNxh3YwHJMXReLddNw"
   ],
-  "TxNum": 5,
-  "TxFactor": 200,
-  "RoutineNum": 5,
-  "TPS": 5,
-  "AccountNum": 4000,
+  "TxNum": 30,
+  "TxFactor": 100,
+  "RoutineNum": 3,
+  "TPS": 3,
+  "AccountNum": 2,
   "StakeOnt": 10,
-  "StartNonce": 3000,
+  "StartNonce": 0,
   "SaveTx": false,
   "SendTx": true
 }
