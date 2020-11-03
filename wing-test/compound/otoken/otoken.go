@@ -206,7 +206,7 @@ func DelegateToProxyAllTestToken(cfg *config.Config, account *goSdk.Account, sdk
 }
 
 func GenerateAccountsToken(cfg *config.Config, admin *goSdk.Account, goSdk *goSdk.OntologySdk) {
-	accounts := DbHelp.QueryAccountFromDb(900, cfg.AccountNum)
+	accounts := DbHelp.QueryAccountFromDb(0, cfg.AccountNum)
 	for i := 0; i < cfg.AccountNum; i++ {
 		TransferAllTestToken(cfg, admin, goSdk, accounts[i].Address.ToBase58())
 		time.Sleep(time.Second/2)

@@ -1,6 +1,7 @@
 package main
 
 import (
+	"github.com/mockyz/AutoTestGo/wing-test/compound/otoken"
 	config "github.com/mockyz/AutoTestGo/wing-test/config_ont"
 	test_case "github.com/mockyz/AutoTestGo/wing-test/test-case"
 	Utils "github.com/mockyz/AutoTestGo/wing-test/utils"
@@ -49,34 +50,30 @@ func main() {
 	if err != nil {
 		log.Errorf("error: %s", err)
 	}
-	//wallet, err := sdk.OpenWallet(cfg.Wallet)
-	//if err != nil {
-	//	log.Errorf("error: %s", err)
-	//}
-	//account, _ := wallet.GetDefaultAccount([]byte(cfg.Password))
+	wallet, err := sdk.OpenWallet(cfg.Wallet)
+	if err != nil {
+		log.Errorf("error: %s", err)
+	}
+	account, _ := wallet.GetDefaultAccount([]byte(cfg.Password))
 	rpcClient := client.NewRpcClient()
 	rpcClient.SetAddress(cfg.Rpc[1])
 	sdk.SetDefaultClient(rpcClient)
-	//WingGov.BatchStaking(cfg, account, sdk,Utils.GetAccounts(cfg))
-	//time.Sleep(time.Second*10)
-	//WingGov.BatchUnStaking(cfg, account, sdk,Utils.GetAccounts(cfg))
-	//WingGov.WingGovMigrate(cfg, account, sdk)
-	//WingGov.Get_admin_address(cfg, account, sdk)
-	//WingGov.DeployContractWingGov(cfg, account, sdk)
-	//WingGov.WingTokenGetGovAddr(cfg, sdk)
-	accounts := Utils.GetAccounts2(0,1)
-	market,_ := test_case.NewMarkets(cfg,accounts[0],sdk,cfg.FNEO)
+	//test wbtc borrow rate ,use defult account and use address
+	accounts := Utils.GetAccounts2(3000,1)
+	market,_ := test_case.NewMarkets(cfg,accounts[0],sdk,cfg.FWBTC)
 	market.TestBorrowRateByBlock()
+	market.TestBorrowRateByBlock2Addr("AG4pZwKa9cr8ca7PED7FqzUfcwnrQ2N26w")
+	market.WingSpeed4SuppluyTest("AG4pZwKa9cr8ca7PED7FqzUfcwnrQ2N26w")
 	//AT9sH4s84NGJYVqNHQWN6vkgb7jQ12eR7p
 	//AJkQo3Fo7JKxtrKZPqYJQuh9cXH38w7rVt
 	//OToken.DelegateToProxyAllTestToken(cfg, account, sdk)
 	//OToken.OTokenTransfer(cfg, account, sdk, "ANxSSzWmFnAtqWBtq2KthP73oX4bHf9FyZ", cfg.ODAI)
-	//OToken.GenerateAccountsToken(cfg, account, sdk)
+	return
+	otoken.GenerateAccountsToken(cfg, account, sdk)
 	//AT9sH4s84NGJYVqNHQWN6vkgb7jQ12eR7p
-	//OToken.WingTokenTransfer(cfg, account, sdk, "ANxSSzWmFnAtqWBtq2KthP73oX4bHf9FyZ")
 	//OToken.BalanceOfAllToken(cfg, sdk, account.Address.ToBase58())
 	//OToken.TransferAllTestToken(cfg, account, sdk, "AG4pZwKa9cr8ca7PED7FqzUfcwnrQ2N26w")
-	bacthTest(cfg, sdk)
+	//bacthTest(cfg, sdk)
 }
 
 
@@ -100,8 +97,8 @@ func bacthTest(cfg *config.Config, genSdk *goSdk.OntologySdk) {
 					sentNum++
 					//TODO : change to your batch func
 					//Utils.NewAccountToDb(wallet)
-					BatchBorrow(cfg,genSdk,accounts[nonce])
-					//BatchSupply(cfg,genSdk,accounts[nonce])
+					//BatchBorrow(cfg,genSdk,accounts[nonce])
+					BatchSupply(cfg,genSdk,accounts[nonce])
 					now := time.Now().UnixNano() / 1e6 // ms
 					diff := sentNum - (now-startTime)/1e3*tpsPerRoutine
 					if now > startTime && diff > 0 {

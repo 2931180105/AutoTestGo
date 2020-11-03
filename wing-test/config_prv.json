@@ -75,7 +75,7 @@
   "TxFactor": 100,
   "RoutineNum": 3,
   "TPS": 3,
-  "AccountNum": 2,
+  "AccountNum": 900,
   "StakeOnt": 10,
   "StartNonce": 0,
   "SaveTx": false,
