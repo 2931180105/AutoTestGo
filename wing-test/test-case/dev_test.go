@@ -98,9 +98,3 @@ func TestWingSpeeds2(t *testing.T) {
 //	}
 //	syn.Wait()
 //}
-func TestBorrowByBlock(t *testing.T)  {
-	//syn := new(sync.WaitGroup)
-
-
-
-}
