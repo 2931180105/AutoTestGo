@@ -86,3 +86,14 @@ func ParseConfig(path string) (*Config, error) {
 	}
 	return config, nil
 }
+func Save2Config(cfg *Config ,path string)  error {
+	data, err := json.MarshalIndent(cfg, "", "  ")
+	if err != nil {
+		return fmt.Errorf("update config, %s", err)
+	}
+	err = ioutil.WriteFile(path, data, 0677)
+	if err != nil {
+		return fmt.Errorf("write config, %s", err)
+	}
+	return nil
+}

@@ -1,0 +1,83 @@
+{
+  "Wallet": "/home/ubuntu/go/src/github.com/mockyz/AutoTestGo/wing-test/wallet.json",
+  "Password": "passwordtest",
+  "SDRate": 0,
+  "WingStartTime": 20,
+  "Oracle": "2927cb865be38d0fddce9cd42b38864074c82ad5",
+  "GovToken": "86246c2d1cee5ddd71dea2b355a9596ff62fcbb9",
+
+  "ZeroPool": "53c8438410dce2288228ce628ce4c32bc1f6335d",
+
+  "WingGov": "78f61350d27826dd034c987bf5c1e866642c5810",
+
+  "Comptroller" : "92ef5620a161977d58e16aaca2335a447d8308d9",
+
+
+  "OldZeroPool": "5bfa10a78cb3f9e14c01f0e38a96e7db5b405f9d",
+  "WingProfit": "5ea4b5522eab96ce26df290e122fec3b8fa4fee9",
+  "GlobalParam": "a7e169ef9ab7930d573850c1152780d8d7530458",
+  "Pool2": "09489abaedf02734d012d6617edcb6aa029f239b",
+  "InterestRate" : "530caa967eba9365d90dd88897cf21b49dee58c2",
+
+  "FWBTC":"162654622062ea6762647babab2462dffa712837",
+  "FONT":"423dbe4f99c5958d01d4b2993318f28f1baedb02",
+  "FrenBTC":"e37e6a5283682b383ecebb712e68cf1d36239d1b",
+  "FUSDC":"5ae2c02bc24138820e336e18f4aa4eb13d25a84d",
+  "FWING":"e5059eac5fb89ae1c8976ea3c3cba7e0786165a9",
+  "FETH":"789c0aa3277430c10d0dc5b1924ece0060bfa100",
+  "FDAI":"37c99c10037e000149541d925f61c4e1fa77a60d",
+  "FUSDT":"a1ad38537dd0d9240ff40e56be654434303e858a",
+  "FSUSD":"cb09fdb1745510ee07dfc9d8e6dc69741578513a",
+  "FNEO":"d7edfcd57d784c4a19c991cdb9b391e6b6442fd5",
+  "FOKB":"4eb4dc1179b8192243273017e8729162134c1af4",
+  "FUNI":"d3ae6627969363d18517208ba59f540400d7dcaf",
+  "IBTC" : "5eba6fb341fbd9d33f7135cae26400277c30d0b9",
+  "IETH" : "82755abf5f5269cd87b4bbb96ad73611a201e7ba",
+  "IUSDT" : "a70fef6a078530ed2ce013b7320aaebeab9ba49c",
+  "AuthAddr": "APHNPLz2u1JUXyD8rhryLaoQrW46J3P6y2",
+
+  "WBTC": "f44504f293aef233f0978f08b50de78ac482b9ba",
+  "ONTd": "c1f7446cf1e20c90699520ff5fe43a92a17d9954",
+  "RenBTC": "1a3d6116cf5ebd67f5be0f5216e43d037d509a09",
+  "USDC": "0bbb55ae5bfb2e7a4c6021d1911f68175f785cc7",
+  "WING": "86246c2d1cee5ddd71dea2b355a9596ff62fcbb9",
+  "ETH": "dd9580a013f2c515a846d56ec71f8ae4edce98eb",
+  "DAI": "ab6ea82ae231b9140ebbe7d7e61c77f64e5a3979",
+  "USDT": "bdb2e7f64ddc5b5cf1d289cec60b5562b74d9410",
+  "SUSD": "939c0747c3fdc57493df00dd9fabac6f79b491c0",
+  "NEO": "276bfedfbaae07569e3d77715880645b9434a4af",
+  "OKB": "9d64665c20363d3204482f95875d8ebbdd39fb56",
+  "UNI": "3e8c1a687b7cb9c5d796f5d5e576f804e770dac9",
+  "Weight": 1,
+  "Amount": 100,
+  "Eta": 1,
+  "Gama": 0,
+  "ExchangeRate": 2,
+  "GasPrice": 0,
+  "GasLimit": 32000000000,
+  "Rpc": [
+    "http://172.168.3.226:20336",
+    "http://172.168.3.226:20336",
+    "http://172.168.3.226:20336"
+  ],
+  "TotalStaticProfit": 100,
+  "LendAmount": [
+    10,20,30,40
+  ],
+  "TotalDynamicProfit": 100,
+  "Wallets": [
+    "wallet01.dat"
+  ],
+  "Wifs": [
+    "L1nfGvz19cWXHDLeEMMC6vozhSLANCy9E2gNxh3YwHJMXReLddNw"
+  ],
+  "TxNum": 30,
+  "TxFactor": 100,
+  "RoutineNum": 3,
+  "TPS": 3,
+  "AccountNum": 900,
+  "StakeOnt": 10,
+  "StartNonce": 0,
+  "SaveTx": false,
+  "SendTx": true
+}
