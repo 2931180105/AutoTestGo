@@ -23,8 +23,8 @@ func (this *FlashToken) WingSpeed4BorrowTestNew(userAddr string) {
 	if err != nil {
 		log.Errorf("  AccountSnapshot err : %v", err)
 	}
-	uesrBorrow := accountSnap.ValidBorrowBalance
-	log.Infof("AccountSnapshot , userBorrow ValidBorrowBalance: %v,TokenBalance:%v,ExchangeRate:%v", uesrBorrow, accountSnap.TokenBalance, accountSnap.ExchangeRate)
+	userBorrow := accountSnap.ValidBorrowBalance
+	log.Infof("AccountSnapshot , userBorrow ValidBorrowBalance: %v,TokenBalance:%v,ExchangeRate:%v", userBorrow, accountSnap.TokenBalance, accountSnap.ExchangeRate)
 	txhash0, _, remian, err := this.Comptroller.ClaimWingAtMarkets(addr, marketAddrs, false)
 	log.Infof("txhash:%v,remian:%v", txhash0, remian)
 	if err != nil {
@@ -50,7 +50,7 @@ func (this *FlashToken) WingSpeed4BorrowTestNew(userAddr string) {
 		log.Errorf("  ClaimWingAtMarkets err : %v", err)
 	}
 	claimStates1 := utils.GetClaimWingEventByHash(this.sdk, txhash)
-	expRsult := utils.ExpTestRuslt(wingSpeed, uesrBorrow, totalBorrow, claimStates0.Timestamp, claimStates1.Timestamp, 50)
+	expRsult := utils.ExpTestRuslt(wingSpeed, userBorrow, totalBorrow, claimStates0.Timestamp, claimStates1.Timestamp, 50)
 	wingBalance1, err := otoken.BalanceOfOToken2(this.sdk, this.TestConfig.WING, userAddr)
 	if err != nil {
 		log.Errorf(" wingBalance0 balance err : %v", err)
@@ -88,8 +88,8 @@ func (this *FlashToken) WingSpeed4BorrowTestNewByMarketName(marketName , userAdd
 	if err != nil {
 		log.Errorf("  AccountSnapshot err : %v", err)
 	}
-	uesrBorrow := accountSnap.ValidBorrowBalance
-	log.Infof("AccountSnapshot , userBorrow ValidBorrowBalance: %v,TokenBalance:%v,ExchangeRate:%v", uesrBorrow, accountSnap.TokenBalance, accountSnap.ExchangeRate)
+	userBorrow := accountSnap.ValidBorrowBalance
+	log.Infof("AccountSnapshot , userBorrow ValidBorrowBalance: %v,TokenBalance:%v,ExchangeRate:%v", userBorrow, accountSnap.TokenBalance, accountSnap.ExchangeRate)
 	txhash0, _, remian, err := this.Comptroller.ClaimWingAtMarkets(addr, marketAddrs, false)
 	log.Infof("txhash:%v,remian:%v", txhash0, remian)
 	if err != nil {
@@ -108,14 +108,14 @@ func (this *FlashToken) WingSpeed4BorrowTestNewByMarketName(marketName , userAdd
 	//marketName, _ = this.Name()
 	log.Infof("marketName: %s, speeds: %v", marketName, wingSpeed)
 	//wait time
-	this.sdk.WaitForGenerateBlock(time.Minute*5, 1000)
+	//this.sdk.WaitForGenerateBlock(time.Minute*5, 1000)
 	txhash, _, remian, err := this.Comptroller.ClaimWingAtMarkets(addr, marketAddrs, false)
 	log.Infof("txhash:%v,remian:%v", txhash, remian)
 	if err != nil {
 		log.Errorf("  ClaimWingAtMarkets err : %v", err)
 	}
 	claimStates1 := utils.GetClaimWingEventByHash(this.sdk, txhash)
-	expRsult := utils.ExpTestRuslt(wingSpeed, uesrBorrow, totalBorrow, claimStates0.Timestamp, claimStates1.Timestamp, 50)
+	expRsult := utils.ExpTestRuslt(wingSpeed, userBorrow, totalBorrow, claimStates0.Timestamp, claimStates1.Timestamp, 50)
 	wingBalance1, err := otoken.BalanceOfOToken2(this.sdk, this.TestConfig.WING, userAddr)
 	if err != nil {
 		log.Errorf(" wingBalance0 balance err : %v", err)
@@ -127,17 +127,20 @@ func (this *FlashToken) WingSpeed4BorrowTestNewByMarketName(marketName , userAdd
 	log.Infof("notifyRsult sub relRsult: %v", big.NewInt(0).Sub(notifyRsult, relRsult))
 	log.Infof("errRate : %v", new(big.Float).Quo(new(big.Float).SetInt(expRsult), new(big.Float).SetInt(notifyRsult)))
 	log.Infof("utils.CmpTestRuslt rate: %v", utils.CmpTestRuslt(expRsult, notifyRsult))
+
+	utils.InsertWingDisResToDb(marketName,userAddr,this.addr.ToHexString(),totalBorrow,userBorrow,wingSpeed,expRsult,relRsult,claimStates0.Timestamp,claimStates1.Timestamp,utils.CmpTestRuslt(expRsult, notifyRsult))
+
 }
 
 
-func (this *FlashToken) WingSpeed4BorrowTestNewByMarketAddr(marketNameAddr common.Address , userAddr string) {
-	this.SetAddr(marketNameAddr)
+func (this *FlashToken) WingSpeed4BorrowTestNewByMarketAddr(marketAddr common.Address , userAddr string) {
+	this.SetAddr(marketAddr)
 	addr, _ := common.AddressFromBase58(userAddr)
 	marketName,err := this.Name()
 	if err !=nil{
 		log.Errorf("marketName err :%v ",err)
 	}
-	marketAddrs := []common.Address{this.GetAddr()}
+	marketAddrs := []common.Address{marketAddr}
 	totalBorrow, err := this.TotalValidBorrows()
 	if err != nil {
 		log.Errorf(" Market TotalBorrows err : %v", err)
@@ -147,8 +150,8 @@ func (this *FlashToken) WingSpeed4BorrowTestNewByMarketAddr(marketNameAddr commo
 	if err != nil {
 		log.Errorf("  AccountSnapshot err : %v", err)
 	}
-	uesrBorrow := accountSnap.ValidBorrowBalance
-	log.Infof("AccountSnapshot , userBorrow ValidBorrowBalance: %v,TokenBalance:%v,ExchangeRate:%v", uesrBorrow, accountSnap.TokenBalance, accountSnap.ExchangeRate)
+	userBorrow := accountSnap.ValidBorrowBalance
+	log.Infof("AccountSnapshot , userBorrow ValidBorrowBalance: %v,TokenBalance:%v,ExchangeRate:%v", userBorrow, accountSnap.TokenBalance, accountSnap.ExchangeRate)
 	txhash0, _, remian, err := this.Comptroller.ClaimWingAtMarkets(addr, marketAddrs, false)
 	log.Infof("txhash:%v,remian:%v", txhash0, remian)
 	if err != nil {
@@ -174,7 +177,7 @@ func (this *FlashToken) WingSpeed4BorrowTestNewByMarketAddr(marketNameAddr commo
 		log.Errorf("  ClaimWingAtMarkets err : %v", err)
 	}
 	claimStates1 := utils.GetClaimWingEventByHash(this.sdk, txhash)
-	expRsult := utils.ExpTestRuslt(wingSpeed, uesrBorrow, totalBorrow, claimStates0.Timestamp, claimStates1.Timestamp, 50)
+	expRsult := utils.ExpTestRuslt(wingSpeed, userBorrow, totalBorrow, claimStates0.Timestamp, claimStates1.Timestamp, 50)
 	wingBalance1, err := otoken.BalanceOfOToken2(this.sdk, this.TestConfig.WING, userAddr)
 	if err != nil {
 		log.Errorf(" wingBalance0 balance err : %v", err)
@@ -186,9 +189,10 @@ func (this *FlashToken) WingSpeed4BorrowTestNewByMarketAddr(marketNameAddr commo
 	log.Infof("notifyRsult sub relRsult: %v", big.NewInt(0).Sub(notifyRsult, relRsult))
 	log.Infof("errRate : %v", new(big.Float).Quo(new(big.Float).SetInt(expRsult), new(big.Float).SetInt(notifyRsult)))
 	log.Infof("utils.CmpTestRuslt rate: %v", utils.CmpTestRuslt(expRsult, notifyRsult))
+	utils.InsertWingDisResToDb(marketName,userAddr,this.addr.ToHexString(),totalBorrow,userBorrow,wingSpeed,expRsult,relRsult,claimStates0.Timestamp,claimStates1.Timestamp,utils.CmpTestRuslt(expRsult, notifyRsult))
 }
 
-func (this *FlashToken) TestWingSpeeds(marketAddr common.Address, usrAddr string, sy *sync.WaitGroup) {
+func (this *FlashToken) TestWingSpeeds4Borrow(marketAddr common.Address, usrAddr string, sy *sync.WaitGroup) {
 	defer sy.Done()
 	this.WingSpeed4BorrowTestNewByMarketAddr(marketAddr, usrAddr)
 }

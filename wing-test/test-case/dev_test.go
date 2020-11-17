@@ -18,6 +18,7 @@ func TestReadFile(t *testing.T) {
 	log.Infof("file :%v", string(fileContent))
 }
 func TestWingSpeeds(t *testing.T) {
+	log.InitLog(log.InfoLog, log.PATH, log.Stdout)
 	syn := new(sync.WaitGroup)
 	var sdk = goSdk.NewOntologySdk()
 	//configPath := ".../config_prv.json"
@@ -40,7 +41,7 @@ func TestWingSpeeds(t *testing.T) {
 	//TODO:markets compare user addr
 	for _, ftokenAddress := range ftokenAddressList {
 		syn.Add(1)
-		go market.TestWingSpeeds(ftokenAddress, "AT9sH4s84NGJYVqNHQWN6vkgb7jQ12eR7p", syn)
+		go market.TestWingSpeeds4Borrow(ftokenAddress, "AXhxR1NDWCABFn6MQmmpVy9BSAgm7bf15D", syn)
 	}
 	syn.Wait()
 }
@@ -81,15 +82,15 @@ func TestWingSpeedTest(t *testing.T){
 	rpcClient.SetAddress(cfg.Rpc[0])
 	sdk.SetDefaultClient(rpcClient)
 	market,_ := NewMarkets(cfg,account,sdk,cfg.FWBTC)
-	ftokenAddressList, err := market.Comptroller.AllMarkets()
+	//ftokenAddressList, err := market.Comptroller.AllMarkets()
 	//TODO:markets compare user addr
-	for _, ftokenAddress := range ftokenAddressList {
-		market.SetAddr(ftokenAddress)
-		marketName,err := market.Name()
-		if err !=nil{
-			log.Errorf("marketName err :%v ",err)
-		}
-		log.Infof("market.Name11: %s",marketName)
-	}
-	//market.WingSpeed4BorrowTestNewByMarketName("SUSD","APHNPLz2u1JUXyD8rhryLaoQrW46J3P6y2")
+	//for _, ftokenAddress := range ftokenAddressList {
+	//	market.SetAddr(ftokenAddress)
+	//	marketName,err := market.Name()
+	//	if err !=nil{
+	//		log.Errorf("marketName err :%v ",err)
+	//	}
+	//	log.Infof("market.Name11: %s",marketName)
+	//}
+	market.WingSpeed4SuppluyTestByName("SUSD","ASQmMksvxcC8rbBGbsChUEwD7guXFH3riY")
 }

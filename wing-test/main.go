@@ -56,8 +56,10 @@ func main() {
 	}
 	account, _ := wallet.GetDefaultAccount([]byte(cfg.Password))
 	rpcClient := client.NewRpcClient()
-	rpcClient.SetAddress(cfg.Rpc[1])
+	rpcClient.SetAddress(cfg.Rpc[0])
 	sdk.SetDefaultClient(rpcClient)
+	otoken.TransferAllTestToken(cfg, account, sdk, "AJExyJ6rk3mdExs3F77jPpZ5xgKSVmYvLA")
+	return
 	//test wbtc borrow rate ,use defult account and use address
 	accounts := Utils.GetAccounts2(3000,1)
 	market,_ := test_case.NewMarkets(cfg,accounts[0],sdk,cfg.FWBTC)
@@ -72,7 +74,6 @@ func main() {
 	otoken.GenerateAccountsToken(cfg, account, sdk)
 	//AT9sH4s84NGJYVqNHQWN6vkgb7jQ12eR7p
 	//OToken.BalanceOfAllToken(cfg, sdk, account.Address.ToBase58())
-	//OToken.TransferAllTestToken(cfg, account, sdk, "AG4pZwKa9cr8ca7PED7FqzUfcwnrQ2N26w")
 	//bacthTest(cfg, sdk)
 }
 
