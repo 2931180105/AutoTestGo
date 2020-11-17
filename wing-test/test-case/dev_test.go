@@ -41,7 +41,11 @@ func TestWingSpeeds(t *testing.T) {
 	//TODO:markets compare user addr
 	for _, ftokenAddress := range ftokenAddressList {
 		syn.Add(1)
-		go market.TestWingSpeeds4Borrow(ftokenAddress, "AXhxR1NDWCABFn6MQmmpVy9BSAgm7bf15D", syn)
+		market,_ := NewMarkets(cfg,account,sdk,ftokenAddress.ToHexString())
+		//time.Sleep(time.Second)
+		go market.WingSpeed4BorrowTestNewByMarketAddr(ftokenAddress, "AXhxR1NDWCABFn6MQmmpVy9BSAgm7bf15D", syn)
+		//time.Sleep(time.Second)
+		//go market.WingSpeed4SuppluyTestNew(ftokenAddress, "ASQmMksvxcC8rbBGbsChUEwD7guXFH3riY", syn)
 	}
 	syn.Wait()
 }

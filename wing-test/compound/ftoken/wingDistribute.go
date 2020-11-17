@@ -117,7 +117,8 @@ func (this *FlashToken) WingSpeed4InsuranceTest(userAddr string) {
 }
 
 
-func (this *FlashToken) WingSpeed4SuppluyTestNew(marketAddr common.Address ,userAddr string) {
+func (this *FlashToken) WingSpeed4SuppluyTestNew(marketAddr common.Address ,userAddr string, sy *sync.WaitGroup)  {
+	defer sy.Done()
 	this.SetAddr(marketAddr)
 	addr, _ := common.AddressFromBase58(userAddr)
 	marketAddrs := []common.Address{this.GetAddr()}
@@ -150,7 +151,7 @@ func (this *FlashToken) WingSpeed4SuppluyTestNew(marketAddr common.Address ,user
 	marketName, _ := this.Name()
 	log.Infof("marketName: %s, speeds: %v", marketName, wingSpeed)
 	//wait time
-	this.sdk.WaitForGenerateBlock(time.Minute*5, 1000)
+	this.sdk.WaitForGenerateBlock(time.Minute*15, 1000)
 	txhash, _, remian, err := this.Comptroller.ClaimWingAtMarkets(addr, marketAddrs, false)
 	log.Infof("txhash:%v,remian:%v", txhash, remian)
 	if err != nil {
@@ -169,7 +170,7 @@ func (this *FlashToken) WingSpeed4SuppluyTestNew(marketAddr common.Address ,user
 	log.Infof("notifyRsult sub relRsult: %v", big.NewInt(0).Sub(notifyRsult, relRsult))
 	log.Infof("errRate : %v", new(big.Float).Quo(new(big.Float).SetInt(expRsult), new(big.Float).SetInt(relRsult)))
 	log.Infof("utils.CmpTestRuslt rate: %v", utils.CmpTestRuslt(expRsult, relRsult))
-	utils.InsertWingDisResToDb4Supply(marketName,userAddr,this.addr.ToHexString(),user,total,wingSpeed,expRsult,relRsult,claimStates0.Timestamp,claimStates1.Timestamp,utils.CmpTestRuslt(expRsult, notifyRsult))
+	utils.InsertWingDisResToDb4Supply(marketName,userAddr,this.addr.ToHexString(),user,total,wingSpeed,expRsult,notifyRsult,claimStates0.Timestamp,claimStates1.Timestamp,utils.CmpTestRuslt(expRsult, notifyRsult))
 }
 
 
@@ -235,9 +236,9 @@ func (this *FlashToken) WingSpeed4SuppluyTestByName(marketName  ,userAddr string
 	log.Infof("notifyRsult sub relRsult: %v", big.NewInt(0).Sub(notifyRsult, relRsult))
 	log.Infof("errRate : %v", new(big.Float).Quo(new(big.Float).SetInt(expRsult), new(big.Float).SetInt(relRsult)))
 	log.Infof("utils.CmpTestRuslt rate: %v", utils.CmpTestRuslt(expRsult, relRsult))
-	utils.InsertWingDisResToDb4Supply(marketName,userAddr,this.addr.ToHexString(),user,total,wingSpeed,expRsult,relRsult,claimStates0.Timestamp,claimStates1.Timestamp,utils.CmpTestRuslt(expRsult, notifyRsult))
+	utils.InsertWingDisResToDb4Supply(marketName,userAddr,this.addr.ToHexString(),user,total,wingSpeed,expRsult,notifyRsult,claimStates0.Timestamp,claimStates1.Timestamp,utils.CmpTestRuslt(expRsult, notifyRsult))
 }
-func (this *FlashToken) TestWingSpeeds4Supply(marketAddr common.Address, usrAddr string, sy *sync.WaitGroup) {
-	defer sy.Done()
-	this.WingSpeed4SuppluyTestNew(marketAddr, usrAddr)
-}
+//func (this *FlashToken) TestWingSpeeds4Supply(marketAddr common.Address, usrAddr string, sy *sync.WaitGroup) {
+//	defer sy.Done()
+//	this.WingSpeed4SuppluyTestNew(marketAddr, usrAddr)
+//}
