@@ -5,6 +5,8 @@ import (
 	"encoding/hex"
 	"fmt"
 	_ "github.com/go-sql-driver/mysql"
+	"github.com/jinzhu/gorm"
+	"github.com/mockyz/AutoTestGo/wing-test/dbHelper/model"
 	"github.com/ontio/ontology-crypto/keypair"
 	"github.com/ontio/ontology-crypto/signature"
 	goSdk "github.com/ontio/ontology-go-sdk"
@@ -52,6 +54,11 @@ func InsertWingDisRes(db *sql.DB, market_name,user_addr,market_addr string,total
 	if err != nil {
 		log.Errorf("Insert data error : %s", err)
 	}
+}
+func InsertWingDisRes4Borrow(db *gorm.DB, market_name,user_addr,market_addr string,total_valid_borrow,user_valid_borrow,wing_speed,exp_res,rel_res *big.Int,start_time,end_time uint32 ,err_rate *big.Float ) {
+	data := &model.WingDisResultBorrow{MarketName:market_name,UserAddr:user_addr,MarketAddr:market_addr,TotalValidBorrow:total_valid_borrow.String(),UserValidBorrow:user_valid_borrow.String(),WingSpeed:wing_speed.String(),ExpRes:exp_res.String(),RelRes:rel_res.String(),StartTime:start_time,EndTime:end_time,ErrRate:err_rate.String()}
+	db.Create(data)
+
 }
 // 插入数据
 func InsertWingDisRes4Supply(db *sql.DB, market_name,user_addr,market_addr string,total_valid_borrow,user_valid_borrow,wing_speed,exp_res,rel_res *big.Int,start_time,end_time uint32 ,err_rate *big.Float ) {

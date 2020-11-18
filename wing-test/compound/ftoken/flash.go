@@ -532,7 +532,7 @@ func (this *FlashToken) TotalValidBorrows() (*big.Int, error) {
 	params := []interface{}{}
 	res, err := utils.PreExecuteBigInt(this.sdk, this.addr, method, params)
 	if err != nil {
-		err = fmt.Errorf("totalBorrows: %s", err)
+		err = fmt.Errorf("TotalValidBorrows: %s", err)
 	}
 	return res, err
 }

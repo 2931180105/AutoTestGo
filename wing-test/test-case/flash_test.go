@@ -45,5 +45,6 @@ func TestBorrow(t *testing.T) {
 	//	}
 	//	log.Infof("market.Name11: %s",marketName)
 	//}
-	market.TestBorrowRate2Supply("SUSD", "ASQmMksvxcC8rbBGbsChUEwD7guXFH3riY")
+	market.TestBorrowRate("USDC", "AG4pZwKa9cr8ca7PED7FqzUfcwnrQ2N26w")
+	//market.Mint()
 }

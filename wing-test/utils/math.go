@@ -84,3 +84,18 @@ func Uint256FromhexString(hex string) common.Uint256 {
 	}
 	return uin256
 }
+
+func Div(x *big.Int, y *big.Int) *big.Int {
+	return big.NewInt(0).Div(x,y)
+}
+func Mul(x *big.Int, y *big.Int) *big.Int {
+	return big.NewInt(0).Mul(x,y)
+}
+func Sub(x *big.Int, y *big.Int) *big.Int {
+	return big.NewInt(0).Sub(x,y)
+}
+func Add(x *big.Int, y *big.Int) *big.Int {
+	return big.NewInt(0).Add(x,y)
+}
+
+

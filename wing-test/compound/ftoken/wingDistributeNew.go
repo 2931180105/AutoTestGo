@@ -2,6 +2,7 @@ package ftoken
 
 import (
 	"github.com/mockyz/AutoTestGo/wing-test/compound/otoken"
+	"github.com/mockyz/AutoTestGo/wing-test/dbHelper/dao"
 	"github.com/mockyz/AutoTestGo/wing-test/utils"
 	"github.com/ontio/ontology/common"
 	"github.com/ontio/ontology/common/log"
@@ -128,8 +129,8 @@ func (this *FlashToken) WingSpeed4BorrowTestNewByMarketName(marketName , userAdd
 	log.Infof("errRate : %v", new(big.Float).Quo(new(big.Float).SetInt(expRsult), new(big.Float).SetInt(notifyRsult)))
 	log.Infof("utils.CmpTestRuslt rate: %v", utils.CmpTestRuslt(expRsult, notifyRsult))
 
-	utils.InsertWingDisResToDb(marketName,userAddr,this.addr.ToHexString(),totalBorrow,userBorrow,wingSpeed,expRsult,notifyRsult,claimStates0.Timestamp,claimStates1.Timestamp,utils.CmpTestRuslt(expRsult, notifyRsult))
-
+	//utils.InsertWingDisResToDb(marketName,userAddr,this.addr.ToHexString(),totalBorrow,userBorrow,wingSpeed,expRsult,notifyRsult,claimStates0.Timestamp,claimStates1.Timestamp,utils.CmpTestRuslt(expRsult, notifyRsult))
+	dao.SaveWingDisResultBorrow(marketName,userAddr,this.addr.ToHexString(),totalBorrow,userBorrow,wingSpeed,expRsult,notifyRsult,claimStates0.Timestamp,claimStates1.Timestamp,utils.CmpTestRuslt(expRsult, notifyRsult))
 }
 
 
@@ -194,7 +195,7 @@ func (this *FlashToken) WingSpeed4BorrowTestNewByMarketAddr(marketAddr common.Ad
 	log.Infof("notifyRsult sub relRsult: %v", big.NewInt(0).Sub(notifyRsult, relRsult))
 	log.Infof("errRate : %v", new(big.Float).Quo(new(big.Float).SetInt(expRsult), new(big.Float).SetInt(notifyRsult)))
 	log.Infof("utils.CmpTestRuslt rate: %v", utils.CmpTestRuslt(expRsult, notifyRsult))
-	utils.InsertWingDisResToDb(marketName,userAddr,this.addr.ToHexString(),totalBorrow,userBorrow,wingSpeed,expRsult,notifyRsult,claimStates0.Timestamp,claimStates1.Timestamp,utils.CmpTestRuslt(expRsult, notifyRsult))
+	dao.SaveWingDisResultBorrow(marketName,userAddr,this.addr.ToHexString(),totalBorrow,userBorrow,wingSpeed,expRsult,notifyRsult,claimStates0.Timestamp,claimStates1.Timestamp,utils.CmpTestRuslt(expRsult, notifyRsult))
 }
 
 //func (this *FlashToken) TestWingSpeeds4Borrow(marketAddr common.Address, usrAddr string, sy *sync.WaitGroup) {

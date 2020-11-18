@@ -2,6 +2,8 @@ package ftoken
 
 import (
 	"github.com/mockyz/AutoTestGo/common/log"
+	"github.com/mockyz/AutoTestGo/wing-test/dbHelper/dao"
+	"github.com/mockyz/AutoTestGo/wing-test/dbHelper/model"
 	"github.com/mockyz/AutoTestGo/wing-test/utils"
 	"github.com/ontio/ontology/common"
 	"math/big"
@@ -12,7 +14,9 @@ import (
 /*
 	1.use market name and usraddr
  */
-func (this *FlashToken)TestBorrowRate2Supply(marketName, addr string) {
+func (this *FlashToken)TestBorrowRate(marketName, addr string) {
+	borrowRateSupply := new(model.BorrowRateSupply)
+	borrowRateSupply.UserAddr=addr
 	ftokenAddressList, err :=  this.Comptroller.AllMarkets()
 	for _, ftokenAddress := range ftokenAddressList {
 		this.SetAddr(ftokenAddress)
@@ -52,23 +56,26 @@ func (this *FlashToken)TestBorrowRate2Supply(marketName, addr string) {
 		log.Errorf("  hash1 AccrueInterest err : %v usrAddr:%s", err, usrAddr)
 		return
 	}
-	utils.PrintSmartEventByHash_Ont(this.sdk, hash1)
 	userUnderlying1, _ := this.BalanceOfUnderlying(usrAddr)
+	utils.PrintSmartEventByHash_Ont(this.sdk, hash1)
 	endTime := utils.GetTimeByTxhash(this.sdk, hash1)
 	totalBorrow1, _ := this.TotalBorrows()
 	totalSupply1, _ := this.TotalSupply()
 	reserves1, _ := this.TotalReserves()
 	log.Infof("startTime:%v,endTime:%v,totalBorrow:%v,totalBorrow1:%v,totalSupply1:%v,reserves1:%v,userUnderlying1:%v",startTime, endTime,totalBorrow, totalBorrow1, totalSupply1, reserves1, userUnderlying1)
 	log.Infof("borrowRatePerBlock:%v,startTime:%v,totalBorrow:%v,totalSupply:%v,reserveFactor:%v,userSupply:%v,reserves:%v,userUnderlying0:%v", borrowRatePerBlock, totalBorrow, totalSupply, reserveFactor, userSupply, reserves, userUnderlying0)
-	reservesAdd := big.NewInt(0).Sub(reserves1, reserves)
-	totalInterestAdd := big.NewInt(0).Sub(totalBorrow1, totalBorrow)
-	userUnderlyingAdd := big.NewInt(0).Sub(userUnderlying1, userUnderlying0)
+	reservesAdd := utils.Sub(reserves1, reserves)
+	totalInterestAdd := utils.Sub(totalBorrow1, totalBorrow)
+	userUnderlyingAdd := utils.Sub(userUnderlying1, userUnderlying0)
 	expTotalInterestAdd := utils.ExpInterestAdd(totalBorrow, big.NewInt(int64(endTime-startTime)), borrowRatePerBlock)
 	log.Infof("totalInterestAdd:%v,expTotalInterestAdd:%v,expTotalInterestAdd - totalInterestAdd : %v", totalInterestAdd, expTotalInterestAdd, big.NewInt(0).Sub(expTotalInterestAdd, totalInterestAdd))
-	//expReservesAdd := big.NewInt(0).Div(big.NewInt(0).Mul(expTotalInterestAdd, reserveFactor), big.NewInt(10^18))
-	expReservesAdd := big.NewInt(0).Div(big.NewInt(0).Mul(expTotalInterestAdd, reserveFactor),utils.ToIntByPrecise("1",9))
-	log.Infof("reservesAdd:%v,expReservesAdd:%v,totalInterestAdd - expInterestAdd: %v", reservesAdd, expReservesAdd, big.NewInt(0).Sub(expReservesAdd, reservesAdd))
-	expSupplyInterestAdd := utils.ExpInterestAdd(totalSupply, big.NewInt(int64(endTime-startTime)), supplyingRatePerBlock)
-	expUserUnderlyingAdd := big.NewInt(0).Div(big.NewInt(0).Mul(userSupply, expSupplyInterestAdd), totalSupply)
+	expReservesAdd := utils.Div(utils.Mul(expTotalInterestAdd, reserveFactor), utils.ToIntByPrecise("1",9))
+	log.Infof("reservesAdd:%v,expReservesAdd:%v,totalInterestAdd - expInterestAdd: %v", reservesAdd, expReservesAdd, utils.Sub(expReservesAdd, reservesAdd))
+	expSupplyInterestAdd := utils.Div(utils.ExpInterestAdd(totalSupply, big.NewInt(int64(endTime-startTime)), supplyingRatePerBlock),big.NewInt(100))
+	expUserUnderlyingAdd := utils.Div(utils.Mul(userSupply, expSupplyInterestAdd), totalSupply)
 	log.Infof("userUnderlying0:%v,expSupplyInterestAdd: %v,userUnderlyingAdd:%v,expUserUnderlyingAdd:%v,expUserUnderlyingAdd - userUnderlyingAdd: %v",  userUnderlying0, expSupplyInterestAdd, userUnderlyingAdd, expUserUnderlyingAdd, big.NewInt(0).Sub(userUnderlyingAdd, expUserUnderlyingAdd))
+	errTotalAdd := utils.CmpTestRuslt(expTotalInterestAdd,totalInterestAdd)
+	errUser := utils.CmpTestRuslt(expUserUnderlyingAdd,userUnderlyingAdd)
+	errReserves := utils.CmpTestRuslt(expReservesAdd,reservesAdd)
+	dao.SaveBorrowRateSupply(marketName,addr,this.addr.ToHexString(),borrowRatePerBlock.String(),supplyingRatePerBlock.String(),userUnderlyingAdd.String(),totalBorrow.String(),totalBorrow1.String(),reserveFactor.String(),reservesAdd.String(),expReservesAdd.String(),totalInterestAdd.String(),expTotalInterestAdd.String(),expUserUnderlyingAdd.String(),userSupply.String(),totalSupply.String(),startTime,endTime,errTotalAdd.String(),errReserves.String(),errUser.String())
 }

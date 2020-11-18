@@ -2,6 +2,7 @@ package ftoken
 
 import (
 	"github.com/mockyz/AutoTestGo/wing-test/compound/otoken"
+	"github.com/mockyz/AutoTestGo/wing-test/dbHelper/dao"
 	"github.com/mockyz/AutoTestGo/wing-test/utils"
 	"github.com/ontio/ontology/common"
 	"github.com/ontio/ontology/common/log"
@@ -170,7 +171,8 @@ func (this *FlashToken) WingSpeed4SuppluyTestNew(marketAddr common.Address ,user
 	log.Infof("notifyRsult sub relRsult: %v", big.NewInt(0).Sub(notifyRsult, relRsult))
 	log.Infof("errRate : %v", new(big.Float).Quo(new(big.Float).SetInt(expRsult), new(big.Float).SetInt(relRsult)))
 	log.Infof("utils.CmpTestRuslt rate: %v", utils.CmpTestRuslt(expRsult, relRsult))
-	utils.InsertWingDisResToDb4Supply(marketName,userAddr,this.addr.ToHexString(),user,total,wingSpeed,expRsult,notifyRsult,claimStates0.Timestamp,claimStates1.Timestamp,utils.CmpTestRuslt(expRsult, notifyRsult))
+	//utils.InsertWingDisResToDb4Supply(marketName,userAddr,this.addr.ToHexString(),user,total,wingSpeed,expRsult,notifyRsult,claimStates0.Timestamp,claimStates1.Timestamp,utils.CmpTestRuslt(expRsult, notifyRsult))
+	dao.SaveWingDisResultSupply(marketName,userAddr,this.addr.ToHexString(),user,total,wingSpeed,expRsult,notifyRsult,claimStates0.Timestamp,claimStates1.Timestamp,utils.CmpTestRuslt(expRsult, notifyRsult))
 }
 
 
@@ -236,7 +238,7 @@ func (this *FlashToken) WingSpeed4SuppluyTestByName(marketName  ,userAddr string
 	log.Infof("notifyRsult sub relRsult: %v", big.NewInt(0).Sub(notifyRsult, relRsult))
 	log.Infof("errRate : %v", new(big.Float).Quo(new(big.Float).SetInt(expRsult), new(big.Float).SetInt(relRsult)))
 	log.Infof("utils.CmpTestRuslt rate: %v", utils.CmpTestRuslt(expRsult, relRsult))
-	utils.InsertWingDisResToDb4Supply(marketName,userAddr,this.addr.ToHexString(),user,total,wingSpeed,expRsult,notifyRsult,claimStates0.Timestamp,claimStates1.Timestamp,utils.CmpTestRuslt(expRsult, notifyRsult))
+	dao.SaveWingDisResultSupply(marketName,userAddr,this.addr.ToHexString(),user,total,wingSpeed,expRsult,notifyRsult,claimStates0.Timestamp,claimStates1.Timestamp,utils.CmpTestRuslt(expRsult, notifyRsult))
 }
 //func (this *FlashToken) TestWingSpeeds4Supply(marketAddr common.Address, usrAddr string, sy *sync.WaitGroup) {
 //	defer sy.Done()

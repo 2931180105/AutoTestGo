@@ -258,6 +258,12 @@ func InsertWingDisResToDb(market_name,user_addr,market_addr string,total_valid_b
 	DbHelp.InsertWingDisRes(db, market_name,user_addr,market_addr,total_valid_borrow,user_valid_borrow,wing_speed,exp_res,rel_res,start_time, end_time ,err_rate)
 	db.Close()
 }
+func InsertWingDisResToDb2(market_name,user_addr,market_addr string,total_valid_borrow,user_valid_borrow,wing_speed,exp_res,rel_res *big.Int,start_time,end_time uint32 ,err_rate *big.Float) {
+	db := DbHelp.SetupConnect()
+	DbHelp.InsertWingDisRes(db, market_name,user_addr,market_addr,total_valid_borrow,user_valid_borrow,wing_speed,exp_res,rel_res,start_time, end_time ,err_rate)
+	db.Close()
+}
+
 func InsertWingDisResToDb4Supply(market_name,user_addr,market_addr string,total_valid_borrow,user_valid_borrow,wing_speed,exp_res,rel_res *big.Int,start_time,end_time uint32 ,err_rate *big.Float) {
 	db := DbHelp.SetupConnect()
 	DbHelp.InsertWingDisRes4Supply(db, market_name,user_addr,market_addr,total_valid_borrow,user_valid_borrow,wing_speed,exp_res,rel_res,start_time, end_time ,err_rate)

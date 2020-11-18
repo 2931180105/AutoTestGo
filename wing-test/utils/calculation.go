@@ -85,6 +85,7 @@ func CmpTestRuslt(expRsult, relRsult *big.Int) *big.Float {
 }
 func ExpInterestAdd(totalBorrow, delayBlockNum, borrowRatePerBlock *big.Int) *big.Int {
 	x := big.NewInt(0).Mul(big.NewInt(0).Mul(totalBorrow, delayBlockNum), borrowRatePerBlock)
-	y := big.NewInt(0).Quo(x, big.NewInt(1e9))
+	//DIV 10^20
+	y := big.NewInt(0).Div(x, ToIntByPrecise("1",18))
 	return y
 }

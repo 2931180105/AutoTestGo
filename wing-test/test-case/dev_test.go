@@ -43,9 +43,9 @@ func TestWingSpeeds(t *testing.T) {
 		syn.Add(1)
 		market,_ := NewMarkets(cfg,account,sdk,ftokenAddress.ToHexString())
 		//time.Sleep(time.Second)
-		go market.WingSpeed4BorrowTestNewByMarketAddr(ftokenAddress, "AXhxR1NDWCABFn6MQmmpVy9BSAgm7bf15D", syn)
+		//go market.WingSpeed4BorrowTestNewByMarketAddr(ftokenAddress, "AXhxR1NDWCABFn6MQmmpVy9BSAgm7bf15D", syn)
 		//time.Sleep(time.Second)
-		//go market.WingSpeed4SuppluyTestNew(ftokenAddress, "ASQmMksvxcC8rbBGbsChUEwD7guXFH3riY", syn)
+		go market.WingSpeed4SuppluyTestNew(ftokenAddress, "ASQmMksvxcC8rbBGbsChUEwD7guXFH3riY", syn)
 	}
 	syn.Wait()
 }
