@@ -16,7 +16,6 @@ go.mod
 # vendor/
 .idea
 temp.rs
-wallet.json
 tools
 Log
 wing-contract-tools
