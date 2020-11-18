@@ -5,6 +5,7 @@ import (
 	config "github.com/mockyz/AutoTestGo/wing-test/config_ont"
 	goSdk "github.com/ontio/ontology-go-sdk"
 	"github.com/ontio/ontology-go-sdk/client"
+	"sync"
 	"testing"
 )
 
@@ -34,17 +35,17 @@ func TestBorrow(t *testing.T) {
 	rpcClient := client.NewRpcClient()
 	rpcClient.SetAddress(cfg.Rpc[0])
 	sdk.SetDefaultClient(rpcClient)
+	syn := new(sync.WaitGroup)
 	market, _ := NewMarkets(cfg, account, sdk, cfg.FWBTC)
-	//ftokenAddressList, err := market.Comptroller.AllMarkets()
+	ftokenAddressList, err := market.Comptroller.AllMarkets()
 	//TODO:markets compare user addr
-	//for _, ftokenAddress := range ftokenAddressList {
-	//	market.SetAddr(ftokenAddress)
-	//	marketName,err := market.Name()
-	//	if err !=nil{
-	//		log.Errorf("marketName err :%v ",err)
-	//	}
-	//	log.Infof("market.Name11: %s",marketName)
-	//}
-	market.TestBorrowRate("USDC", "AG4pZwKa9cr8ca7PED7FqzUfcwnrQ2N26w")
+	for _, ftokenAddress := range ftokenAddressList {
+		syn.Add(1)
+		market,_ := NewMarkets(cfg,account,sdk,ftokenAddress.ToHexString())
+		makerName ,_:=market.Name()
+		go market.TestBorrowRateSync(makerName, "ASQmMksvxcC8rbBGbsChUEwD7guXFH3riY", syn)
+	}
+	syn.Wait()
+	//market.TestBorrowRate("USDC", "AG4pZwKa9cr8ca7PED7FqzUfcwnrQ2N26w")
 	//market.Mint()
 }

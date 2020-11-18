@@ -18,6 +18,7 @@ type FlashToken struct {
 	sdk    *ontSDK.OntologySdk
 	signer *ontSDK.Account
 	addr   common.Address
+	WingGov common.Address
 	Comptroller *comptroller.Comptroller
 	TestConfig *config.Config
 	gasPrice uint64
@@ -63,10 +64,12 @@ func NewFlashToken2(sdk *ontSDK.OntologySdk, contractAddr string, signer *ontSDK
 			return nil, fmt.Errorf("NewFlashToken: invalid contract addr %s", contractAddr)
 		}
 	}
+	wingGov,_ :=common.AddressFromHexString(cfg.WingGov)
 	return &FlashToken{
 		sdk:      sdk,
 		signer:   signer,
 		addr:     addr,
+		WingGov: wingGov,
 		gasPrice: cfg.GasPrice,
 		gasLimit: cfg.GasLimit,
 		TestConfig:cfg,
@@ -84,7 +87,12 @@ func (this *FlashToken) GetAddr() common.Address {
 func (this *FlashToken) SetAddr(address common.Address) {
 	this.addr = address
 }
-
+func (this *FlashToken) GetSigner() ontSDK.Account {
+	return *this.signer
+}
+func (this *FlashToken) GetGoSdk() *ontSDK.OntologySdk {
+	return this.sdk
+}
 func (this *FlashToken) Init(admin, underlying_ common.Address, underlyingName string, comptroller_,
 	globalParamContract common.Address, interestRateModel common.Address,
 	initialExchangeRateMantissa *big.Int) (string, error) {
@@ -337,9 +345,9 @@ func (this *FlashToken) RedeemUnderlying(redeemer common.Address, redeemAmount *
 	return hash, err
 }
 
-func (this *FlashToken) Borrow(borrower common.Address, borrowAmount *big.Int) (string, error) {
+func (this *FlashToken) Borrow(borrower common.Address, borrowAmount *big.Int,useWing bool) (string, error) {
 	method := "borrow"
-	params := []interface{}{borrower, borrowAmount}
+	params := []interface{}{borrower, borrowAmount,useWing}
 	hash, err:= utils.InvokeTx(this.sdk, this.signer, this.gasPrice, this.gasLimit, this.addr, method, params)
 	if err != nil {
 		err = fmt.Errorf("Borrow: %s", err)
@@ -727,14 +735,14 @@ func (this *FlashToken) TotalInsurance() (*big.Int, error) {
 	return res, err
 }
 
-func (this *FlashToken) Underlying() (common.Address, error) {
+func (this *FlashToken) Underlying() common.Address {
 	method := "underlying"
 	params := []interface{}{}
 	res, err := utils.PreExecuteAddress(this.sdk, this.addr, method, params)
 	if err != nil {
-		err = fmt.Errorf("Underlying: %s", err)
+	  fmt.Errorf("Underlying: %s", err)
 	}
-	return res, err
+	return res
 }
 
 func (this *FlashToken) UnderlyingName() (string, error) {
@@ -896,3 +904,4 @@ func GetITokenAddress(genSdk *ontSDK.OntologySdk, ftokenAddress common.Address) 
 	}
 	return insuranceAddress, nil
 }
+
