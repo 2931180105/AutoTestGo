@@ -58,7 +58,7 @@ func main() {
 	rpcClient := client.NewRpcClient()
 	rpcClient.SetAddress(cfg.Rpc[0])
 	sdk.SetDefaultClient(rpcClient)
-	otoken.TransferAllTestToken(cfg, account, sdk, "AJExyJ6rk3mdExs3F77jPpZ5xgKSVmYvLA")
+	otoken.TransferAllTestToken(cfg, account, sdk, "AQrbvno89zKPuq59PpTn2Xo41BrAwJN5z5")
 	return
 	//test wbtc borrow rate ,use defult account and use address
 	accounts := Utils.GetAccounts2(3000,1)

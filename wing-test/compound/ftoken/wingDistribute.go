@@ -238,7 +238,7 @@ func (this *FlashToken) WingSpeed4SuppluyTestByName(marketName  ,userAddr string
 	log.Infof("notifyRsult sub relRsult: %v", big.NewInt(0).Sub(notifyRsult, relRsult))
 	log.Infof("errRate : %v", new(big.Float).Quo(new(big.Float).SetInt(expRsult), new(big.Float).SetInt(relRsult)))
 	log.Infof("utils.CmpTestRuslt rate: %v", utils.CmpTestRuslt(expRsult, relRsult))
-	dao.SaveWingDisResultSupply(marketName,userAddr,this.addr.ToHexString(),user,total,wingSpeed,expRsult,notifyRsult,claimStates0.Timestamp,claimStates1.Timestamp,utils.CmpTestRuslt(expRsult, notifyRsult))
+	dao.SaveWingDisResultSupply(marketName,userAddr,this.addr.ToHexString(),total,user,wingSpeed,expRsult,notifyRsult,claimStates0.Timestamp,claimStates1.Timestamp,utils.CmpTestRuslt(expRsult, notifyRsult))
 }
 //func (this *FlashToken) TestWingSpeeds4Supply(marketAddr common.Address, usrAddr string, sy *sync.WaitGroup) {
 //	defer sy.Done()

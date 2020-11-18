@@ -15,8 +15,8 @@ func TestInsertStat(t *testing.T) {
 	}
 	NewDao(cfg)
 	//db.Table("want_name").AutoMigrate(&model.WingDisResultSupplyTmp{})
-	//db.CreateTable(&model.WingDisResultBorrow{})
-	//db.CreateTable(&model.WingDisResultSupply{})
+	db.CreateTable(&model.WingDisResultBorrow{})
+	db.CreateTable(&model.WingDisResultSupply{})
 	db.CreateTable(&model.BorrowRateSupply{})
 
 	//db.Table("nft_transfer_events").AutoMigrate(&event.NFTTransferEventModel{})

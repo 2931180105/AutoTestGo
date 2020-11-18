@@ -96,5 +96,6 @@ func TestWingSpeedTest(t *testing.T){
 	//	}
 	//	log.Infof("market.Name11: %s",marketName)
 	//}
-	market.WingSpeed4SuppluyTestByName("SUSD","ASQmMksvxcC8rbBGbsChUEwD7guXFH3riY")
+
+	market.WingSpeed4SuppluyTestByName("ONG","AT9sH4s84NGJYVqNHQWN6vkgb7jQ12eR7p")
 }
