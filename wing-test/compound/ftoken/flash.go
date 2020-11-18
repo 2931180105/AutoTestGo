@@ -7,6 +7,7 @@ import (
 	"github.com/mockyz/AutoTestGo/wing-test/utils"
 	ontSDK "github.com/ontio/ontology-go-sdk"
 	"github.com/ontio/ontology/common"
+	"github.com/ontio/ontology/smartcontract/service/native/ont"
 	"math/big"
 )
 
@@ -25,6 +26,7 @@ type FlashToken struct {
 type AccountSnapshot struct {
 	TokenBalance  *big.Int
 	BorrowBalance *big.Int
+	ValidBorrowBalance *big.Int
 	ExchangeRate  *big.Int
 }
 
@@ -78,6 +80,9 @@ func (this *FlashToken) UpdateSigner(newSigner *ontSDK.Account) {
 
 func (this *FlashToken) GetAddr() common.Address {
 	return this.addr
+}
+func (this *FlashToken) SetAddr(address common.Address) {
+	this.addr = address
 }
 
 func (this *FlashToken) Init(admin, underlying_ common.Address, underlyingName string, comptroller_,
@@ -234,6 +239,22 @@ func (this *FlashToken) NeoVMApprove(owner, spender common.Address, amount *big.
 	return hash, err
 }
 
+func (this *FlashToken) NativeApprove(owner, spender common.Address, amount *big.Int) (string, error) {
+	method := "approve"
+	state := &ont.State{
+		From:  owner,
+		To:    spender,
+		Value: amount.Uint64(),
+	}
+	params := []interface{}{state}
+	hash, err := utils.InvokeNativeTx(this.sdk, this.signer, this.gasPrice, this.gasLimit, this.addr,
+		method, params)
+	if err != nil {
+		err = fmt.Errorf("NativeApprove: %s", err)
+	}
+	return hash, err
+}
+
 func (this *FlashToken) AccrueInterest() (string, error) {
 	method := "accrueInterest"
 	params := []interface{}{}
@@ -242,6 +263,18 @@ func (this *FlashToken) AccrueInterest() (string, error) {
 		err = fmt.Errorf("AccrueInterest: %s", err)
 	}
 	return hash, err
+}
+
+
+func (this *FlashToken) AccrualTimestamp() (uint64, error) {
+	method := "accrualTimestamp"
+	params := []interface{}{}
+	res, err := utils.PreExecuteBigInt(this.sdk, this.addr, method, params)
+	if err != nil {
+		err = fmt.Errorf("AccrualTimestamp: %s", err)
+		return 0, err
+	}
+	return res.Uint64(), nil
 }
 
 func (this *FlashToken) SetPendingAdmin(pendingAdmin common.Address) (string, error) {
@@ -419,6 +452,10 @@ func DeserializeAccountSnapshot(data []byte) (*AccountSnapshot, error) {
 	if eof {
 		return nil, fmt.Errorf("read BorrowBalance eof")
 	}
+	v, eof := source.NextI128()
+	if eof {
+		return nil, fmt.Errorf("read ValidBorrowBalance eof")
+	}
 	e, eof := source.NextI128()
 	if eof {
 		return nil, fmt.Errorf("read ExchangeRate eof")
@@ -426,6 +463,7 @@ func DeserializeAccountSnapshot(data []byte) (*AccountSnapshot, error) {
 	return &AccountSnapshot{
 		TokenBalance:  t.ToBigInt(),
 		BorrowBalance: b.ToBigInt(),
+		ValidBorrowBalance: v.ToBigInt(),
 		ExchangeRate:  e.ToBigInt(),
 	}, nil
 }
@@ -488,14 +526,34 @@ func (this *FlashToken) ExchangeRateStored() (*big.Int, error) {
 	return res, err
 }
 
-func (this *FlashToken) BorrowBalanceStored(account common.Address) (*big.Int, error) {
-	method := "borrowBalanceStored"
-	params := []interface{}{account}
+
+func (this *FlashToken) TotalValidBorrows() (*big.Int, error) {
+	method := "totalValidBorrows"
+	params := []interface{}{}
 	res, err := utils.PreExecuteBigInt(this.sdk, this.addr, method, params)
 	if err != nil {
-		err = fmt.Errorf("BorrowBalanceStored: %s", err)
+		err = fmt.Errorf("TotalValidBorrows: %s", err)
 	}
 	return res, err
+}
+
+func (this *FlashToken) BorrowBalanceStored(account common.Address) (*big.Int, *big.Int, error) {
+	method := "borrowBalanceStored"
+	params := []interface{}{account}
+	res, err := utils.PreExecuteByteArray(this.sdk, this.addr, method, params)
+	if err != nil {
+		return nil, nil, fmt.Errorf("BorrowBalanceStored: %s", err)
+	}
+	source := common.NewZeroCopySource(res)
+	borrowBalance, eof := source.NextI128()
+	if eof {
+		return nil, nil, fmt.Errorf("BorrowBalanceStored: read borrowBalance eof")
+	}
+	validBorrowBalance, eof := source.NextI128()
+	if eof {
+		return nil, nil, fmt.Errorf("BorrowBalanceStored: read borrowBalance eof")
+	}
+	return borrowBalance.ToBigInt(), validBorrowBalance.ToBigInt(), nil
 }
 
 func (this *FlashToken) TotalBorrows() (*big.Int, error) {
@@ -714,7 +772,7 @@ func (this *FlashToken) IsFToken() (bool, error) {
 	params := []interface{}{}
 	res, err := utils.PreExecuteBool(this.sdk, this.addr, method, params)
 	if err != nil {
-		err = fmt.Errorf("IsFToken: %s", err)
+		err = fmt.Errorf("IsBorrow: %s", err)
 	}
 	return res, err
 }

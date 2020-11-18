@@ -56,7 +56,9 @@ func ExpTestRuslt(wingSpeed, users, total *big.Int, start, end, percetage uint32
 	y := (end - start) * percetage
 	reslut := big.NewInt(0).Div(big.NewInt(0).Mul(x, big.NewInt(int64(y))), big.NewInt(100))
 	log.Infof("wingSpeed: %v,users: %v,total: %v,start: %v,end: %v,percetage: %v", wingSpeed, users, total, start, end, percetage)
-
+	if reslut.Cmp(big.NewInt(0))==0{
+		reslut =big.NewInt(1)
+	}
 	return reslut
 }
 func GetTimeByTxhash(sdk *ontSDK.OntologySdk, txHash string) uint32 {
@@ -74,7 +76,7 @@ func GetTimeByTxhash(sdk *ontSDK.OntologySdk, txHash string) uint32 {
 	return blockInfo.Header.Timestamp
 }
 func CmpTestRuslt(expRsult, relRsult *big.Int) *big.Float {
-	if relRsult.Cmp(expRsult) > 0 {
+	if relRsult.Cmp(expRsult) < 0 {
 		return new(big.Float).Sub(new(big.Float).SetInt64(1), new(big.Float).Quo(new(big.Float).SetInt(relRsult), new(big.Float).SetInt(expRsult)))
 	} else {
 		return new(big.Float).Sub(new(big.Float).SetInt64(1), new(big.Float).Quo(new(big.Float).SetInt(expRsult), new(big.Float).SetInt(relRsult)))
@@ -83,6 +85,7 @@ func CmpTestRuslt(expRsult, relRsult *big.Int) *big.Float {
 }
 func ExpInterestAdd(totalBorrow, delayBlockNum, borrowRatePerBlock *big.Int) *big.Int {
 	x := big.NewInt(0).Mul(big.NewInt(0).Mul(totalBorrow, delayBlockNum), borrowRatePerBlock)
-	y := big.NewInt(0).Quo(x, big.NewInt(1e9))
+	//DIV 10^20
+	y := big.NewInt(0).Div(x, ToIntByPrecise("1",18))
 	return y
 }

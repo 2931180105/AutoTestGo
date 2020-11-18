@@ -5,11 +5,15 @@ import (
 	"encoding/hex"
 	"fmt"
 	_ "github.com/go-sql-driver/mysql"
+	"github.com/jinzhu/gorm"
+	"github.com/mockyz/AutoTestGo/wing-test/dbHelper/model"
 	"github.com/ontio/ontology-crypto/keypair"
 	"github.com/ontio/ontology-crypto/signature"
 	goSdk "github.com/ontio/ontology-go-sdk"
 	"github.com/ontio/ontology/common/log"
 	"github.com/ontio/ontology/core/types"
+	"math/big"
+	"time"
 )
 
 func errorHandler(err error) {
@@ -34,7 +38,6 @@ func CreateTable(db *sql.DB, sql string) {
 	errorHandler(err)
 }
 
-var INSERT_DATA = `INSERT INTO account_info(base58,wif,balance_ont,balance_wing,staking_amount) VALUES(?,?,?,?,?);`
 
 // 插入数据
 func Insert(db *sql.DB, base58 string, wif string, balance_ont int, balance_wing int, staking_amount int) {
@@ -44,21 +47,38 @@ func Insert(db *sql.DB, base58 string, wif string, balance_ont int, balance_wing
 	}
 }
 
-var UPDATE_DATA = `UPDATE account_info SET balance_wing=? WHERE base58=?;`
+// 插入数据
+func InsertWingDisRes(db *sql.DB, market_name,user_addr,market_addr string,total_valid_borrow,user_valid_borrow,wing_speed,exp_res,rel_res *big.Int,start_time,end_time uint32 ,err_rate *big.Float ) {
+	errRate ,_:=err_rate.Float64()
+	_, err := db.Exec(INSERT_WING_DIS_RES,market_name,user_addr,market_addr,total_valid_borrow.Int64(),user_valid_borrow.Int64(),wing_speed.Int64(),exp_res.Int64(),rel_res.Int64(),start_time,end_time,errRate ,time.Now())
+	if err != nil {
+		log.Errorf("Insert data error : %s", err)
+	}
+}
+func InsertWingDisRes4Borrow(db *gorm.DB, market_name,user_addr,market_addr string,total_valid_borrow,user_valid_borrow,wing_speed,exp_res,rel_res *big.Int,start_time,end_time uint32 ,err_rate *big.Float ) {
+	data := &model.WingDisResultBorrow{MarketName:market_name,UserAddr:user_addr,MarketAddr:market_addr,TotalValidBorrow:total_valid_borrow.String(),UserValidBorrow:user_valid_borrow.String(),WingSpeed:wing_speed.String(),ExpRes:exp_res.String(),RelRes:rel_res.String(),StartTime:start_time,EndTime:end_time,ErrRate:err_rate.String()}
+	db.Create(data)
 
+}
+// 插入数据
+func InsertWingDisRes4Supply(db *sql.DB, market_name,user_addr,market_addr string,total_valid_borrow,user_valid_borrow,wing_speed,exp_res,rel_res *big.Int,start_time,end_time uint32 ,err_rate *big.Float ) {
+	errRate ,_:=err_rate.Float64()
+	_, err := db.Exec(INSERT_WING_DIS_RES2,market_name,user_addr,market_addr,total_valid_borrow.Int64(),user_valid_borrow.Int64(),wing_speed.Int64(),exp_res.Int64(),rel_res.Int64(),start_time,end_time,errRate ,time.Now())
+	if err != nil {
+		log.Errorf("Insert data error : %s", err)
+	}
+}
 // 修改数据
 func Update(db *sql.DB, wing_balance uint64, base58 string) (sql.Result, error) {
 	return db.Exec(UPDATE_DATA, wing_balance, base58)
 }
 
-var UPDATE_Staking = `UPDATE account_info SET staking_amount=? WHERE base58=?;`
 
 // 修改数据
 func UpdateStakingBalance(db *sql.DB, wing_balance uint64, base58 string) (sql.Result, error) {
 	return db.Exec(UPDATE_Staking, wing_balance, base58)
 }
 
-var DELETE_DATA = `DELETE FROM student WHERE age>=30`
 
 // 删除记录
 func Delete(db *sql.DB) {
@@ -71,10 +91,6 @@ var DELETE_TABLE = `DROP TABLE student;`
 func DeleteTable(db *sql.DB) {
 	db.Exec(DELETE_TABLE)
 }
-
-var QUERY_DATA = `SELECT * FROM account_info limit ?,?;`
-
-var QUERY_Addr = `SELECT * FROM account_info WHERE base58=?;`
 
 // 查询数据
 func Query(db *sql.DB, start, end int) *sql.Rows {

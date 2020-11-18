@@ -2,43 +2,24 @@ package test_case
 
 import (
 	"github.com/mockyz/AutoTestGo/common/log"
-	"github.com/mockyz/AutoTestGo/wing-test/utils"
+	"github.com/mockyz/AutoTestGo/wing-test/compound/comptroller"
+	"github.com/mockyz/AutoTestGo/wing-test/compound/ftoken"
+	config "github.com/mockyz/AutoTestGo/wing-test/config_ont"
 	ontSDK "github.com/ontio/ontology-go-sdk"
 	"math/big"
-	"time"
 )
-
-func GetClaimWingEventByHash(sdk *ontSDK.OntologySdk, txHash string) *ClaimWingAtMarket {
-	claimWingAtMarket := new(ClaimWingAtMarket)
-	//wait hash
-	for j := 0; j < 50; j++ {
-		time.Sleep(time.Second * 3)
-		evts, err := sdk.GetSmartContractEvent(txHash)
-		if err != nil || evts == nil {
-			continue
-		} else {
-			log.Infof("evts = %v\n", evts)
-			log.Infof("TxHash:%v\n", txHash)
-			log.Infof("State:%d\n", evts.State)
-			for _, notify := range evts.Notify {
-				log.Infof("ContractAddress:%v\n", notify.ContractAddress)
-				log.Infof("States:%+v\n", notify.States)
-				value := notify.States.([]interface{})
-				if value[0].(string) == "DistributedSupplierWing" {
-					claimWingAtMarket.DistributedSupplierWing = utils.ToIntByPrecise(value[3].(string), 0)
-				}
-				if value[0].(string) == "DistributedBorrowerWing" {
-					claimWingAtMarket.DistributedBorrowerWing = utils.ToIntByPrecise(value[3].(string), 0)
-				}
-				if value[0].(string) == "DistributedGuaranteeWing" {
-					claimWingAtMarket.DistributedGuaranteeWing = utils.ToIntByPrecise(value[3].(string), 0)
-				}
-			}
-			break
-		}
+func NewMarkets(cfg *config.Config, account *ontSDK.Account, sdk *ontSDK.OntologySdk, makretAddr string) (*ftoken.FlashToken, error) {
+	comp,err := comptroller.NewComptroller(sdk,cfg.Comptroller,account,cfg.GasPrice,cfg.GasLimit)
+	if err !=nil {
+		log.Errorf("NewComptroller  err:%v",err)
 	}
-	claimWingAtMarket.Timestamp = GetTimeByTxhash(sdk, txHash)
-	return claimWingAtMarket
+	market ,err := ftoken.NewFlashToken2(sdk,makretAddr,account,cfg,comp)
+	if err !=nil {
+		log.Errorf("NewFlashToken  err:%v",err)
+	}
+	market.TestConfig = cfg
+
+	return market, nil
 }
 func ExpTestRuslt(wingSpeed, users, total *big.Int, start, end, percetage uint32) *big.Int {
 
@@ -76,6 +57,6 @@ func CmpTestRuslt(expRsult, relRsult *big.Int) *big.Float {
 }
 func ExpInterestAdd(totalBorrow, delayBlockNum, borrowRatePerBlock *big.Int) *big.Int {
 	x := big.NewInt(0).Mul(big.NewInt(0).Mul(totalBorrow, delayBlockNum), borrowRatePerBlock)
-	y := big.NewInt(0).Quo(x, big.NewInt(1e9))
+	y := big.NewInt(0).Quo(x, big.NewInt(10^9))
 	return y
 }

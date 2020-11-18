@@ -153,3 +153,78 @@ func PreExecuteStringArray(sdk *ontSDK.OntologySdk, contract common.Address, met
 	}
 	return result, nil
 }
+func PreExecuteByteArray(sdk *ontSDK.OntologySdk, contract common.Address, method string, params []interface{}) ([]byte, error) {
+	res, err := sdk.WasmVM.PreExecInvokeWasmVMContract(contract, method, params)
+	if err != nil {
+		return nil, fmt.Errorf("PreExecuteByteArray: %s", err)
+	}
+	data, err := res.Result.ToByteArray()
+	if err != nil {
+		return nil, fmt.Errorf("PreExecuteByteArray: %s", err)
+	}
+	return data, nil
+}
+func PreExecuteUint64(sdk *ontSDK.OntologySdk, contract common.Address, method string, params []interface{}) (uint64, error) {
+	res, err := sdk.WasmVM.PreExecInvokeWasmVMContract(contract, method, params)
+	if err != nil {
+		return 0, fmt.Errorf("PreExecuteUint64: %s", err)
+	}
+	bs, err := res.Result.ToByteArray()
+	if err != nil {
+		return 0, fmt.Errorf("PreExecuteUint64: %s", err)
+	}
+	source := common.NewZeroCopySource(bs)
+	data, eof := source.NextUint64()
+	if eof {
+		return 0, fmt.Errorf("PreExecuteUint64: %v", eof)
+	}
+	return data, nil
+}
+
+
+func PreExecuteUint128(sdk *ontSDK.OntologySdk, contract common.Address, method string, params []interface{}) (common.I128, error) {
+	res, err := sdk.WasmVM.PreExecInvokeWasmVMContract(contract, method, params)
+	if err != nil {
+		return common.I128{}, fmt.Errorf("PreExecuteUint128: %s", err)
+	}
+	bs, err := res.Result.ToByteArray()
+	if err != nil {
+		return common.I128{}, fmt.Errorf("PreExecuteUint128: %s", err)
+	}
+	source := common.NewZeroCopySource(bs)
+	data, eof := source.NextI128()
+	if eof {
+		return common.I128{}, fmt.Errorf("PreExecuteUint128: %v", eof)
+	}
+	return data, nil
+}
+
+func PreExecuteU256(sdk *ontSDK.OntologySdk, contract common.Address, method string, params []interface{}) (*big.Int, error) {
+	res, err := sdk.WasmVM.PreExecInvokeWasmVMContract(contract, method, params)
+	if err != nil {
+		return nil, fmt.Errorf("PreExecuteU256: %s", err)
+	}
+	data, err := res.Result.ToByteArray()
+	if err != nil {
+		return nil, fmt.Errorf("PreExecuteU256: %s", err)
+	}
+	return common.BigIntFromNeoBytes(data), nil
+}
+
+
+func InvokeNativeTx(sdk *ontSDK.OntologySdk, signConfig *ontSDK.Account, gasPrice, gasLimit uint64,
+	contract common.Address, method string, params []interface{}) (txHash string, err error) {
+	tx, err := sdk.Native.NewNativeInvokeTransaction(gasPrice, gasLimit, 00, contract, method, params)
+	if err != nil {
+		return "", fmt.Errorf("InvokeNativeTx: %s", err)
+	}
+	err = SignTx(sdk, tx,0, signConfig)
+	if err != nil {
+		return "", fmt.Errorf("InvokeNativeTx: %s", err)
+	}
+	hash, err := sdk.SendTransaction(tx)
+	if err != nil {
+		return "", fmt.Errorf("InvokeNativeTx: %s", err)
+	}
+	return hash.ToHexString(), nil
+}
