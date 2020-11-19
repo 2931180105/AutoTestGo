@@ -76,12 +76,14 @@ func GetTimeByTxhash(sdk *ontSDK.OntologySdk, txHash string) uint32 {
 	return blockInfo.Header.Timestamp
 }
 func CmpTestRuslt(expRsult, relRsult *big.Int) *big.Float {
+	if relRsult.Cmp(big.NewInt(0))==0 || expRsult.Cmp(big.NewInt(0))==0{
+		return big.NewFloat(1)
+	}
 	if relRsult.Cmp(expRsult) < 0 {
 		return new(big.Float).Sub(new(big.Float).SetInt64(1), new(big.Float).Quo(new(big.Float).SetInt(relRsult), new(big.Float).SetInt(expRsult)))
 	} else {
 		return new(big.Float).Sub(new(big.Float).SetInt64(1), new(big.Float).Quo(new(big.Float).SetInt(expRsult), new(big.Float).SetInt(relRsult)))
 	}
-	return nil
 }
 func ExpInterestAdd(totalBorrow, delayBlockNum, borrowRatePerBlock *big.Int) *big.Int {
 	x := big.NewInt(0).Mul(big.NewInt(0).Mul(totalBorrow, delayBlockNum), borrowRatePerBlock)
