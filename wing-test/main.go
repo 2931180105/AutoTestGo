@@ -3,7 +3,6 @@ package main
 import (
 	"github.com/mockyz/AutoTestGo/wing-test/compound/otoken"
 	config "github.com/mockyz/AutoTestGo/wing-test/config_ont"
-	test_case "github.com/mockyz/AutoTestGo/wing-test/test-case"
 	Utils "github.com/mockyz/AutoTestGo/wing-test/utils"
 	goSdk "github.com/ontio/ontology-go-sdk"
 	"github.com/ontio/ontology-go-sdk/client"
@@ -58,20 +57,8 @@ func main() {
 	rpcClient := client.NewRpcClient()
 	rpcClient.SetAddress(cfg.Rpc[0])
 	sdk.SetDefaultClient(rpcClient)
-	otoken.TransferAllTestToken(cfg, account, sdk, "AQrbvno89zKPuq59PpTn2Xo41BrAwJN5z5")
+	otoken.TransferAllTestToken(cfg, account, sdk, "Abm6jq16PJe6cxjYtUXFXNYQeCD5wiNmye")
 	return
-	//test wbtc borrow rate ,use defult account and use address
-	accounts := Utils.GetAccounts2(3000,1)
-	market,_ := test_case.NewMarkets(cfg,accounts[0],sdk,cfg.FWBTC)
-	//market.TestBorrowRateByBlock()
-	market.TestBorrowRateByTime()
-
-	//market.TestBorrowRateByBlock2Addr("AG4pZwKa9cr8ca7PED7FqzUfcwnrQ2N26w")
-	market.TestBorrowRateByTime2Addr("AG4pZwKa9cr8ca7PED7FqzUfcwnrQ2N26w")
-
-	market.WingSpeed4SuppluyTest("AG4pZwKa9cr8ca7PED7FqzUfcwnrQ2N26w")
-	//AT9sH4s84NGJYVqNHQWN6vkgb7jQ12eR7p
-	//AJkQo3Fo7JKxtrKZPqYJQuh9cXH38w7rVt
 	//OToken.DelegateToProxyAllTestToken(cfg, account, sdk)
 	//OToken.OTokenTransfer(cfg, account, sdk, "ANxSSzWmFnAtqWBtq2KthP73oX4bHf9FyZ", cfg.ODAI)
 	return

@@ -12,12 +12,12 @@ import (
 // TODO: support estimate gas before execute tx
 
 type Comptroller struct {
-	sdk    *ontSDK.OntologySdk
-	signer *ontSDK.Account
-	addr   common.Address
+	Sdk    *ontSDK.OntologySdk
+	Signer *ontSDK.Account
+	Addr   common.Address
 
-	gasPrice uint64
-	gasLimit uint64
+	GasPrice uint64
+	GasLimit uint64
 }
 
 func NewComptroller(nodeRPCAddr string, contractAddr string, signer *ontSDK.Account, gasPrice,
@@ -38,21 +38,21 @@ func NewComptroller(nodeRPCAddr string, contractAddr string, signer *ontSDK.Acco
 		}
 	}
 	return &Comptroller{
-		sdk:      sdk,
-		signer:   signer,
-		addr:     addr,
-		gasPrice: gasPrice,
-		gasLimit: gasLimit,
+		Sdk:      sdk,
+		Signer:   signer,
+		Addr:     addr,
+		GasPrice: gasPrice,
+		GasLimit: gasLimit,
 	}, nil
 }
 
 
 func (this *Comptroller) UpdateSigner(newSigner *ontSDK.Account) {
-	this.signer = newSigner
+	this.Signer = newSigner
 }
 
 func (this *Comptroller) GetAddr() common.Address {
-	return this.addr
+	return this.Addr
 }
 
 func (this *Comptroller) Init(admin, globalParam, wingAddr, priceOracle, oscoreOracle common.Address, maxSupply,
@@ -60,7 +60,7 @@ func (this *Comptroller) Init(admin, globalParam, wingAddr, priceOracle, oscoreO
 	method := "init"
 	params := []interface{}{admin, globalParam, wingAddr, priceOracle, oscoreOracle,
 		maxSupply, insuranceRepayFactor, liquidateIncentiveFactor}
-	hash, err := utils.InvokeTx(this.sdk, this.signer, this.gasPrice, this.gasLimit, this.addr, method, params)
+	hash, err := utils.InvokeTx(this.Sdk, this.Signer, this.GasPrice, this.GasLimit, this.Addr, method, params)
 	if err != nil {
 		err = fmt.Errorf("Init: %s", err)
 	}
@@ -70,7 +70,7 @@ func (this *Comptroller) Init(admin, globalParam, wingAddr, priceOracle, oscoreO
 func (this *Comptroller) SetPendingAdmin(newPendingAdmin common.Address) (string, error) {
 	method := "_setPendingAdmin"
 	params := []interface{}{newPendingAdmin}
-	hash, err := utils.InvokeTx(this.sdk, this.signer, this.gasPrice, this.gasLimit, this.addr, method, params)
+	hash, err := utils.InvokeTx(this.Sdk, this.Signer, this.GasPrice, this.GasLimit, this.Addr, method, params)
 	if err != nil {
 		err = fmt.Errorf("SetPendingAdmin: %s", err)
 	}
@@ -80,7 +80,7 @@ func (this *Comptroller) SetPendingAdmin(newPendingAdmin common.Address) (string
 func (this *Comptroller) AcceptAdmin() (string, error) {
 	method := "_acceptAdmin"
 	params := []interface{}{}
-	hash, err := utils.InvokeTx(this.sdk, this.signer, this.gasPrice, this.gasLimit, this.addr, method, params)
+	hash, err := utils.InvokeTx(this.Sdk, this.Signer, this.GasPrice, this.GasLimit, this.Addr, method, params)
 	if err != nil {
 		err = fmt.Errorf("AcceptAdmin: %s", err)
 	}
@@ -90,7 +90,7 @@ func (this *Comptroller) AcceptAdmin() (string, error) {
 func (this *Comptroller) SetPriceOracle(oracle common.Address) (string, error) {
 	method := "_setPriceOracle"
 	params := []interface{}{oracle}
-	hash, err := utils.InvokeTx(this.sdk, this.signer, this.gasPrice, this.gasLimit, this.addr, method, params)
+	hash, err := utils.InvokeTx(this.Sdk, this.Signer, this.GasPrice, this.GasLimit, this.Addr, method, params)
 	if err != nil {
 		err = fmt.Errorf("SetPriceOracle: %s", err)
 	}
@@ -100,7 +100,7 @@ func (this *Comptroller) SetPriceOracle(oracle common.Address) (string, error) {
 func (this *Comptroller) SetOScoreOracle(oracle common.Address) (string, error) {
 	method := "_setOScoreOracle"
 	params := []interface{}{oracle}
-	hash, err := utils.InvokeTx(this.sdk, this.signer, this.gasPrice, this.gasLimit, this.addr, method, params)
+	hash, err := utils.InvokeTx(this.Sdk, this.Signer, this.GasPrice, this.GasLimit, this.Addr, method, params)
 	if err != nil {
 		err = fmt.Errorf("SetOScoreOracle: %s", err)
 	}
@@ -110,7 +110,7 @@ func (this *Comptroller) SetOScoreOracle(oracle common.Address) (string, error) 
 func (this *Comptroller) SetGlobalParam(globalParam common.Address) (string, error) {
 	method := "_setGlobalParam"
 	params := []interface{}{globalParam}
-	hash, err := utils.InvokeTx(this.sdk, this.signer, this.gasPrice, this.gasLimit, this.addr, method, params)
+	hash, err := utils.InvokeTx(this.Sdk, this.Signer, this.GasPrice, this.GasLimit, this.Addr, method, params)
 	if err != nil {
 		err = fmt.Errorf("SetGlobalParam: %s", err)
 	}
@@ -120,7 +120,7 @@ func (this *Comptroller) SetGlobalParam(globalParam common.Address) (string, err
 func (this *Comptroller) SetWingAddr(wing common.Address) (string, error) {
 	method := "_setWingAddr"
 	params := []interface{}{wing}
-	hash, err := utils.InvokeTx(this.sdk, this.signer, this.gasPrice, this.gasLimit, this.addr, method, params)
+	hash, err := utils.InvokeTx(this.Sdk, this.Signer, this.GasPrice, this.GasLimit, this.Addr, method, params)
 	if err != nil {
 		err = fmt.Errorf("SetWingAddr: %s", err)
 	}
@@ -130,7 +130,7 @@ func (this *Comptroller) SetWingAddr(wing common.Address) (string, error) {
 func (this *Comptroller) SetInsuranceRepayFactor(factor *big.Int) (string, error) {
 	method := "_setInsuranceRepayFactor"
 	params := []interface{}{factor}
-	hash, err := utils.InvokeTx(this.sdk, this.signer, this.gasPrice, this.gasLimit, this.addr, method, params)
+	hash, err := utils.InvokeTx(this.Sdk, this.Signer, this.GasPrice, this.GasLimit, this.Addr, method, params)
 	if err != nil {
 		err = fmt.Errorf("SetInsuranceRepayFactor: %s", err)
 	}
@@ -140,7 +140,7 @@ func (this *Comptroller) SetInsuranceRepayFactor(factor *big.Int) (string, error
 func (this *Comptroller) SetMaxSupplyValue(value *big.Int) (string, error) {
 	method := "_setMaxSupplyValue"
 	params := []interface{}{value}
-	hash, err := utils.InvokeTx(this.sdk, this.signer, this.gasPrice, this.gasLimit, this.addr, method, params)
+	hash, err := utils.InvokeTx(this.Sdk, this.Signer, this.GasPrice, this.GasLimit, this.Addr, method, params)
 	if err != nil {
 		err = fmt.Errorf("SetMaxSupplyValue: %s", err)
 	}
@@ -150,7 +150,7 @@ func (this *Comptroller) SetMaxSupplyValue(value *big.Int) (string, error) {
 func (this *Comptroller) MaxSupplyValue() (*big.Int, error) {
 	method := "maxSupplyValue"
 	params := []interface{}{}
-	res, err := utils.PreExecuteBigInt(this.sdk, this.addr, method, params)
+	res, err := utils.PreExecuteBigInt(this.Sdk, this.Addr, method, params)
 	if err != nil {
 		err = fmt.Errorf("MaxSupplyValue: %s", err)
 	}
@@ -160,7 +160,7 @@ func (this *Comptroller) MaxSupplyValue() (*big.Int, error) {
 func (this *Comptroller) TotalSupplyValue() (*big.Int, error) {
 	method := "totalSupplyValue"
 	params := []interface{}{}
-	res, err := utils.PreExecuteBigInt(this.sdk, this.addr, method, params)
+	res, err := utils.PreExecuteBigInt(this.Sdk, this.Addr, method, params)
 	if err != nil {
 		err = fmt.Errorf("TotalSupplyValue: %s", err)
 	}
@@ -170,7 +170,7 @@ func (this *Comptroller) TotalSupplyValue() (*big.Int, error) {
 func (this *Comptroller) SetLiquidationIncentive(incentive *big.Int) (string, error) {
 	method := "_setLiquidationIncentive"
 	params := []interface{}{incentive}
-	hash, err := utils.InvokeTx(this.sdk, this.signer, this.gasPrice, this.gasLimit, this.addr, method, params)
+	hash, err := utils.InvokeTx(this.Sdk, this.Signer, this.GasPrice, this.GasLimit, this.Addr, method, params)
 	if err != nil {
 		err = fmt.Errorf("SetLiquidationIncentive: %s", err)
 	}
@@ -183,7 +183,7 @@ func (this *Comptroller) RegisterMarket(marketName string, supplyPool common.Add
 	method := "registerMarket"
 	params := []interface{}{marketName, supplyPool, borrowPool, insurancePool, underlying,
 		underlyingDecimals, wingWeight}
-	hash, err := utils.InvokeTx(this.sdk, this.signer, this.gasPrice, this.gasLimit, this.addr, method, params)
+	hash, err := utils.InvokeTx(this.Sdk, this.Signer, this.GasPrice, this.GasLimit, this.Addr, method, params)
 	if err != nil {
 		err = fmt.Errorf("RegisterMarket: %s", err)
 	}
@@ -193,7 +193,7 @@ func (this *Comptroller) RegisterMarket(marketName string, supplyPool common.Add
 func (this *Comptroller) UpdateMarketUnderlying(market string, underlying common.Address) (string, error) {
 	method := "updateMarketUnderlying"
 	params := []interface{}{market, underlying}
-	hash, err := utils.InvokeTx(this.sdk, this.signer, this.gasPrice, this.gasLimit, this.addr, method, params)
+	hash, err := utils.InvokeTx(this.Sdk, this.Signer, this.GasPrice, this.GasLimit, this.Addr, method, params)
 	if err != nil {
 		err = fmt.Errorf("UpdateMarketUnderlying: %s", err)
 	}
@@ -203,7 +203,7 @@ func (this *Comptroller) UpdateMarketUnderlying(market string, underlying common
 func (this *Comptroller) UpdateMarketSupplyPool(market string, supplyPool common.Address) (string, error) {
 	method := "updateMarketSupplyPool"
 	params := []interface{}{market, supplyPool}
-	hash, err := utils.InvokeTx(this.sdk, this.signer, this.gasPrice, this.gasLimit, this.addr, method, params)
+	hash, err := utils.InvokeTx(this.Sdk, this.Signer, this.GasPrice, this.GasLimit, this.Addr, method, params)
 	if err != nil {
 		err = fmt.Errorf("UpdateMarketSupplyPool: %s", err)
 	}
@@ -213,7 +213,7 @@ func (this *Comptroller) UpdateMarketSupplyPool(market string, supplyPool common
 func (this *Comptroller) UpdateMarketBorrowPool(market string, borrowPool common.Address) (string, error) {
 	method := "updateMarketBorrowPool"
 	params := []interface{}{market, borrowPool}
-	hash, err := utils.InvokeTx(this.sdk, this.signer, this.gasPrice, this.gasLimit, this.addr, method, params)
+	hash, err := utils.InvokeTx(this.Sdk, this.Signer, this.GasPrice, this.GasLimit, this.Addr, method, params)
 	if err != nil {
 		err = fmt.Errorf("UpdateMarketBorrowPool: %s", err)
 	}
@@ -223,7 +223,7 @@ func (this *Comptroller) UpdateMarketBorrowPool(market string, borrowPool common
 func (this *Comptroller) UpdateMarketInsurancePool(market string, insurancePool common.Address) (string, error) {
 	method := "updateMarketInsurancePool"
 	params := []interface{}{market, insurancePool}
-	hash, err := utils.InvokeTx(this.sdk, this.signer, this.gasPrice, this.gasLimit, this.addr, method, params)
+	hash, err := utils.InvokeTx(this.Sdk, this.Signer, this.GasPrice, this.GasLimit, this.Addr, method, params)
 	if err != nil {
 		err = fmt.Errorf("UpdateMarketInsurancePool: %s", err)
 	}
@@ -233,7 +233,7 @@ func (this *Comptroller) UpdateMarketInsurancePool(market string, insurancePool 
 func (this *Comptroller) UpdateMarketUnderlyingDecimals(market string, underlyingDecimals uint64) (string, error) {
 	method := "updateMarketUnderlyingDecimals"
 	params := []interface{}{market, underlyingDecimals}
-	hash, err := utils.InvokeTx(this.sdk, this.signer, this.gasPrice, this.gasLimit, this.addr, method, params)
+	hash, err := utils.InvokeTx(this.Sdk, this.Signer, this.GasPrice, this.GasLimit, this.Addr, method, params)
 	if err != nil {
 		err = fmt.Errorf("UpdateMarketUnderlyingDecimals: %s", err)
 	}
@@ -243,7 +243,7 @@ func (this *Comptroller) UpdateMarketUnderlyingDecimals(market string, underlyin
 func (this *Comptroller) UpdateMarketWingWeight(market string, weight uint64) (string, error) {
 	method := "updateMarketWingWeight"
 	params := []interface{}{market, weight}
-	hash, err := utils.InvokeTx(this.sdk, this.signer, this.gasPrice, this.gasLimit, this.addr, method, params)
+	hash, err := utils.InvokeTx(this.Sdk, this.Signer, this.GasPrice, this.GasLimit, this.Addr, method, params)
 	if err != nil {
 		err = fmt.Errorf("UpdateMarketWingWeight: %s", err)
 	}
@@ -253,7 +253,7 @@ func (this *Comptroller) UpdateMarketWingWeight(market string, weight uint64) (s
 func (this *Comptroller) UpdateWingSBI(market common.Address, supplyPortion, borrowPortion, insurancePortion uint8) (string, error) {
 	method := "updateWingSBI"
 	params := []interface{}{market, supplyPortion, borrowPortion, insurancePortion}
-	hash, err := utils.InvokeTx(this.sdk, this.signer, this.gasPrice, this.gasLimit, this.addr, method, params)
+	hash, err := utils.InvokeTx(this.Sdk, this.Signer, this.GasPrice, this.GasLimit, this.Addr, method, params)
 	if err != nil {
 		err = fmt.Errorf("UpdateWingSBI: %s", err)
 	}
@@ -263,7 +263,7 @@ func (this *Comptroller) UpdateWingSBI(market common.Address, supplyPortion, bor
 func (this *Comptroller) SetPauseGuardian(newPausedGuardian common.Address) (string, error) {
 	method := "_setPauseGuardian"
 	params := []interface{}{newPausedGuardian}
-	hash, err := utils.InvokeTx(this.sdk, this.signer, this.gasPrice, this.gasLimit, this.addr, method, params)
+	hash, err := utils.InvokeTx(this.Sdk, this.Signer, this.GasPrice, this.GasLimit, this.Addr, method, params)
 	if err != nil {
 		err = fmt.Errorf("SetPauseGuardian: %s", err)
 	}
@@ -273,7 +273,7 @@ func (this *Comptroller) SetPauseGuardian(newPausedGuardian common.Address) (str
 func (this *Comptroller) SetMintPaused(market common.Address, state bool) (string, error) {
 	method := "_setMintPaused"
 	params := []interface{}{market, state}
-	hash, err := utils.InvokeTx(this.sdk, this.signer, this.gasPrice, this.gasLimit, this.addr, method, params)
+	hash, err := utils.InvokeTx(this.Sdk, this.Signer, this.GasPrice, this.GasLimit, this.Addr, method, params)
 	if err != nil {
 		err = fmt.Errorf("SetMintPaused: %s", err)
 	}
@@ -283,7 +283,7 @@ func (this *Comptroller) SetMintPaused(market common.Address, state bool) (strin
 func (this *Comptroller) SetBorrowPaused(market common.Address, state bool) (string, error) {
 	method := "_setBorrowPaused"
 	params := []interface{}{market, state}
-	hash, err := utils.InvokeTx(this.sdk, this.signer, this.gasPrice, this.gasLimit, this.addr, method, params)
+	hash, err := utils.InvokeTx(this.Sdk, this.Signer, this.GasPrice, this.GasLimit, this.Addr, method, params)
 	if err != nil {
 		err = fmt.Errorf("SetBorrowPaused: %s", err)
 	}
@@ -293,7 +293,7 @@ func (this *Comptroller) SetBorrowPaused(market common.Address, state bool) (str
 func (this *Comptroller) SetTransferPaused(state bool) (string, error) {
 	method := "_setTransferPaused"
 	params := []interface{}{state}
-	hash, err := utils.InvokeTx(this.sdk, this.signer, this.gasPrice, this.gasLimit, this.addr, method, params)
+	hash, err := utils.InvokeTx(this.Sdk, this.Signer, this.GasPrice, this.GasLimit, this.Addr, method, params)
 	if err != nil {
 		err = fmt.Errorf("SetTransferPaused: %s", err)
 	}
@@ -303,7 +303,7 @@ func (this *Comptroller) SetTransferPaused(state bool) (string, error) {
 func (this *Comptroller) SetSeizePaused(state bool) (string, error) {
 	method := "_setSeizePaused"
 	params := []interface{}{state}
-	hash, err := utils.InvokeTx(this.sdk, this.signer, this.gasPrice, this.gasLimit, this.addr, method, params)
+	hash, err := utils.InvokeTx(this.Sdk, this.Signer, this.GasPrice, this.GasLimit, this.Addr, method, params)
 	if err != nil {
 		err = fmt.Errorf("SetSeizePaused: %s", err)
 	}
@@ -313,7 +313,7 @@ func (this *Comptroller) SetSeizePaused(state bool) (string, error) {
 func (this *Comptroller) SetDistributeWingSwitch(state bool) (string, error) {
 	method := "setDistributeWingSwitch"
 	params := []interface{}{state}
-	hash, err := utils.InvokeTx(this.sdk, this.signer, this.gasPrice, this.gasLimit, this.addr, method, params)
+	hash, err := utils.InvokeTx(this.Sdk, this.Signer, this.GasPrice, this.GasLimit, this.Addr, method, params)
 	if err != nil {
 		err = fmt.Errorf("SetDistributeWingSwitch: %s", err)
 	}
@@ -323,7 +323,7 @@ func (this *Comptroller) SetDistributeWingSwitch(state bool) (string, error) {
 func (this *Comptroller) RepayInsurance(borrower common.Address) (string, error) {
 	method := "repayInsurance"
 	params := []interface{}{borrower}
-	hash, err := utils.InvokeTx(this.sdk, this.signer, this.gasPrice, this.gasLimit, this.addr, method, params)
+	hash, err := utils.InvokeTx(this.Sdk, this.Signer, this.GasPrice, this.GasLimit, this.Addr, method, params)
 	if err != nil {
 		err = fmt.Errorf("RepayInsurance: %s", err)
 	}
@@ -335,7 +335,7 @@ func (this *Comptroller) ClaimWing(holder common.Address, preExecute bool) (hash
 	method := "claimWing"
 	params := []interface{}{holder}
 	if !preExecute {
-		hash, err = utils.InvokeTx(this.sdk, this.signer, this.gasPrice, this.gasLimit, this.addr, method, params)
+		hash, err = utils.InvokeTx(this.Sdk, this.Signer, this.GasPrice, this.GasLimit, this.Addr, method, params)
 		if err != nil {
 			err = fmt.Errorf("ClaimWing: %s", err)
 		}
@@ -358,7 +358,7 @@ func (this *Comptroller) ClaimWingAtMarkets(holder common.Address, markets []str
 	}
 	params := []interface{}{holder, marketsParam}
 	if !preExecute {
-		hash, err = utils.InvokeTx(this.sdk, this.signer, this.gasPrice, this.gasLimit, this.addr, method, params)
+		hash, err = utils.InvokeTx(this.Sdk, this.Signer, this.GasPrice, this.GasLimit, this.Addr, method, params)
 		if err != nil {
 			err = fmt.Errorf("ClaimWingAtMarkets: %s", err)
 		}
@@ -385,7 +385,7 @@ func (this *Comptroller) ClaimAllWing(holders []common.Address, markets []string
 	}
 	params := []interface{}{holdersParam, marketsParam, borrows, suppliers, insurance}
 	if !preExecute {
-		hash, err = utils.InvokeTx(this.sdk, this.signer, this.gasPrice, this.gasLimit, this.addr, method, params)
+		hash, err = utils.InvokeTx(this.Sdk, this.Signer, this.GasPrice, this.GasLimit, this.Addr, method, params)
 		if err != nil {
 			err = fmt.Errorf("ClaimAllWing: %s", err)
 		}
@@ -404,7 +404,7 @@ func (this *Comptroller) ClaimInterest(holder common.Address, preExecute bool) (
 	method := "claimInterest"
 	params := []interface{}{holder}
 	if !preExecute {
-		hash, err = utils.InvokeTx(this.sdk, this.signer, this.gasPrice, this.gasLimit, this.addr, method, params)
+		hash, err = utils.InvokeTx(this.Sdk, this.Signer, this.GasPrice, this.GasLimit, this.Addr, method, params)
 		if err != nil {
 			err = fmt.Errorf("ClaimInterest: %s", err)
 		}
@@ -427,7 +427,7 @@ func (this *Comptroller) ClaimInterestAtMarkets(holder common.Address, markets [
 	}
 	params := []interface{}{holder, marketsParam}
 	if !preExecute {
-		hash, err = utils.InvokeTx(this.sdk, this.signer, this.gasPrice, this.gasLimit, this.addr, method, params)
+		hash, err = utils.InvokeTx(this.Sdk, this.Signer, this.GasPrice, this.GasLimit, this.Addr, method, params)
 		if err != nil {
 			err = fmt.Errorf("ClaimInterestAtMarkets: %s", err)
 		}
@@ -450,7 +450,7 @@ func (this *Comptroller) ClaimAllInterest(holder common.Address, markets []commo
 	}
 	params := []interface{}{holder, marketsParam, borrows, suppliers, insurance}
 	if !preExecute {
-		hash, err = utils.InvokeTx(this.sdk, this.signer, this.gasPrice, this.gasLimit, this.addr, method, params)
+		hash, err = utils.InvokeTx(this.Sdk, this.Signer, this.GasPrice, this.GasLimit, this.Addr, method, params)
 		if err != nil {
 			err = fmt.Errorf("ClaimAllInterest: %s", err)
 		}
@@ -465,7 +465,7 @@ func (this *Comptroller) ClaimAllInterest(holder common.Address, markets []commo
 }
 
 func (this *Comptroller) preExecuteClaim(method string, params []interface{}) (remains *big.Int, err error) {
-	res, err := this.sdk.WasmVM.PreExecInvokeWasmVMContract(this.addr, method, params)
+	res, err := this.Sdk.WasmVM.PreExecInvokeWasmVMContract(this.Addr, method, params)
 	if err != nil {
 		err = fmt.Errorf("preExecuteClaim: %s", err)
 		return
@@ -489,7 +489,7 @@ func (this *Comptroller) preExecuteClaim(method string, params []interface{}) (r
 func (this *Comptroller) GetAccountLiquidity(account common.Address) (*AccountLiquidity, error) {
 	method := "getAccountLiquidity"
 	params := []interface{}{account}
-	res, err := this.sdk.WasmVM.PreExecInvokeWasmVMContract(this.addr, method, params)
+	res, err := this.Sdk.WasmVM.PreExecInvokeWasmVMContract(this.Addr, method, params)
 	if err != nil {
 		return nil, fmt.Errorf("GetAccountLiquidity: %s", err)
 	}
@@ -507,7 +507,7 @@ func (this *Comptroller) GetAccountLiquidity(account common.Address) (*AccountLi
 func (this *Comptroller) LiquidateCalculate(account common.Address) (string, *big.Int, error) {
 	method := "liquidateCalculate"
 	params := []interface{}{account}
-	res, err := this.sdk.WasmVM.PreExecInvokeWasmVMContract(this.addr, method, params)
+	res, err := this.Sdk.WasmVM.PreExecInvokeWasmVMContract(this.Addr, method, params)
 	if err != nil {
 		return "", nil, fmt.Errorf("LiquidateCalculateSeizeTokens: %s", err)
 	}
@@ -533,7 +533,7 @@ func (this *Comptroller) LiquidateCalculate(account common.Address) (string, *bi
 func (this *Comptroller) Admin() (common.Address, error) {
 	method := "admin"
 	params := []interface{}{}
-	res, err := utils.PreExecuteAddress(this.sdk, this.addr, method, params)
+	res, err := utils.PreExecuteAddress(this.Sdk, this.Addr, method, params)
 	if err != nil {
 		err = fmt.Errorf("Admin: %s", err)
 	}
@@ -543,7 +543,7 @@ func (this *Comptroller) Admin() (common.Address, error) {
 func (this *Comptroller) PendingAdmin() (common.Address, error) {
 	method := "pendingAdmin"
 	params := []interface{}{}
-	res, err := utils.PreExecuteAddress(this.sdk, this.addr, method, params)
+	res, err := utils.PreExecuteAddress(this.Sdk, this.Addr, method, params)
 	if err != nil {
 		err = fmt.Errorf("PendingAdmin: %s", err)
 	}
@@ -553,7 +553,7 @@ func (this *Comptroller) PendingAdmin() (common.Address, error) {
 func (this *Comptroller) GlobalParam() (common.Address, error) {
 	method := "globalParam"
 	params := []interface{}{}
-	res, err := utils.PreExecuteAddress(this.sdk, this.addr, method, params)
+	res, err := utils.PreExecuteAddress(this.Sdk, this.Addr, method, params)
 	if err != nil {
 		err = fmt.Errorf("GlobalParam: %s", err)
 	}
@@ -563,7 +563,7 @@ func (this *Comptroller) GlobalParam() (common.Address, error) {
 func (this *Comptroller) WingAddr() (common.Address, error) {
 	method := "wingAddr"
 	params := []interface{}{}
-	res, err := utils.PreExecuteAddress(this.sdk, this.addr, method, params)
+	res, err := utils.PreExecuteAddress(this.Sdk, this.Addr, method, params)
 	if err != nil {
 		err = fmt.Errorf("WingAddr: %s", err)
 	}
@@ -573,7 +573,7 @@ func (this *Comptroller) WingAddr() (common.Address, error) {
 func (this *Comptroller) PriceOracle() (common.Address, error) {
 	method := "priceOracle"
 	params := []interface{}{}
-	res, err := utils.PreExecuteAddress(this.sdk, this.addr, method, params)
+	res, err := utils.PreExecuteAddress(this.Sdk, this.Addr, method, params)
 	if err != nil {
 		err = fmt.Errorf("PriceOracle: %s", err)
 	}
@@ -583,7 +583,7 @@ func (this *Comptroller) PriceOracle() (common.Address, error) {
 func (this *Comptroller) OScoreOracle() (common.Address, error) {
 	method := "oScoreOracle"
 	params := []interface{}{}
-	res, err := utils.PreExecuteAddress(this.sdk, this.addr, method, params)
+	res, err := utils.PreExecuteAddress(this.Sdk, this.Addr, method, params)
 	if err != nil {
 		err = fmt.Errorf("OScoreOracle: %s", err)
 	}
@@ -593,7 +593,7 @@ func (this *Comptroller) OScoreOracle() (common.Address, error) {
 func (this *Comptroller) MarketInfo(market string) (*MarketInfo, error) {
 	method := "marketInfo"
 	params := []interface{}{market}
-	res, err := this.sdk.WasmVM.PreExecInvokeWasmVMContract(this.addr, method, params)
+	res, err := this.Sdk.WasmVM.PreExecInvokeWasmVMContract(this.Addr, method, params)
 	if err != nil {
 		return nil, fmt.Errorf("MarketInfo: %s", err)
 	}
@@ -611,7 +611,7 @@ func (this *Comptroller) MarketInfo(market string) (*MarketInfo, error) {
 func (this *Comptroller) LiquidationIncentiveFactor() (*big.Int, error) {
 	method := "liquidationIncentiveFactor"
 	params := []interface{}{}
-	res, err := utils.PreExecuteBigInt(this.sdk, this.addr, method, params)
+	res, err := utils.PreExecuteBigInt(this.Sdk, this.Addr, method, params)
 	if err != nil {
 		err = fmt.Errorf("LiquidationIncentiveFactor: %s", err)
 	}
@@ -621,7 +621,7 @@ func (this *Comptroller) LiquidationIncentiveFactor() (*big.Int, error) {
 func (this *Comptroller) InsuranceRepayFactor() (*big.Int, error) {
 	method := "insuranceRepayFactor"
 	params := []interface{}{}
-	res, err := utils.PreExecuteBigInt(this.sdk, this.addr, method, params)
+	res, err := utils.PreExecuteBigInt(this.Sdk, this.Addr, method, params)
 	if err != nil {
 		err = fmt.Errorf("InsuranceRepayFactor: %s", err)
 	}
@@ -631,7 +631,7 @@ func (this *Comptroller) InsuranceRepayFactor() (*big.Int, error) {
 func (this *Comptroller) PauseGuardian() (common.Address, error) {
 	method := "pauseGuardian"
 	params := []interface{}{}
-	res, err := utils.PreExecuteAddress(this.sdk, this.addr, method, params)
+	res, err := utils.PreExecuteAddress(this.Sdk, this.Addr, method, params)
 	if err != nil {
 		err = fmt.Errorf("PauseGuardian: %s", err)
 	}
@@ -641,7 +641,7 @@ func (this *Comptroller) PauseGuardian() (common.Address, error) {
 func (this *Comptroller) TransferGuardianPaused() (bool, error) {
 	method := "transferGuardianPaused"
 	params := []interface{}{}
-	res, err := utils.PreExecuteBool(this.sdk, this.addr, method, params)
+	res, err := utils.PreExecuteBool(this.Sdk, this.Addr, method, params)
 	if err != nil {
 		err = fmt.Errorf("TransferGuardianPaused: %s", err)
 	}
@@ -651,7 +651,7 @@ func (this *Comptroller) TransferGuardianPaused() (bool, error) {
 func (this *Comptroller) SeizeGuardianPaused() (bool, error) {
 	method := "seizeGuardianPaused"
 	params := []interface{}{}
-	res, err := utils.PreExecuteBool(this.sdk, this.addr, method, params)
+	res, err := utils.PreExecuteBool(this.Sdk, this.Addr, method, params)
 	if err != nil {
 		err = fmt.Errorf("SeizeGuardianPaused: %s", err)
 	}
@@ -661,7 +661,7 @@ func (this *Comptroller) SeizeGuardianPaused() (bool, error) {
 func (this *Comptroller) MintGuardianPaused(market common.Address) (bool, error) {
 	method := "mintGuardianPaused"
 	params := []interface{}{market}
-	res, err := utils.PreExecuteBool(this.sdk, this.addr, method, params)
+	res, err := utils.PreExecuteBool(this.Sdk, this.Addr, method, params)
 	if err != nil {
 		err = fmt.Errorf("MintGuardianPaused: %s", err)
 	}
@@ -671,7 +671,7 @@ func (this *Comptroller) MintGuardianPaused(market common.Address) (bool, error)
 func (this *Comptroller) BorrowGuardianPaused(market common.Address) (bool, error) {
 	method := "borrowGuardianPaused"
 	params := []interface{}{market}
-	res, err := utils.PreExecuteBool(this.sdk, this.addr, method, params)
+	res, err := utils.PreExecuteBool(this.Sdk, this.Addr, method, params)
 	if err != nil {
 		err = fmt.Errorf("BorrowGuardianPaused: %s", err)
 	}
@@ -681,7 +681,7 @@ func (this *Comptroller) BorrowGuardianPaused(market common.Address) (bool, erro
 func (this *Comptroller) AllMarkets() ([]string, error) {
 	method := "allMarkets"
 	params := []interface{}{}
-	res, err := utils.PreExecuteStringArray(this.sdk, this.addr, method, params)
+	res, err := utils.PreExecuteStringArray(this.Sdk, this.Addr, method, params)
 	if err != nil {
 		err = fmt.Errorf("AllMarkets: %s", err)
 	}
@@ -691,7 +691,7 @@ func (this *Comptroller) AllMarkets() ([]string, error) {
 func (this *Comptroller) AccountBorrowMarket(account common.Address) (string, error) {
 	method := "accountBorrowMarket"
 	params := []interface{}{account}
-	res, err := utils.PreExecuteString(this.sdk, this.addr, method, params)
+	res, err := utils.PreExecuteString(this.Sdk, this.Addr, method, params)
 	if err != nil {
 		err = fmt.Errorf("AccountBorrowMarket: %s", err)
 	}
@@ -701,7 +701,7 @@ func (this *Comptroller) AccountBorrowMarket(account common.Address) (string, er
 func (this *Comptroller) AccountBorrowDay(account common.Address) (uint64, error) {
 	method := "accountBorrowDay"
 	params := []interface{}{account}
-	res, err := utils.PreExecuteBigInt(this.sdk, this.addr, method, params)
+	res, err := utils.PreExecuteBigInt(this.Sdk, this.Addr, method, params)
 	if err != nil {
 		err = fmt.Errorf("AccountBorrowDay: %s", err)
 	}
@@ -711,7 +711,7 @@ func (this *Comptroller) AccountBorrowDay(account common.Address) (uint64, error
 func (this *Comptroller) AccountCollateralPool(account common.Address) ([]string, error) {
 	method := "accountCollateralPool"
 	params := []interface{}{account}
-	res, err := utils.PreExecuteStringArray(this.sdk, this.addr, method, params)
+	res, err := utils.PreExecuteStringArray(this.Sdk, this.Addr, method, params)
 	if err != nil {
 		err = fmt.Errorf("AccountBorrowDay: %s", err)
 	}
@@ -721,7 +721,7 @@ func (this *Comptroller) AccountCollateralPool(account common.Address) ([]string
 func (this *Comptroller) WingSupplyIndex(market string) (*big.Int, error) {
 	method := "wingSupplyIndex"
 	params := []interface{}{market}
-	res, err := utils.PreExecuteU256(this.sdk, this.addr, method, params)
+	res, err := utils.PreExecuteU256(this.Sdk, this.Addr, method, params)
 	if err != nil {
 		err = fmt.Errorf("WingSupplyIndex: %s", err)
 	}
@@ -731,7 +731,7 @@ func (this *Comptroller) WingSupplyIndex(market string) (*big.Int, error) {
 func (this *Comptroller) WingBorrowIndex(market string) (*big.Int, error) {
 	method := "wingBorrowIndex"
 	params := []interface{}{market}
-	res, err := utils.PreExecuteU256(this.sdk, this.addr, method, params)
+	res, err := utils.PreExecuteU256(this.Sdk, this.Addr, method, params)
 	if err != nil {
 		err = fmt.Errorf("WingSupplyIndex: %s", err)
 	}
@@ -741,7 +741,7 @@ func (this *Comptroller) WingBorrowIndex(market string) (*big.Int, error) {
 func (this *Comptroller) WingInsuranceIndex(market string) (*big.Int, error) {
 	method := "wingInsuranceIndex"
 	params := []interface{}{market}
-	res, err := utils.PreExecuteU256(this.sdk, this.addr, method, params)
+	res, err := utils.PreExecuteU256(this.Sdk, this.Addr, method, params)
 	if err != nil {
 		err = fmt.Errorf("WingInsuranceIndex: %s", err)
 	}
@@ -751,7 +751,7 @@ func (this *Comptroller) WingInsuranceIndex(market string) (*big.Int, error) {
 func (this *Comptroller) WingBorrowIndexSnapshot(market string, dayNumber uint64) (*big.Int, error) {
 	method := "wingBorrowIndexSnapshot"
 	params := []interface{}{market, dayNumber}
-	res, err := utils.PreExecuteU256(this.sdk, this.addr, method, params)
+	res, err := utils.PreExecuteU256(this.Sdk, this.Addr, method, params)
 	if err != nil {
 		err = fmt.Errorf("WingBorrowIndexSnapshot: %s", err)
 	}
@@ -761,7 +761,7 @@ func (this *Comptroller) WingBorrowIndexSnapshot(market string, dayNumber uint64
 func (this *Comptroller) WingSupplierIndex(market string, account common.Address) (*big.Int, error) {
 	method := "wingSupplierIndex"
 	params := []interface{}{market, account}
-	res, err := utils.PreExecuteU256(this.sdk, this.addr, method, params)
+	res, err := utils.PreExecuteU256(this.Sdk, this.Addr, method, params)
 	if err != nil {
 		err = fmt.Errorf("WingSupplierIndex: %s", err)
 	}
@@ -771,7 +771,7 @@ func (this *Comptroller) WingSupplierIndex(market string, account common.Address
 func (this *Comptroller) WingBorrowerIndex(market string, account common.Address) (*big.Int, error) {
 	method := "wingBorrowerIndex"
 	params := []interface{}{market, account}
-	res, err := utils.PreExecuteU256(this.sdk, this.addr, method, params)
+	res, err := utils.PreExecuteU256(this.Sdk, this.Addr, method, params)
 	if err != nil {
 		err = fmt.Errorf("wingBorrowerIndex: %s", err)
 	}
@@ -781,7 +781,7 @@ func (this *Comptroller) WingBorrowerIndex(market string, account common.Address
 func (this *Comptroller) WingGuarantorIndex(market string, account common.Address) (*big.Int, error) {
 	method := "wingGuarantorIndex"
 	params := []interface{}{market, account}
-	res, err := utils.PreExecuteU256(this.sdk, this.addr, method, params)
+	res, err := utils.PreExecuteU256(this.Sdk, this.Addr, method, params)
 	if err != nil {
 		err = fmt.Errorf("WingGuarantorIndex: %s", err)
 	}
@@ -791,7 +791,7 @@ func (this *Comptroller) WingGuarantorIndex(market string, account common.Addres
 func (this *Comptroller) WingUserAccrued(account common.Address) (*big.Int, error) {
 	method := "wingUserAccrued"
 	params := []interface{}{account}
-	res, err := utils.PreExecuteBigInt(this.sdk, this.addr, method, params)
+	res, err := utils.PreExecuteBigInt(this.Sdk, this.Addr, method, params)
 	if err != nil {
 		err = fmt.Errorf("WingUserAccrued: %s", err)
 	}
@@ -801,7 +801,7 @@ func (this *Comptroller) WingUserAccrued(account common.Address) (*big.Int, erro
 func (this *Comptroller) WingUserPunished(account common.Address) (*big.Int, error) {
 	method := "wingUserPunished"
 	params := []interface{}{account}
-	res, err := utils.PreExecuteBigInt(this.sdk, this.addr, method, params)
+	res, err := utils.PreExecuteBigInt(this.Sdk, this.Addr, method, params)
 	if err != nil {
 		err = fmt.Errorf("WingUserPunished: %s", err)
 	}
@@ -811,7 +811,7 @@ func (this *Comptroller) WingUserPunished(account common.Address) (*big.Int, err
 func (this *Comptroller) LastWingBalance() (*big.Int, error) {
 	method := "lastWingBalance"
 	params := []interface{}{}
-	res, err := utils.PreExecuteBigInt(this.sdk, this.addr, method, params)
+	res, err := utils.PreExecuteBigInt(this.Sdk, this.Addr, method, params)
 	if err != nil {
 		err = fmt.Errorf("LastWingBalance: %s", err)
 	}
@@ -821,7 +821,7 @@ func (this *Comptroller) LastWingBalance() (*big.Int, error) {
 func (this *Comptroller) WingMarketAccrued(market string) (*big.Int, error) {
 	method := "wingMarketAccrued"
 	params := []interface{}{market}
-	res, err := utils.PreExecuteBigInt(this.sdk, this.addr, method, params)
+	res, err := utils.PreExecuteBigInt(this.Sdk, this.Addr, method, params)
 	if err != nil {
 		err = fmt.Errorf("WingMarketAccrued: %s", err)
 	}
@@ -831,7 +831,7 @@ func (this *Comptroller) WingMarketAccrued(market string) (*big.Int, error) {
 func (this *Comptroller) WingSBIPortion(market common.Address) (*WingSBI, error) {
 	method := "wingSBIPortion"
 	params := []interface{}{market}
-	res, err := this.sdk.WasmVM.PreExecInvokeWasmVMContract(this.addr, method, params)
+	res, err := this.Sdk.WasmVM.PreExecInvokeWasmVMContract(this.Addr, method, params)
 	if err != nil {
 		return nil, fmt.Errorf("MarketMeta: %s", err)
 	}
@@ -849,7 +849,7 @@ func (this *Comptroller) WingSBIPortion(market common.Address) (*WingSBI, error)
 func (this *Comptroller) WingDistributedNum(market string) (*big.Int, error) {
 	method := "wingDistributedNum"
 	params := []interface{}{market}
-	res, err := utils.PreExecuteBigInt(this.sdk, this.addr, method, params)
+	res, err := utils.PreExecuteBigInt(this.Sdk, this.Addr, method, params)
 	if err != nil {
 		err = fmt.Errorf("WingDistributedNum: %s", err)
 	}
@@ -859,7 +859,7 @@ func (this *Comptroller) WingDistributedNum(market string) (*big.Int, error) {
 func (this *Comptroller) InterestIndex(market string) (*big.Int, error) {
 	method := "interestIndex"
 	params := []interface{}{market}
-	res, err := utils.PreExecuteU256(this.sdk, this.addr, method, params)
+	res, err := utils.PreExecuteU256(this.Sdk, this.Addr, method, params)
 	if err != nil {
 		err = fmt.Errorf("InterestIndex: %s", err)
 	}
@@ -869,7 +869,7 @@ func (this *Comptroller) InterestIndex(market string) (*big.Int, error) {
 func (this *Comptroller) InterestUserIndex(market string, account common.Address) (*big.Int, error) {
 	method := "interestUserIndex"
 	params := []interface{}{market, account}
-	res, err := utils.PreExecuteU256(this.sdk, this.addr, method, params)
+	res, err := utils.PreExecuteU256(this.Sdk, this.Addr, method, params)
 	if err != nil {
 		err = fmt.Errorf("InterestUserIndex: %s", err)
 	}
@@ -879,7 +879,7 @@ func (this *Comptroller) InterestUserIndex(market string, account common.Address
 func (this *Comptroller) UserCompletedBorrowNum(account common.Address) (*big.Int, error) {
 	method := "userCompletedBorrowNum"
 	params := []interface{}{account}
-	res, err := utils.PreExecuteBigInt(this.sdk, this.addr, method, params)
+	res, err := utils.PreExecuteBigInt(this.Sdk, this.Addr, method, params)
 	if err != nil {
 		err = fmt.Errorf("UserCompletedBorrowNum: %s", err)
 	}
@@ -889,7 +889,7 @@ func (this *Comptroller) UserCompletedBorrowNum(account common.Address) (*big.In
 func (this *Comptroller) IsComptroller() (bool, error) {
 	method := "isComptroller"
 	params := []interface{}{}
-	res, err := utils.PreExecuteBool(this.sdk, this.addr, method, params)
+	res, err := utils.PreExecuteBool(this.Sdk, this.Addr, method, params)
 	if err != nil {
 		err = fmt.Errorf("IsComptroller: %s", err)
 	}

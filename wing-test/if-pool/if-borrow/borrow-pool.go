@@ -17,11 +17,11 @@ import  (
 // TODO: adapt to latest borrow pool
 
 type IfBorrowPool struct {
-	sdk    *ontSDK.OntologySdk
-	signer	*ontSDK.Account
-	addr   common.Address
-	gasPrice uint64
-	gasLimit uint64
+	Sdk      *ontSDK.OntologySdk
+	Signer   *ontSDK.Account
+	Addr     common.Address
+	GasPrice uint64
+	GasLimit uint64
 }
 type OscoreInfo struct {
 	Level            byte
@@ -80,20 +80,20 @@ func NewIfBorrowPool(nodeRPCAddr string, contractAddr string, signer *ontSDK.Acc
 		}
 	}
 	return &IfBorrowPool{
-		sdk:      sdk,
-		signer:   signer,
-		addr:     addr,
-		gasPrice: gasPrice,
-		gasLimit: gasLimit,
+		Sdk:      sdk,
+		Signer:   signer,
+		Addr:     addr,
+		GasPrice: gasPrice,
+		GasLimit: gasLimit,
 	}, nil
 }
 
 func (this *IfBorrowPool) UpdateSigner(newSigner *ontSDK.Account) {
-	this.signer = newSigner
+	this.Signer = newSigner
 }
 
 func (this *IfBorrowPool) GetAddr() common.Address {
-	return this.addr
+	return this.Addr
 }
 
 func (this *IfBorrowPool) Init(admin common.Address, marketName string, oracle, comptroller common.Address, accruedDayNumber,
@@ -106,7 +106,7 @@ func (this *IfBorrowPool) Init(admin common.Address, marketName string, oracle, 
 	method := "init"
 	params := []interface{}{admin, marketName, oracle, comptroller, accruedDayNumber, formalDays, interimDays,
 		interimInterestRate, punishInterestRate, reservesFactor, insuranceInterestFactor}
-	hash, err := utils.InvokeTx(this.sdk, this.signer, this.gasPrice, this.gasLimit, this.addr, method, params)
+	hash, err := utils.InvokeTx(this.Sdk, this.Signer, this.GasPrice, this.GasLimit, this.Addr, method, params)
 	if err != nil {
 		err = fmt.Errorf("Init: %s", err)
 	}
@@ -123,17 +123,17 @@ func (this *IfBorrowPool) SetOscoreInfo(param []*OscoreInfo) (string, error) {
 		p.Serialize(sink)
 	}
 	contract := &states.WasmContractParam{}
-	contract.Address = this.addr
+	contract.Address = this.Addr
 	contract.Args = sink.Bytes()
 
-	tx, err := utils2.NewWasmSmartContractTransaction(this.gasPrice, this.gasLimit, common.SerializeToBytes(contract))
+	tx, err := utils2.NewWasmSmartContractTransaction(this.GasPrice, this.GasLimit, common.SerializeToBytes(contract))
 	if err != nil {
 		return "", err
 	}
-	if err = utils.SignTx(this.sdk, tx,0, this.signer); err != nil {
+	if err = utils.SignTx(this.Sdk, tx,0, this.Signer); err != nil {
 		return "", err
 	}
-	txhash, err := this.sdk.SendTransaction(tx)
+	txhash, err := this.Sdk.SendTransaction(tx)
 	if err != nil {
 		return "", err
 	}
@@ -143,7 +143,7 @@ func (this *IfBorrowPool) SetOscoreInfo(param []*OscoreInfo) (string, error) {
 func (this *IfBorrowPool) SetPriceOracle(oracle common.Address) (string, error) {
 	method := "_setPriceOracle"
 	params := []interface{}{oracle}
-	hash, err := utils.InvokeTx(this.sdk, this.signer, this.gasPrice, this.gasLimit, this.addr, method, params)
+	hash, err := utils.InvokeTx(this.Sdk, this.Signer, this.GasPrice, this.GasLimit, this.Addr, method, params)
 	if err != nil {
 		err = fmt.Errorf("SetPriceOracle: %s", err)
 	}
@@ -154,7 +154,7 @@ func (this *IfBorrowPool) SetPriceOracle(oracle common.Address) (string, error) 
 func (this *IfBorrowPool) SetComptroller(comptroller common.Address) (string, error) {
 	method := "_setComptroller"
 	params := []interface{}{comptroller}
-	hash, err := utils.InvokeTx(this.sdk, this.signer, this.gasPrice, this.gasLimit, this.addr, method, params)
+	hash, err := utils.InvokeTx(this.Sdk, this.Signer, this.GasPrice, this.GasLimit, this.Addr, method, params)
 	if err != nil {
 		err = fmt.Errorf("SetComptroller: %s", err)
 	}
@@ -163,7 +163,7 @@ func (this *IfBorrowPool) SetComptroller(comptroller common.Address) (string, er
 func (this *IfBorrowPool) SetOracle(oracle common.Address) (string, error) {
 	method := "_setOracle"
 	params := []interface{}{oracle}
-	hash, err := utils.InvokeTx(this.sdk, this.signer, this.gasPrice, this.gasLimit, this.addr, method, params)
+	hash, err := utils.InvokeTx(this.Sdk, this.Signer, this.GasPrice, this.GasLimit, this.Addr, method, params)
 	if err != nil {
 		err = fmt.Errorf("SetOracle: %s", err)
 	}
@@ -173,7 +173,7 @@ func (this *IfBorrowPool) SetOracle(oracle common.Address) (string, error) {
 func (this *IfBorrowPool) SetReserveFactor(factor *big.Int) (string, error) {
 	method := "_setReserveFactor"
 	params := []interface{}{factor}
-	hash, err := utils.InvokeTx(this.sdk, this.signer, this.gasPrice, this.gasLimit, this.addr, method, params)
+	hash, err := utils.InvokeTx(this.Sdk, this.Signer, this.GasPrice, this.GasLimit, this.Addr, method, params)
 	if err != nil {
 		err = fmt.Errorf("SetReserveFactor: %s", err)
 		return "", err
@@ -184,7 +184,7 @@ func (this *IfBorrowPool) SetReserveFactor(factor *big.Int) (string, error) {
 func (this *IfBorrowPool) SetInterimInterestRate(factor *big.Int) (string, error) {
 	method := "_setInterimInterestRate"
 	params := []interface{}{factor}
-	hash, err := utils.InvokeTx(this.sdk, this.signer, this.gasPrice, this.gasLimit, this.addr, method, params)
+	hash, err := utils.InvokeTx(this.Sdk, this.Signer, this.GasPrice, this.GasLimit, this.Addr, method, params)
 	if err != nil {
 		err = fmt.Errorf("SetInterimInterestRate: %s", err)
 		return "", err
@@ -195,7 +195,7 @@ func (this *IfBorrowPool) SetInterimInterestRate(factor *big.Int) (string, error
 func (this *IfBorrowPool) SetPunishInterestRate(factor *big.Int) (string, error) {
 	method := "_setPunishInterestRate"
 	params := []interface{}{factor}
-	hash, err := utils.InvokeTx(this.sdk, this.signer, this.gasPrice, this.gasLimit, this.addr, method, params)
+	hash, err := utils.InvokeTx(this.Sdk, this.Signer, this.GasPrice, this.GasLimit, this.Addr, method, params)
 	if err != nil {
 		err = fmt.Errorf("SetPunishInterestRate: %s", err)
 		return "", err
@@ -206,7 +206,7 @@ func (this *IfBorrowPool) SetPunishInterestRate(factor *big.Int) (string, error)
 func (this *IfBorrowPool) SetFormalBorrowDays(days uint64) (string, error) {
 	method := "_setFormalBorrowDays"
 	params := []interface{}{days}
-	hash, err := utils.InvokeTx(this.sdk, this.signer, this.gasPrice, this.gasLimit, this.addr, method, params)
+	hash, err := utils.InvokeTx(this.Sdk, this.Signer, this.GasPrice, this.GasLimit, this.Addr, method, params)
 	if err != nil {
 		err = fmt.Errorf("SetFormalBorrowDays: %s", err)
 		return "", err
@@ -217,7 +217,7 @@ func (this *IfBorrowPool) SetFormalBorrowDays(days uint64) (string, error) {
 func (this *IfBorrowPool) SetInterimBorrowDays(days uint64) (string, error) {
 	method := "_setInterimBorrowDays"
 	params := []interface{}{days}
-	hash, err := utils.InvokeTx(this.sdk, this.signer, this.gasPrice, this.gasLimit, this.addr, method, params)
+	hash, err := utils.InvokeTx(this.Sdk, this.Signer, this.GasPrice, this.GasLimit, this.Addr, method, params)
 	if err != nil {
 		err = fmt.Errorf("SetInterimBorrowDays: %s", err)
 		return "", err
@@ -228,7 +228,7 @@ func (this *IfBorrowPool) SetInterimBorrowDays(days uint64) (string, error) {
 func (this *IfBorrowPool) SetInsuranceInterestFactor(factor *big.Int) (string, error) {
 	method := "setInsuranceInterestFactor"
 	params := []interface{}{factor}
-	hash, err := utils.InvokeTx(this.sdk, this.signer, this.gasPrice, this.gasLimit, this.addr, method, params)
+	hash, err := utils.InvokeTx(this.Sdk, this.Signer, this.GasPrice, this.GasLimit, this.Addr, method, params)
 	if err != nil {
 		err = fmt.Errorf("SetInsuranceInterestFactor: %s", err)
 		return "", err
@@ -239,7 +239,7 @@ func (this *IfBorrowPool) SetInsuranceInterestFactor(factor *big.Int) (string, e
 func (this *IfBorrowPool) SetInsuranceFactor(factor *big.Int) (string, error) {
 	method := "_setInsuranceFactor"
 	params := []interface{}{factor}
-	hash, err := utils.InvokeTx(this.sdk, this.signer, this.gasPrice, this.gasLimit, this.addr, method, params)
+	hash, err := utils.InvokeTx(this.Sdk, this.Signer, this.GasPrice, this.GasLimit, this.Addr, method, params)
 	if err != nil {
 		err = fmt.Errorf("SetInsuranceFactor: %s", err)
 		return "", err
@@ -251,7 +251,7 @@ func (this *IfBorrowPool) SetInsuranceFactor(factor *big.Int) (string, error) {
 func (this *IfBorrowPool) SetMarketAddr(market common.Address) (string, error) {
 	method := "_setMarketAddr"
 	params := []interface{}{market}
-	hash, err := utils.InvokeTx(this.sdk, this.signer, this.gasPrice, this.gasLimit, this.addr, method, params)
+	hash, err := utils.InvokeTx(this.Sdk, this.Signer, this.GasPrice, this.GasLimit, this.Addr, method, params)
 	if err != nil {
 		err = fmt.Errorf("SetMarketAddr: %s", err)
 		return "", err
@@ -263,7 +263,7 @@ func (this *IfBorrowPool) SetMarketAddr(market common.Address) (string, error) {
 func (this *IfBorrowPool) SetInsuranceAddr(insurance common.Address) (string, error) {
 	method := "_setInsuranceAddr"
 	params := []interface{}{insurance}
-	hash, err := utils.InvokeTx(this.sdk, this.signer, this.gasPrice, this.gasLimit, this.addr, method, params)
+	hash, err := utils.InvokeTx(this.Sdk, this.Signer, this.GasPrice, this.GasLimit, this.Addr, method, params)
 	if err != nil {
 		err = fmt.Errorf("SetInsuranceAddr: %s", err)
 		return "", err
@@ -275,7 +275,7 @@ func (this *IfBorrowPool) SetInsuranceAddr(insurance common.Address) (string, er
 func (this *IfBorrowPool) SetMarketName(marketName string) (string, error) {
 	method := "putMarketName"
 	params := []interface{}{marketName}
-	hash, err := utils.InvokeTx(this.sdk, this.signer, this.gasPrice, this.gasLimit, this.addr, method, params)
+	hash, err := utils.InvokeTx(this.Sdk, this.Signer, this.GasPrice, this.GasLimit, this.Addr, method, params)
 	if err != nil {
 		err = fmt.Errorf("SetMarketName: %s", err)
 		return "", err
@@ -286,7 +286,7 @@ func (this *IfBorrowPool) SetMarketName(marketName string) (string, error) {
 func (this *IfBorrowPool) Transfer(from, to common.Address, amount *big.Int) (string, error) {
 	method := "transfer"
 	params := []interface{}{from, to, amount}
-	hash, err := utils.InvokeTx(this.sdk, this.signer, this.gasPrice, this.gasLimit, this.addr, method, params)
+	hash, err := utils.InvokeTx(this.Sdk, this.Signer, this.GasPrice, this.GasLimit, this.Addr, method, params)
 	if err != nil {
 		err = fmt.Errorf("Transfer: %s", err)
 		return "", err
@@ -298,7 +298,7 @@ func (this *IfBorrowPool) Transfer(from, to common.Address, amount *big.Int) (st
 func (this *IfBorrowPool) TransferFrom(from, src, to common.Address, amount *big.Int) (string, error) {
 	method := "transferFrom"
 	params := []interface{}{from, src, to, amount}
-	hash, err := utils.InvokeTx(this.sdk, this.signer, this.gasPrice, this.gasLimit, this.addr, method, params)
+	hash, err := utils.InvokeTx(this.Sdk, this.Signer, this.GasPrice, this.GasLimit, this.Addr, method, params)
 	if err != nil {
 		err = fmt.Errorf("TransferFrom: %s", err)
 		return "", err
@@ -310,7 +310,7 @@ func (this *IfBorrowPool) TransferFrom(from, src, to common.Address, amount *big
 func (this *IfBorrowPool) Approve(owner, spender common.Address, amount *big.Int) (string, error) {
 	method := "approve"
 	params := []interface{}{owner, spender, amount}
-	hash, err := utils.InvokeTx(this.sdk, this.signer, this.gasPrice, this.gasLimit, this.addr, method, params)
+	hash, err := utils.InvokeTx(this.Sdk, this.Signer, this.GasPrice, this.GasLimit, this.Addr, method, params)
 	if err != nil {
 		err = fmt.Errorf("Approve: %s", err)
 		return "", err
@@ -322,7 +322,7 @@ func (this *IfBorrowPool) Approve(owner, spender common.Address, amount *big.Int
 func (this *IfBorrowPool) NeoVMApprove(owner, spender common.Address, amount *big.Int) (string, error) {
 	method := "approve"
 	params := []interface{}{owner, spender, amount}
-	hash, err := utils.InvokeNeoVMTx(this.sdk, this.signer, this.gasPrice, this.gasLimit, this.addr,
+	hash, err := utils.InvokeNeoVMTx(this.Sdk, this.Signer, this.GasPrice, this.GasLimit, this.Addr,
 		method, params)
 	if err != nil {
 		err = fmt.Errorf("NeoVMApprove: %s", err)
@@ -334,7 +334,7 @@ func (this *IfBorrowPool) NeoVMApprove(owner, spender common.Address, amount *bi
 func (this *IfBorrowPool) AccrueInterest() (string, error) {
 	method := "accrueInterest"
 	params := []interface{}{}
-	hash, err := utils.InvokeTx(this.sdk, this.signer, this.gasPrice, this.gasLimit, this.addr, method, params)
+	hash, err := utils.InvokeTx(this.Sdk, this.Signer, this.GasPrice, this.GasLimit, this.Addr, method, params)
 	if err != nil {
 		err = fmt.Errorf("AccrueInterest: %s", err)
 	}
@@ -344,7 +344,7 @@ func (this *IfBorrowPool) AccrueInterest() (string, error) {
 func (this *IfBorrowPool) AccrueAccountInterest(addr common.Address) (string, error) {
 	method := "accrueAccountInterest"
 	params := []interface{}{addr}
-	hash, err := utils.InvokeTx(this.sdk, this.signer, this.gasPrice, this.gasLimit, this.addr, method, params)
+	hash, err := utils.InvokeTx(this.Sdk, this.Signer, this.GasPrice, this.GasLimit, this.Addr, method, params)
 	if err != nil {
 		err = fmt.Errorf("AccrueAccountInterest: %s", err)
 	}
@@ -354,7 +354,7 @@ func (this *IfBorrowPool) AccrueAccountInterest(addr common.Address) (string, er
 func (this *IfBorrowPool) SetPendingAdmin(pendingAdmin common.Address) (string, error) {
 	method := "_setPendingAdmin"
 	params := []interface{}{pendingAdmin}
-	hash, err := utils.InvokeTx(this.sdk, this.signer, this.gasPrice, this.gasLimit, this.addr, method, params)
+	hash, err := utils.InvokeTx(this.Sdk, this.Signer, this.GasPrice, this.GasLimit, this.Addr, method, params)
 	if err != nil {
 		err = fmt.Errorf("SetPendingAdmin: %s", err)
 	}
@@ -364,7 +364,7 @@ func (this *IfBorrowPool) SetPendingAdmin(pendingAdmin common.Address) (string, 
 func (this *IfBorrowPool) AcceptAdmin() (string, error) {
 	method := "_acceptAdmin"
 	params := []interface{}{}
-	hash, err := utils.InvokeTx(this.sdk, this.signer, this.gasPrice, this.gasLimit, this.addr, method, params)
+	hash, err := utils.InvokeTx(this.Sdk, this.Signer, this.GasPrice, this.GasLimit, this.Addr, method, params)
 	if err != nil {
 		err = fmt.Errorf("_acceptAdmin: %s", err)
 	}
@@ -374,7 +374,7 @@ func (this *IfBorrowPool) AcceptAdmin() (string, error) {
 func (this *IfBorrowPool) ReduceReserves(reduceAmount *big.Int) (string, error) {
 	method := "_reduceReserves"
 	params := []interface{}{reduceAmount}
-	hash, err := utils.InvokeTx(this.sdk, this.signer, this.gasPrice, this.gasLimit, this.addr, method, params)
+	hash, err := utils.InvokeTx(this.Sdk, this.Signer, this.GasPrice, this.GasLimit, this.Addr, method, params)
 	if err != nil {
 		err = fmt.Errorf("ReduceReserves: %s", err)
 	}
@@ -385,7 +385,7 @@ func (this *IfBorrowPool) ReduceReserves(reduceAmount *big.Int) (string, error) 
 func (this *IfBorrowPool) Mint(minter common.Address, mintAmount *big.Int) (string, error) {
 	method := "mint"
 	params := []interface{}{minter, mintAmount}
-	hash, err := utils.InvokeTx(this.sdk, this.signer, this.gasPrice, this.gasLimit, this.addr, method, params)
+	hash, err := utils.InvokeTx(this.Sdk, this.Signer, this.GasPrice, this.GasLimit, this.Addr, method, params)
 	if err != nil {
 		err = fmt.Errorf("Mint: %s", err)
 	}
@@ -396,7 +396,7 @@ func (this *IfBorrowPool) Mint(minter common.Address, mintAmount *big.Int) (stri
 func (this *IfBorrowPool) Redeem(redeemer common.Address, redeemTokens *big.Int) (string, error) {
 	method := "redeem"
 	params := []interface{}{redeemer, redeemTokens}
-	hash, err := utils.InvokeTx(this.sdk, this.signer, this.gasPrice, this.gasLimit, this.addr, method, params)
+	hash, err := utils.InvokeTx(this.Sdk, this.Signer, this.GasPrice, this.GasLimit, this.Addr, method, params)
 	if err != nil {
 		err = fmt.Errorf("Redeem: %s", err)
 	}
@@ -407,7 +407,7 @@ func (this *IfBorrowPool) Redeem(redeemer common.Address, redeemTokens *big.Int)
 func (this *IfBorrowPool) RedeemUnderlying(redeemer common.Address, redeemAmount *big.Int) (string, error) {
 	method := "redeemUnderlying"
 	params := []interface{}{redeemer, redeemAmount}
-	hash, err := utils.InvokeTx(this.sdk, this.signer, this.gasPrice, this.gasLimit, this.addr, method, params)
+	hash, err := utils.InvokeTx(this.Sdk, this.Signer, this.GasPrice, this.GasLimit, this.Addr, method, params)
 	if err != nil {
 		err = fmt.Errorf("RedeemUnderlying: %s", err)
 	}
@@ -418,7 +418,7 @@ func (this *IfBorrowPool) RedeemUnderlying(redeemer common.Address, redeemAmount
 func (this *IfBorrowPool) Borrow(borrower common.Address, borrowAmount *big.Int) (string, error) {
 	method := "borrow"
 	params := []interface{}{borrower, borrowAmount}
-	hash, err := utils.InvokeTx(this.sdk, this.signer, this.gasPrice, this.gasLimit, this.addr, method, params)
+	hash, err := utils.InvokeTx(this.Sdk, this.Signer, this.GasPrice, this.GasLimit, this.Addr, method, params)
 	if err != nil {
 		err = fmt.Errorf("Borrow: %s", err)
 	}
@@ -428,7 +428,7 @@ func (this *IfBorrowPool) Borrow(borrower common.Address, borrowAmount *big.Int)
 func (this *IfBorrowPool) RepayBorrow(borrower common.Address, repayAmount *big.Int) (string, error) {
 	method := "repayBorrow"
 	params := []interface{}{borrower, repayAmount}
-	hash, err := utils.InvokeTx(this.sdk, this.signer, this.gasPrice, this.gasLimit, this.addr, method, params)
+	hash, err := utils.InvokeTx(this.Sdk, this.Signer, this.GasPrice, this.GasLimit, this.Addr, method, params)
 	if err != nil {
 		err = fmt.Errorf("RepayBorrow: %s", err)
 	}
@@ -438,7 +438,7 @@ func (this *IfBorrowPool) RepayBorrow(borrower common.Address, repayAmount *big.
 func (this *IfBorrowPool) RepayBorrowBehalf(payer, borrower common.Address, repayAmount *big.Int) (string, error) {
 	method := "repayBorrowBehalf"
 	params := []interface{}{payer, borrower, repayAmount}
-	hash, err := utils.InvokeTx(this.sdk, this.signer, this.gasPrice, this.gasLimit, this.addr, method, params)
+	hash, err := utils.InvokeTx(this.Sdk, this.Signer, this.GasPrice, this.GasLimit, this.Addr, method, params)
 	if err != nil {
 		err = fmt.Errorf("RepayBorrowBehalf: %s", err)
 	}
@@ -448,7 +448,7 @@ func (this *IfBorrowPool) RepayBorrowBehalf(payer, borrower common.Address, repa
 func (this *IfBorrowPool) Liquidate(liquidator, borrower common.Address) (string, error) {
 	method := "liquidate"
 	params := []interface{}{liquidator, borrower}
-	hash, err := utils.InvokeTx(this.sdk, this.signer, this.gasPrice, this.gasLimit, this.addr, method, params)
+	hash, err := utils.InvokeTx(this.Sdk, this.Signer, this.GasPrice, this.GasLimit, this.Addr, method, params)
 	if err != nil {
 		err = fmt.Errorf("Liquidate: %s", err)
 	}
@@ -458,7 +458,7 @@ func (this *IfBorrowPool) Liquidate(liquidator, borrower common.Address) (string
 func (this *IfBorrowPool) ReduceCollateral(from common.Address, addAmount *big.Int) (string, error) {
 	method := "reduceCollateral"
 	params := []interface{}{from, addAmount}
-	hash, err := utils.InvokeTx(this.sdk, this.signer, this.gasPrice, this.gasLimit, this.addr, method, params)
+	hash, err := utils.InvokeTx(this.Sdk, this.Signer, this.GasPrice, this.GasLimit, this.Addr, method, params)
 	if err != nil {
 		err = fmt.Errorf("ReduceCollateral: %s", err)
 	}
@@ -468,7 +468,7 @@ func (this *IfBorrowPool) ReduceCollateral(from common.Address, addAmount *big.I
 func (this *IfBorrowPool) IncreaseCollateral(from common.Address, addAmount *big.Int) (string, error) {
 	method := "increaseCollateral"
 	params := []interface{}{from, addAmount}
-	hash, err := utils.InvokeTx(this.sdk, this.signer, this.gasPrice, this.gasLimit, this.addr, method, params)
+	hash, err := utils.InvokeTx(this.Sdk, this.Signer, this.GasPrice, this.GasLimit, this.Addr, method, params)
 	if err != nil {
 		err = fmt.Errorf("IncreaseCollateral: %s", err)
 	}
@@ -479,7 +479,7 @@ func (this *IfBorrowPool) IncreaseCollateral(from common.Address, addAmount *big
 func (this *IfBorrowPool) GetOscoreInfoByLevel(level byte) (*OscoreInfo, error) {
 	method := "getOscoreInfoByLevel"
 	params := []interface{}{level}
-	res, err := utils.PreExecuteByteArray(this.sdk, this.addr, method, params)
+	res, err := utils.PreExecuteByteArray(this.Sdk, this.Addr, method, params)
 	if err != nil {
 		err = fmt.Errorf("GetOscoreInfoByLevel: %s", err)
 	}
@@ -492,7 +492,7 @@ func (this *IfBorrowPool) GetOscoreInfoByLevel(level byte) (*OscoreInfo, error) 
 func (this *IfBorrowPool) Allowance(owner, spender common.Address) (*big.Int, error) {
 	method := "allowance"
 	params := []interface{}{owner, spender}
-	res, err := utils.PreExecuteBigInt(this.sdk, this.addr, method, params)
+	res, err := utils.PreExecuteBigInt(this.Sdk, this.Addr, method, params)
 	if err != nil {
 		err = fmt.Errorf("Allowance: %s", err)
 		return nil, err
@@ -504,7 +504,7 @@ func (this *IfBorrowPool) Allowance(owner, spender common.Address) (*big.Int, er
 func (this *IfBorrowPool) BalanceOf(owner common.Address) (*big.Int, error) {
 	method := "balanceOf"
 	params := []interface{}{owner}
-	res, err := utils.PreExecuteBigInt(this.sdk, this.addr, method, params)
+	res, err := utils.PreExecuteBigInt(this.Sdk, this.Addr, method, params)
 	if err != nil {
 		err = fmt.Errorf("BalanceOf: %s", err)
 		return nil, err
@@ -516,7 +516,7 @@ func (this *IfBorrowPool) BalanceOf(owner common.Address) (*big.Int, error) {
 func (this *IfBorrowPool) NeoVMBalanceOf(owner common.Address) (*big.Int, error) {
 	method := "balanceOf"
 	params := []interface{}{owner}
-	res, err := utils.NeoVMPreExecuteBigInt(this.sdk, this.addr, method, params)
+	res, err := utils.NeoVMPreExecuteBigInt(this.Sdk, this.Addr, method, params)
 	if err != nil {
 		err = fmt.Errorf("NeoVMBalanceOf: %s", err)
 		return nil, err
@@ -528,7 +528,7 @@ func (this *IfBorrowPool) NeoVMBalanceOf(owner common.Address) (*big.Int, error)
 func (this *IfBorrowPool) BalanceOfUnderlying(owner common.Address) (*big.Int, error) {
 	method := "balanceOfUnderlying"
 	params := []interface{}{owner}
-	res, err := utils.PreExecuteBigInt(this.sdk, this.addr, method, params)
+	res, err := utils.PreExecuteBigInt(this.Sdk, this.Addr, method, params)
 	if err != nil {
 		err = fmt.Errorf("BalanceOfUnderlying: %s", err)
 		return nil, err
@@ -595,7 +595,7 @@ func DeserializeAccountSnapshot(data []byte) (*AccountSnapshot, error) {
 func (this *IfBorrowPool) AccountSnapshot(owner common.Address) (*AccountSnapshot, error) {
 	method := "accountSnapshot"
 	params := []interface{}{owner}
-	res, err := this.sdk.WasmVM.PreExecInvokeWasmVMContract(this.addr, method, params)
+	res, err := this.Sdk.WasmVM.PreExecInvokeWasmVMContract(this.Addr, method, params)
 	if err != nil {
 		return nil, fmt.Errorf("AccountSnapshot: %s", err)
 	}
@@ -613,7 +613,7 @@ func (this *IfBorrowPool) AccountSnapshot(owner common.Address) (*AccountSnapsho
 func (this *IfBorrowPool) BorrowRatePerBlock() (*big.Int, error) {
 	method := "borrowRatePerBlock"
 	params := []interface{}{}
-	res, err := utils.PreExecuteBigInt(this.sdk, this.addr, method, params)
+	res, err := utils.PreExecuteBigInt(this.Sdk, this.Addr, method, params)
 	if err != nil {
 		err = fmt.Errorf("BorrowRatePerBlock: %s", err)
 	}
@@ -623,7 +623,7 @@ func (this *IfBorrowPool) BorrowRatePerBlock() (*big.Int, error) {
 func (this *IfBorrowPool) SupplyRatePerBlock() (*big.Int, error) {
 	method := "supplyRatePerBlock"
 	params := []interface{}{}
-	res, err := utils.PreExecuteBigInt(this.sdk, this.addr, method, params)
+	res, err := utils.PreExecuteBigInt(this.Sdk, this.Addr, method, params)
 	if err != nil {
 		err = fmt.Errorf("SupplyRatePerBlock: %s", err)
 	}
@@ -633,7 +633,7 @@ func (this *IfBorrowPool) SupplyRatePerBlock() (*big.Int, error) {
 func (this *IfBorrowPool) GetCash() (*big.Int, error) {
 	method := "getCash"
 	params := []interface{}{}
-	res, err := utils.PreExecuteBigInt(this.sdk, this.addr, method, params)
+	res, err := utils.PreExecuteBigInt(this.Sdk, this.Addr, method, params)
 	if err != nil {
 		err = fmt.Errorf("GetCash: %s", err)
 	}
@@ -643,7 +643,7 @@ func (this *IfBorrowPool) GetCash() (*big.Int, error) {
 func (this *IfBorrowPool) ExchangeRateStored() (*big.Int, error) {
 	method := "exchangeRateStored"
 	params := []interface{}{}
-	res, err := utils.PreExecuteBigInt(this.sdk, this.addr, method, params)
+	res, err := utils.PreExecuteBigInt(this.Sdk, this.Addr, method, params)
 	if err != nil {
 		err = fmt.Errorf("ExchangeRateStored: %s", err)
 	}
@@ -653,7 +653,7 @@ func (this *IfBorrowPool) ExchangeRateStored() (*big.Int, error) {
 func (this *IfBorrowPool) BorrowBalanceStored(account common.Address) (*big.Int, error) {
 	method := "borrowBalanceStored"
 	params := []interface{}{account}
-	res, err := utils.PreExecuteBigInt(this.sdk, this.addr, method, params)
+	res, err := utils.PreExecuteBigInt(this.Sdk, this.Addr, method, params)
 	if err != nil {
 		err = fmt.Errorf("BorrowBalanceStored: %s", err)
 	}
@@ -663,7 +663,7 @@ func (this *IfBorrowPool) BorrowBalanceStored(account common.Address) (*big.Int,
 func (this *IfBorrowPool) GlobalParam() (common.Address, error) {
 	method := "globalParam"
 	params := []interface{}{}
-	res, err := utils.PreExecuteAddress(this.sdk, this.addr, method, params)
+	res, err := utils.PreExecuteAddress(this.Sdk, this.Addr, method, params)
 	if err != nil {
 		err = fmt.Errorf("GlobalParam: %s", err)
 	}
@@ -673,27 +673,18 @@ func (this *IfBorrowPool) GlobalParam() (common.Address, error) {
 func (this *IfBorrowPool) MarketName() (string, error) {
 	method := "marketName"
 	params := []interface{}{}
-	res, err := utils.PreExecuteString(this.sdk, this.addr, method, params)
+	res, err := utils.PreExecuteString(this.Sdk, this.Addr, method, params)
 	if err != nil {
 		err = fmt.Errorf("Name: %s", err)
 	}
 	return res, err
 }
 
-func (this *IfBorrowPool) Symbol() (string, error) {
-	method := "symbol"
-	params := []interface{}{}
-	res, err := utils.PreExecuteString(this.sdk, this.addr, method, params)
-	if err != nil {
-		err = fmt.Errorf("Symbol: %s", err)
-	}
-	return res, err
-}
 
 func (this *IfBorrowPool) Decimals() (string, error) {
 	method := "Decimals"
 	params := []interface{}{}
-	res, err := utils.PreExecuteString(this.sdk, this.addr, method, params)
+	res, err := utils.PreExecuteString(this.Sdk, this.Addr, method, params)
 	if err != nil {
 		err = fmt.Errorf("Decimals: %s", err)
 	}
@@ -703,7 +694,7 @@ func (this *IfBorrowPool) Decimals() (string, error) {
 func (this *IfBorrowPool) Admin() (common.Address, error) {
 	method := "admin"
 	params := []interface{}{}
-	res, err := utils.PreExecuteAddress(this.sdk, this.addr, method, params)
+	res, err := utils.PreExecuteAddress(this.Sdk, this.Addr, method, params)
 	if err != nil {
 		err = fmt.Errorf("Admin: %s", err)
 	}
@@ -713,7 +704,7 @@ func (this *IfBorrowPool) Admin() (common.Address, error) {
 func (this *IfBorrowPool) PendingAdmin() (common.Address, error) {
 	method := "pendingAdmin"
 	params := []interface{}{}
-	res, err := utils.PreExecuteAddress(this.sdk, this.addr, method, params)
+	res, err := utils.PreExecuteAddress(this.Sdk, this.Addr, method, params)
 	if err != nil {
 		err = fmt.Errorf("PendingAdmin: %s", err)
 	}
@@ -723,7 +714,7 @@ func (this *IfBorrowPool) PendingAdmin() (common.Address, error) {
 func (this *IfBorrowPool) Comptroller() (common.Address, error) {
 	method := "comptroller"
 	params := []interface{}{}
-	res, err := utils.PreExecuteAddress(this.sdk, this.addr, method, params)
+	res, err := utils.PreExecuteAddress(this.Sdk, this.Addr, method, params)
 	if err != nil {
 		err = fmt.Errorf("Comptroller: %s", err)
 	}
@@ -733,7 +724,7 @@ func (this *IfBorrowPool) Comptroller() (common.Address, error) {
 func (this *IfBorrowPool) ReserveFactor() (*big.Int, error) {
 	method := "reservesFactor"
 	params := []interface{}{}
-	res, err := utils.PreExecuteBigInt(this.sdk, this.addr, method, params)
+	res, err := utils.PreExecuteBigInt(this.Sdk, this.Addr, method, params)
 	if err != nil {
 		err = fmt.Errorf("ReservesFactor: %s", err)
 	}
@@ -743,7 +734,7 @@ func (this *IfBorrowPool) ReserveFactor() (*big.Int, error) {
 func (this *IfBorrowPool) InsuranceInterestFactor() (*big.Int, error) {
 	method := "insuranceInterestFactor"
 	params := []interface{}{}
-	res, err := utils.PreExecuteBigInt(this.sdk, this.addr, method, params)
+	res, err := utils.PreExecuteBigInt(this.Sdk, this.Addr, method, params)
 	if err != nil {
 		err = fmt.Errorf("InsuranceInterestFactor: %s", err)
 	}
@@ -753,7 +744,7 @@ func (this *IfBorrowPool) InsuranceInterestFactor() (*big.Int, error) {
 func (this *IfBorrowPool) TotalReserves() (*big.Int, error) {
 	method := "totalReserves"
 	params := []interface{}{}
-	res, err := utils.PreExecuteBigInt(this.sdk, this.addr, method, params)
+	res, err := utils.PreExecuteBigInt(this.Sdk, this.Addr, method, params)
 	if err != nil {
 		err = fmt.Errorf("TotalReserves: %s", err)
 	}
@@ -763,7 +754,7 @@ func (this *IfBorrowPool) TotalReserves() (*big.Int, error) {
 func (this *IfBorrowPool) IsBorrow() (bool, error) {
 	method := "isBorrow"
 	params := []interface{}{}
-	res, err := utils.PreExecuteBool(this.sdk, this.addr, method, params)
+	res, err := utils.PreExecuteBool(this.Sdk, this.Addr, method, params)
 	if err != nil {
 		err = fmt.Errorf("IsBorrow: %s", err)
 	}
@@ -773,7 +764,7 @@ func (this *IfBorrowPool) IsBorrow() (bool, error) {
 func (this *IfBorrowPool) OScoreOracle() (common.Address, error) {
 	method := "oScoreOracle"
 	params := []interface{}{}
-	res, err := utils.PreExecuteAddress(this.sdk, this.addr, method, params)
+	res, err := utils.PreExecuteAddress(this.Sdk, this.Addr, method, params)
 	if err != nil {
 		err = fmt.Errorf("OScoreOracle: %s", err)
 	}
@@ -782,7 +773,7 @@ func (this *IfBorrowPool) OScoreOracle() (common.Address, error) {
 func (this *IfBorrowPool) FormalBorrowDays() (uint64, error) {
 	method := "formalBorrowDays"
 	params := []interface{}{}
-	res, err := utils.PreExecuteUint64(this.sdk, this.addr, method, params)
+	res, err := utils.PreExecuteUint64(this.Sdk, this.Addr, method, params)
 	if err != nil {
 		err = fmt.Errorf("FormalBorrowDays: %s", err)
 	}
@@ -791,7 +782,7 @@ func (this *IfBorrowPool) FormalBorrowDays() (uint64, error) {
 func (this *IfBorrowPool) InterimBorrowDays() (uint64, error) {
 	method := "interimBorrowDays"
 	params := []interface{}{}
-	res, err := utils.PreExecuteUint64(this.sdk, this.addr, method, params)
+	res, err := utils.PreExecuteUint64(this.Sdk, this.Addr, method, params)
 	if err != nil {
 		err = fmt.Errorf("InterimBorrowDays: %s", err)
 	}
@@ -801,7 +792,7 @@ func (this *IfBorrowPool) InterimBorrowDays() (uint64, error) {
 func (this *IfBorrowPool) AccruedDayNumber() (uint64, error) {
 	method := "accruedDayNumber"
 	params := []interface{}{}
-	res, err := utils.PreExecuteUint64(this.sdk, this.addr, method, params)
+	res, err := utils.PreExecuteUint64(this.Sdk, this.Addr, method, params)
 	if err != nil {
 		err = fmt.Errorf("AccruedDayNumber: %s", err)
 	}
@@ -811,7 +802,7 @@ func (this *IfBorrowPool) AccruedDayNumber() (uint64, error) {
 func (this *IfBorrowPool) PunishInterestRate() (bool, error) {
 	method := "punishInterestRate"
 	params := []interface{}{}
-	res, err := utils.PreExecuteBool(this.sdk, this.addr, method, params)
+	res, err := utils.PreExecuteBool(this.Sdk, this.Addr, method, params)
 	if err != nil {
 		err = fmt.Errorf("PunishInterestRate: %s", err)
 	}
@@ -821,7 +812,7 @@ func (this *IfBorrowPool) PunishInterestRate() (bool, error) {
 func (this *IfBorrowPool) InterimInterestRate() (bool, error) {
 	method := "interimInterestRate"
 	params := []interface{}{}
-	res, err := utils.PreExecuteBool(this.sdk, this.addr, method, params)
+	res, err := utils.PreExecuteBool(this.Sdk, this.Addr, method, params)
 	if err != nil {
 		err = fmt.Errorf("InterimInterestRate: %s", err)
 	}
@@ -831,7 +822,7 @@ func (this *IfBorrowPool) InterimInterestRate() (bool, error) {
 func (this *IfBorrowPool) FormalInterest() (common.I128, error) {
 	method := "formalInterest"
 	params := []interface{}{}
-	res, err := utils.PreExecuteUint128(this.sdk, this.addr, method, params)
+	res, err := utils.PreExecuteUint128(this.Sdk, this.Addr, method, params)
 	if err != nil {
 		err = fmt.Errorf("FormalInterest: %s", err)
 	}
@@ -841,7 +832,7 @@ func (this *IfBorrowPool) FormalInterest() (common.I128, error) {
 func (this *IfBorrowPool) TotalInterest() (common.I128, error) {
 	method := "totalInterest"
 	params := []interface{}{}
-	res, err := utils.PreExecuteUint128(this.sdk, this.addr, method, params)
+	res, err := utils.PreExecuteUint128(this.Sdk, this.Addr, method, params)
 	if err != nil {
 		err = fmt.Errorf("TotalInterest: %s", err)
 	}
@@ -851,7 +842,7 @@ func (this *IfBorrowPool) TotalInterest() (common.I128, error) {
 func (this *IfBorrowPool) TotalInsuranceInterest() (common.I128, error) {
 	method := "totalInsuranceInterest"
 	params := []interface{}{}
-	res, err := utils.PreExecuteUint128(this.sdk, this.addr, method, params)
+	res, err := utils.PreExecuteUint128(this.Sdk, this.Addr, method, params)
 	if err != nil {
 		err = fmt.Errorf("TotalInsuranceInterest: %s", err)
 	}

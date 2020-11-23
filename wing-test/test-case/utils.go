@@ -5,8 +5,12 @@ import (
 	"github.com/mockyz/AutoTestGo/wing-test/compound/comptroller"
 	"github.com/mockyz/AutoTestGo/wing-test/compound/ftoken"
 	config "github.com/mockyz/AutoTestGo/wing-test/config_ont"
+	if_borrow "github.com/mockyz/AutoTestGo/wing-test/if-pool/if-borrow"
+	if_ctrl "github.com/mockyz/AutoTestGo/wing-test/if-pool/if-ctrl"
+	"github.com/mockyz/AutoTestGo/wing-test/if-pool/iftoken"
+	"github.com/mockyz/AutoTestGo/wing-test/if-pool/iitoken"
 	ontSDK "github.com/ontio/ontology-go-sdk"
-	"math/big"
+	"github.com/ontio/ontology/common"
 )
 func NewMarkets(cfg *config.Config, account *ontSDK.Account, sdk *ontSDK.OntologySdk, makretAddr string) (*ftoken.FlashToken, error) {
 	comp,err := comptroller.NewComptroller(sdk,cfg.Comptroller,account,cfg.GasPrice,cfg.GasLimit)
@@ -21,42 +25,50 @@ func NewMarkets(cfg *config.Config, account *ontSDK.Account, sdk *ontSDK.Ontolog
 
 	return market, nil
 }
-func ExpTestRuslt(wingSpeed, users, total *big.Int, start, end, percetage uint32) *big.Int {
 
-	//	expResult =wingSpeed*percetage*userBorrow/totalBorrow * (start - end time)
-	//x =wingSpeed*userBorrow/totalBorrow
-	x := big.NewInt(0).Div(big.NewInt(0).Mul(wingSpeed, users), total)
-	//y = (start -end) * percetage
-	y := (end - start) * percetage
-	reslut := big.NewInt(0).Div(big.NewInt(0).Mul(x, big.NewInt(int64(y))), big.NewInt(100))
-	log.Infof("wingSpeed: %v,users: %v,total: %v,start: %v,end: %v,percetage: %v", wingSpeed, users, total, start, end, percetage)
+type  IFPool struct{
+	IfCtrl   if_ctrl.Comptroller
+	IfBorrow if_borrow.IfBorrowPool
+	IfToken	iftoken.IFToken
+	IIToken  iitoken.IIToken
 
-	return reslut
 }
-func GetTimeByTxhash(sdk *ontSDK.OntologySdk, txHash string) uint32 {
-	blockHeight, err := sdk.GetBlockHeightByTxHash(txHash)
+func NewIFPool(nodeRPCAddr, comptrollerAddr, borrowAddr string, signer *ontSDK.Account, gasPrice, gasLimit uint64) *IFPool {
+	sdk := ontSDK.NewOntologySdk()
+	client := sdk.NewRpcClient()
+	client.SetAddress(nodeRPCAddr)
+	sdk.SetDefaultClient(client)
+	_, err := sdk.GetCurrentBlockHeight()
 	if err != nil {
-		log.Errorf("  GetBlockHeightByTxHash err : %v", err)
+		return nil
 	}
-	blockInfo, err := sdk.GetBlockByHeight(blockHeight)
+	addr, err := common.AddressFromHexString(comptrollerAddr)
 	if err != nil {
-		log.Errorf("  GetBlockByHeight err : %v", err)
+		addr, err = common.AddressFromBase58(comptrollerAddr)
+		if err != nil {
+			return nil
+		}
 	}
-	log.Infof("hash time is : %v", blockInfo.Header.Timestamp)
-	log.Infof("blockHeight is : %v", blockHeight)
-
-	return blockInfo.Header.Timestamp
-}
-func CmpTestRuslt(expRsult, relRsult *big.Int) *big.Float {
-	if relRsult.Cmp(expRsult) > 0 {
-		return new(big.Float).Sub(new(big.Float).SetInt64(1), new(big.Float).Quo(new(big.Float).SetInt(relRsult), new(big.Float).SetInt(expRsult)))
-	} else {
-		return new(big.Float).Sub(new(big.Float).SetInt64(1), new(big.Float).Quo(new(big.Float).SetInt(expRsult), new(big.Float).SetInt(relRsult)))
+	IfCtrl := if_ctrl.Comptroller{
+		Sdk:      sdk,
+		Signer:   signer,
+		Addr:     addr,
+		GasPrice: gasPrice,
+		GasLimit: gasLimit,
 	}
-	return nil
-}
-func ExpInterestAdd(totalBorrow, delayBlockNum, borrowRatePerBlock *big.Int) *big.Int {
-	x := big.NewInt(0).Mul(big.NewInt(0).Mul(totalBorrow, delayBlockNum), borrowRatePerBlock)
-	y := big.NewInt(0).Quo(x, big.NewInt(10^9))
-	return y
+	baddr, err := common.AddressFromHexString(borrowAddr)
+	if err != nil {
+		addr, err = common.AddressFromBase58(borrowAddr)
+		if err != nil {
+			return nil
+		}
+	}
+	IfBorrow :=if_borrow.IfBorrowPool{
+		Sdk:      sdk,
+		Signer:   signer,
+		Addr:     baddr,
+		GasPrice: gasPrice,
+		GasLimit: gasLimit,
+	}
+	return &IFPool{IfCtrl: IfCtrl, IfBorrow: IfBorrow}
 }
